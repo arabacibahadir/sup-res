@@ -1,5 +1,5 @@
 """
-This program can detect support-resistance, some candle patterns,rsi,macd...
+This program can detect support-resistance, some candle patterns,rsi...
 """
 import pandas as pd
 import plotly.graph_objects as go
