@@ -1,5 +1,7 @@
 """
 This program can detect support-resistance, some candle patterns,rsi  ...
+
+123123
 """
 import pandas as pd
 import plotly.graph_objects as go
