@@ -100,11 +100,13 @@ def main():
     ))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines", marker=dict(color="MediumPurple", size=10)
+        y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines",
+        marker=dict(color="MediumPurple", size=10)
     ))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines", marker=dict(color="LightSeaGreen", size=10)))
+        y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
+        marker=dict(color="LightSeaGreen", size=10)))
 
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
@@ -125,8 +127,6 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
 
-    # fib levelleri???#fib levelleri???#fib levelleri???
-
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
                       height=1225, plot_bgcolor='rgba(0,0,0,0)',
@@ -139,6 +139,7 @@ def main():
 
     # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık?
     # candle pattern?
+    # fib levelleri???#fib levelleri???#fib levelleri???
 
 
 if __name__ == "__main__":
