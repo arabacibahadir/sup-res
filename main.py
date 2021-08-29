@@ -174,7 +174,6 @@ fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"
 
 #fib levelleri???#fib levelleri???#fib levelleri???
 #fib levelleri???#fib levelleri???#fib levelleri???
-#fib levelleri???#fib levelleri???#fib levelleri???
 
 fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1900, height=1250,
                   xaxis_title="Date", yaxis_title="Price", legend_title="Legend", legend = dict(bgcolor = '#E2E2E2'),
