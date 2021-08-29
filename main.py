@@ -1,23 +1,22 @@
 """
 This program can detect support-resistance, some candle patterns,rsi  ...
-
-123123
 """
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
-#rest ile api yaz-kripto seçmece yap
-#class ata bazi şeylere
+
+# rest ile api yaz-kripto seçmece yap
+# class ata bazi şeylere
 # ilk sitenin web sayfa tanıtımı var onu kendim sildim belki if yazıp o sitelinn linki varsa sil kodu yazabilirim--csvdeki ilk satırı sil,sildiyse devam silmediyse sil
 df = pd.read_csv("BTC.csv", delimiter=',', encoding="utf-8-sig", index_col=False,
                  nrows=254)  # nrows kaç tane veriyi incelediğini gösteriyor onu kullanıcıya seçtirebiliriz mi?
 df = df.iloc[::-1]
 df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
 df.reset_index(drop=True, inplace=True)
-#REV OLANLARI NULL GELENLERİ SİLEREK HALLEDEBİLİRİZ TEK LİSTTEN YAPMAK İÇİN. BÖYLE GÜZEL DURMUYOR
+# REV OLANLARI NULL GELENLERİ SİLEREK HALLEDEBİLİRİZ TEK LİSTTEN YAPMAK İÇİN. BÖYLE GÜZEL DURMUYOR
 volume = list(reversed((df['Volume USDT'])))
 sma10 = list((df.ta.sma(10)))
-sma10_rev=list(reversed(df.ta.sma(10)))
+sma10_rev = list(reversed(df.ta.sma(10)))
 sma50 = list((df.ta.sma(50)))
 sma50_rev = list(reversed(df.ta.sma(50)))
 sma100 = list((df.ta.sma(100)))
@@ -54,10 +53,9 @@ fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
                                 low=df['low'],
                                 close=df['close'])])
 
-
-ss = rr = []  # ss:Support list # rr:Resistance list
-# sensitive yapıyoruz,(2,2)ler o anlama geliyor.higher(2den fazla mesela 3 olunca sens azalır daha detyaylı verir veriyi grafiği)
-# sensitivity change 3,1
+ss = []  # ss:Support list
+rr = []  # rr:Resistance list
+# Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
 for row in range(3, len(df)):
     if support(df, row, 3, 1):
         ss.append((row, df.low[row], 1))
@@ -67,11 +65,11 @@ for row in range(3, len(df)):
         # eğer dirençler birbirleri çok yakınsa x noktalarını biraz sağa sola kaydır??????????
 
 c = 0
-# Draw Support line
+# Draw Support lines
 while 1:
     if c > len(ss) - 1:
         break
-    # Support Line
+    # Support Lines
     fig.add_shape(type='line', x0=ss[c][0] - 1, y0=ss[c][1],
                   x1=len(df) + 30,
                   y1=ss[c][1],
@@ -82,12 +80,12 @@ while 1:
 
     c += 1
 
-# Draw Resistance line
+# Draw Resistance lines
 c = 0
 while 1:
     if c > len(rr) - 1:
         break
-    # Resistance Line
+    # Resistance Lines
     fig.add_shape(type='line', x0=rr[c][0] - 1, y0=rr[c][1],
                   x1=len(df) + 30,
                   y1=rr[c][1],
@@ -102,36 +100,34 @@ while 1:
 
     c += 1
 
-
-#buraya class ata
-# Legend->Resistance
+# buraya class ata
+# Legend -> Resistance
 fig.add_trace(go.Scatter(
     y=[ss[0]],
     name="Resistance",
     mode="lines",
     marker=dict(color="MediumPurple", size=10)
 ))
-# Legend->Support
+# Legend -> Support
 fig.add_trace(go.Scatter(
     y=[ss[0]],
     name="Support",
     mode="lines",
     marker=dict(color="LightSeaGreen", size=10)
 ))
-# Legend->Current Resistance
+# Legend -> Current Resistance
 fig.add_trace(go.Scatter(
     y=[ss[0]],
     name=f"Current Resistance : {int(rr[-1][1])}",
     mode="markers+lines",
     marker=dict(color="MediumPurple", size=10)
 ))
-# Legend->Current Support
+# Legend -> Current Support
 fig.add_trace(go.Scatter(
     y=[ss[0]],
     name=f"Current Support : {int(ss[-1][1])}",
     mode="markers+lines",
     marker=dict(color="LightSeaGreen", size=10)))
-
 
 fig.add_trace(go.Scatter(
     y=[ss[0]],
@@ -174,19 +170,20 @@ fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"S
 fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100_rev[0])}",
                          line=dict(color='#a69b05', width=3)))
 
-#fib levelleri???#fib levelleri???#fib levelleri???
-#fib levelleri???#fib levelleri???#fib levelleri???
+# fib levelleri???#fib levelleri???#fib levelleri???
+# fib levelleri???#fib levelleri???#fib levelleri???
 
-fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1900, height=1250,
-                  xaxis_title="Date", yaxis_title="Price", legend_title="Legend", legend = dict(bgcolor = '#E2E2E2'),
+# Chart updates
+fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1800, height=1350,
+                  xaxis_title="Date", yaxis_title="Price", legend_title="Legend", legend=dict(bgcolor='#E2E2E2'),
                   )
 
 fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
 fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
 fig.show()
-# candle 2den başlamalı yoksa algoritma gg hatırlatma olarak ekle-->buna gerek olmayabilir belki
+
 # main kısmını ekle program başlamadan önce website adresini islsin
-# background color?
-#ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık?
-#candle pattern?
+
+# ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık?
+# candle pattern?
