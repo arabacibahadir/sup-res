@@ -58,6 +58,26 @@ def main():
             rr.append((row, df.high[row], 1))
             # eğer dirençler birbirleri çok yakınsa x noktalarını biraz sağa sola kaydır???
 
+    # Closest sup-res lines
+    sup_below = []
+    res_above = []
+    sup = list(map(lambda sup1: sup1[1], ss))
+    res = list(map(lambda res1: res1[1], rr))
+    latest_close = list(df['close'])[-1]
+    for s in sup:
+        if s < latest_close:
+            sup_below.append(s)
+
+    for r in res:
+        if r > latest_close:
+            res_above.append(r)
+
+    sup_below = sorted(sup_below)
+    res_above = sorted(res_above)
+
+    print("Supports: " + str(sup_below[-1]) + ", " + str(sup_below[-2]) + ", " + str(sup_below[-3]))
+    print("Resistances: " + str(res_above[0]) + ", " + str(res_above[1]) + ", " + str(res_above[2]))
+
     c = 0
     # Drawing support lines
     while 1:
@@ -137,9 +157,9 @@ def main():
 
     fig.show()
 
-    # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık?
+    # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık? ya da text olarak yazsın ayrıca foto olarak tüm paritelerin destek-dirençleri yazsın?
     # candle pattern?
-    # fib levelleri???#fib levelleri???#fib levelleri???
+    # fib levelleri??? en önemli destek direnç noktaları hangileri akümülasyon bölgelerine bak!
 
 
 if __name__ == "__main__":
