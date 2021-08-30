@@ -1,18 +1,20 @@
 """
 Reliability score of a trading strategy is more important than the win rate.
 If possible always backtest and write your executed trade history into Excel.
-This program can detect support-resistance.  ...
+This program shows support-resistance zones, simple moving average, rsi, fibonacci retracement
 """
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
 
+# NOTES
 # chart size set-> legend section with chart
 # hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful.
 # rest ile api yaz-kripto seçmece yap
-
+# paritelerin hepsini tek fotoda-> twitter?
 # csvdeki ilk satırı sil,sildiyse devam silmediyse sil
+
 def main():
     # nrows -> Number of candlesticks
     df = pd.read_csv("BTC.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254)
@@ -44,8 +46,8 @@ def main():
                 return 0
         return 1
 
-    def fib_pl(high_price,
-               low_price):  # -> Fibonacci Price Level between highest resistance line and lowest support line
+    # -> Fibonacci Price Level between highest resistance line and lowest support line
+    def fib_pl(high_price, low_price):
         # Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
         # In this code section we will use only lines, not the highest and lowest prices on chart. Be careful on that, this fib levels can be wrong and irrelevant.
         fib_multipliers = [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
@@ -102,12 +104,10 @@ def main():
         # Support Lines
         fig.add_shape(type='line', x0=ss[c][0] - 1, y0=ss[c][1],
                       x1=len(df) + 30,
-                      y1=ss[c][1],
-                      line=dict(color="LightSeaGreen", width=2))
+                      y1=ss[c][1], line=dict(color="LightSeaGreen", width=2))
         # Support annotations
         fig.add_annotation(x=len(df) + 10, y=ss[c][1], text=str(ss[c][1]),
                            font=dict(size=15, color="LightSeaGreen"))
-
         c += 1
 
     # Drawing resistance lines
@@ -118,8 +118,7 @@ def main():
         # Resistance Lines
         fig.add_shape(type='line', x0=rr[c][0] - 1, y0=rr[c][1],
                       x1=len(df) + 30,
-                      y1=rr[c][1],
-                      line=dict(color="MediumPurple", width=1))
+                      y1=rr[c][1], line=dict(color="MediumPurple", width=1))
         # Resistance annotations
         fig.add_annotation(x=len(df) + 30, y=rr[c][1], text=str(rr[c][1]),
                            font=dict(size=15, color="MediumPurple"))
@@ -139,15 +138,13 @@ def main():
         marker=dict(color="MediumPurple", size=10)))
 
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Resistances: {next_res}", mode="lines", marker=dict(color="MediumPurple", size=10)
-    ))
+        y=[ss[0]], name=f"Next Resistances: {next_res}", mode="lines", marker=dict(color="MediumPurple", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="MediumPurple", size=8)
-    ))
+        y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="MediumPurple", size=8)))
 
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
@@ -195,8 +192,6 @@ def main():
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
     fig.show()
-
-    # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık? ya da text olarak yazsın ayrıca foto olarak tüm paritelerin destek-dirençleri yazsın?
 
 
 if __name__ == "__main__":
