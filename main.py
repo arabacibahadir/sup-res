@@ -1,11 +1,13 @@
 """
-This program can detect support-resistance, some candle patterns,rsi  ...
+Reliability score of a trading strategy is more important than the win rate.
+If possible always backtest and write your executed trade history into Excel.
+This program can detect support-resistance.  ...
 """
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
-
+# hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful
 # rest ile api yaz-kripto seçmece yap
 
 # csvdeki ilk satırı sil,sildiyse devam silmediyse sil
