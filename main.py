@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import pandas_ta as ta
 
 
+# chart size set-> legend section with chart
 # hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful.
 # rest ile api yaz-kripto seçmece yap
 
@@ -23,6 +24,7 @@ def main():
     sma50 = list((df.ta.sma(50)))
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
+    fib = []
 
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
@@ -42,9 +44,15 @@ def main():
                 return 0
         return 1
 
-    def fibonacci_price_level(): #->add to trace section 
-        # Fibonacci Price Level = High Price - (High Price -Low Price)*Fibonacci Level
-        pass
+    def fib_pl(high_price, low_price):  # -> Fibonacci Price Level between highest resistance line and lowest support line
+        # Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+        # In this code section we will use only lines, not the highest and lowest prices on chart. Be careful on that, this fib levels can be wrong and irrelevant.
+        fib_multipliers = [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
+
+        for multi in fib_multipliers:
+            retracement_levels = low_price + (
+                        high_price - low_price) * multi  # -> Downtrend Fibonacci Retracement Formula we use in here
+            fib.append(retracement_levels)
 
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
@@ -81,8 +89,9 @@ def main():
 
     sup_below = sorted(sup_below)
     res_above = sorted(res_above)
-    next_res = str(res_above[0]) + ", " + str(res_above[1]) + ", " + str(res_above[2])
-    next_sup = str(sup_below[-1]) + ", " + str(sup_below[-2]) + ", " + str(sup_below[-3])
+    next_res = str(res_above[1]) + ", " + str(res_above[2]) + ", " + str(res_above[3])
+    next_sup = str(sup_below[-2]) + ", " + str(sup_below[-3]) + ", " + str(sup_below[-4])
+    fib_pl(res_above[-1], sup_below[0])  # Fibonacci func
 
     c = 0
     # Drawing support lines
@@ -143,13 +152,13 @@ def main():
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
 
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#f5efc4", size=14)))
+        y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
 
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI : {int(rsi[100])}", mode="lines", marker=dict(color="#f5efc4", size=10)))
+        y=[ss[0]], name=f"RSI : {int(rsi[100])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
 
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume : {int(volume[1])} $ ", mode="lines", marker=dict(color="#f5efc4", size=10)))
+        y=[ss[0]], name=f"Volume : {int(volume[1])} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
 
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10 : {int(sma10[-1])}",
                              line=dict(color='#5c6cff', width=3)))
@@ -158,14 +167,33 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
 
+    # fibs
+    # [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 1.382: {int(fib[5])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 0.786: {int(fib[4])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 0.618: {int(fib[3])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 0.500: {int(fib[2])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 0.382: {int(fib[1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+
+
+
 
 
 
     # Chart updates
-    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
-                      height=1225, plot_bgcolor='rgba(0,0,0,0)',
+    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820, paper_bgcolor='#FFE4F5',
+                      height=1225, plot_bgcolor='#fcedfa',#FFE4F5
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
-                      legend=dict(bgcolor='#f5efc4'))
+                      legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
