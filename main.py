@@ -7,7 +7,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
-# hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful
+
+# hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful.
 # rest ile api yaz-kripto seçmece yap
 
 # csvdeki ilk satırı sil,sildiyse devam silmediyse sil
@@ -40,6 +41,10 @@ def main():
             if price1.high[i] > price1.high[i - 1]:
                 return 0
         return 1
+
+    def fibonacci_price_level(): #->add to trace section 
+        # Fibonacci Price Level = High Price - (High Price -Low Price)*Fibonacci Level
+        pass
 
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
@@ -76,9 +81,8 @@ def main():
 
     sup_below = sorted(sup_below)
     res_above = sorted(res_above)
-
-    print("Supports: " + str(sup_below[-1]) + ", " + str(sup_below[-2]) + ", " + str(sup_below[-3]))
-    print("Resistances: " + str(res_above[0]) + ", " + str(res_above[1]) + ", " + str(res_above[2]))
+    next_res = str(res_above[0]) + ", " + str(res_above[1]) + ", " + str(res_above[2])
+    next_sup = str(sup_below[-1]) + ", " + str(sup_below[-2]) + ", " + str(sup_below[-3])
 
     c = 0
     # Drawing support lines
@@ -114,21 +118,26 @@ def main():
 
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Resistance", mode="lines", marker=dict(color="MediumPurple", size=10)
-    ))
+        y=[ss[0]], name="Resistance", mode="lines", marker=dict(color="MediumPurple", size=10)))
+
     # Legend -> Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)
-    ))
+        y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines",
-        marker=dict(color="MediumPurple", size=10)
+        marker=dict(color="MediumPurple", size=10)))
+
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Next Resistances: {next_res}", mode="lines", marker=dict(color="MediumPurple", size=10)
     ))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="MediumPurple", size=8)
+    ))
 
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
@@ -149,11 +158,14 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
 
+
+
+
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
                       height=1225, plot_bgcolor='rgba(0,0,0,0)',
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
-                      legend=dict(bgcolor='#f5efc4', x=0.03, y=1, traceorder="normal"))
+                      legend=dict(bgcolor='#f5efc4'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
