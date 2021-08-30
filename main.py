@@ -10,7 +10,7 @@ import pandas_ta as ta
 
 # ilk sitenin web sayfa tanıtımı var onu kendim sildim belki if yazıp o sitelinn linki varsa sil kodu yazabilirim--csvdeki ilk satırı sil,sildiyse devam silmediyse sil
 def main():
-    # nrows -> number of candlesticks
+    # nrows -> Number of candlesticks
     df = pd.read_csv("BTC.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254)
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
