@@ -8,7 +8,7 @@ import pandas_ta as ta
 
 # rest ile api yaz-kripto seçmece yap
 
-# ilk sitenin web sayfa tanıtımı var onu kendim sildim belki if yazıp o sitelinn linki varsa sil kodu yazabilirim--csvdeki ilk satırı sil,sildiyse devam silmediyse sil
+# csvdeki ilk satırı sil,sildiyse devam silmediyse sil
 def main():
     # nrows -> Number of candlesticks
     df = pd.read_csv("BTC.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254)
@@ -158,7 +158,7 @@ def main():
     fig.show()
 
     # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık? ya da text olarak yazsın ayrıca foto olarak tüm paritelerin destek-dirençleri yazsın?
-    # candle pattern?
+
     # fib levelleri??? en önemli destek direnç noktaları hangileri akümülasyon bölgelerine bak!
 
 
