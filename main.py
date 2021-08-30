@@ -44,14 +44,15 @@ def main():
                 return 0
         return 1
 
-    def fib_pl(high_price, low_price):  # -> Fibonacci Price Level between highest resistance line and lowest support line
+    def fib_pl(high_price,
+               low_price):  # -> Fibonacci Price Level between highest resistance line and lowest support line
         # Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
         # In this code section we will use only lines, not the highest and lowest prices on chart. Be careful on that, this fib levels can be wrong and irrelevant.
         fib_multipliers = [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
 
         for multi in fib_multipliers:
-            retracement_levels = low_price + (
-                        high_price - low_price) * multi  # -> Downtrend Fibonacci Retracement Formula we use in here
+            # -> Downtrend Fibonacci Retracement Formula we use in here
+            retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
     df = df[:len(df)]
@@ -184,14 +185,10 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
 
-
-
-
-
-
     # Chart updates
-    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820, paper_bgcolor='#FFE4F5',
-                      height=1225, plot_bgcolor='#fcedfa',#FFE4F5
+    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
+                      paper_bgcolor='#FFE4F5',
+                      height=1225, plot_bgcolor='#fcedfa',  # FFE4F5
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
@@ -200,8 +197,6 @@ def main():
     fig.show()
 
     # ilk 5 direnç ilk 3 supportu yazsın karışmasın ortalık? ya da text olarak yazsın ayrıca foto olarak tüm paritelerin destek-dirençleri yazsın?
-
-    # fib levelleri??? en önemli destek direnç noktaları hangileri akümülasyon bölgelerine bak!
 
 
 if __name__ == "__main__":
