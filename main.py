@@ -17,7 +17,7 @@ import pandas_ta as ta
 
 def main():
     # nrows -> Number of candlesticks
-    df = pd.read_csv("BTC.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254)
+    df = pd.read_csv("Binance_BTCUSDT_d.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
@@ -48,8 +48,10 @@ def main():
 
     # -> Fibonacci Price Level between highest resistance line and lowest support line
     def fib_pl(high_price, low_price):
-        # Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-        # In this code section we will use only lines, not the highest and lowest prices on chart. Be careful on that, this fib levels can be wrong and irrelevant.
+        """ Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+         In this code section we will use only lines, not the highest and lowest prices on chart.
+         Be careful on that, this fib levels can be wrong and irrelevant.
+        """
         fib_multipliers = [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
         for multi in fib_multipliers:
             # -> Downtrend Fibonacci Retracement Formula we use in here
@@ -143,7 +145,7 @@ def main():
         y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="MediumPurple", size=8)))
+        y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="LightSeaGreen", size=8)))
 
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
@@ -183,13 +185,11 @@ def main():
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
-                      paper_bgcolor='#FFE4F5',
-                      height=1225, plot_bgcolor='#fcedfa', 
+                      paper_bgcolor='#FFE4F5', height=1225, plot_bgcolor='#fcedfa',
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
-
     fig.show()
 
 
