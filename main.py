@@ -1,8 +1,4 @@
-"""
-Reliability score of a trading strategy is more important than the win rate.
-If possible always backtest and write your executed trade history into Excel.
-This program shows support-resistance zones, simple moving average, rsi, fibonacci retracement
-"""
+
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
@@ -13,7 +9,7 @@ import pandas_ta as ta
 # hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful.
 # rest ile api yaz-kripto seçmece yap
 # paritelerin hepsini tek fotoda-> twitter?
-# csvdeki ilk satırı sil,sildiyse devam silmediyse sil
+
 
 def main():
     # nrows -> Number of candlesticks
@@ -184,8 +180,8 @@ def main():
         y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
 
     # Chart updates
-    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom", width=1820,
-                      paper_bgcolor='#FFE4F5', height=1225, plot_bgcolor='#fcedfa',
+    fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
+                      paper_bgcolor='#FFE4F5',  plot_bgcolor='#fcedfa', height=1250, width=1900,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
