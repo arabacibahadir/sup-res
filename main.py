@@ -125,7 +125,6 @@ def main():
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name="Resistance", mode="lines", marker=dict(color="MediumPurple", size=10)))
-
     # Legend -> Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
@@ -133,7 +132,6 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines",
         marker=dict(color="MediumPurple", size=10)))
-
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {next_res}", mode="lines", marker=dict(color="MediumPurple", size=10)))
     # Legend -> Current Support
@@ -142,28 +140,21 @@ def main():
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Supports: {next_sup}", mode="lines", marker=dict(color="LightSeaGreen", size=8)))
-
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
-
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
-
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"RSI : {int(rsi[100])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume : {int(volume[1])} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
-
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10 : {int(sma10[-1])}",
                              line=dict(color='#5c6cff', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50 : {int(sma50[-1])}",
                              line=dict(color='#950fba', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
-
-    # fibs
-    # [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
+    # fibs [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
