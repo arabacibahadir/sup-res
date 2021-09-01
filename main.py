@@ -1,4 +1,3 @@
-
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
@@ -13,7 +12,8 @@ import pandas_ta as ta
 
 def main():
     # nrows -> Number of candlesticks
-    df = pd.read_csv("Binance_BTCUSDT_d.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
+    df = pd.read_csv("Binance_BTCUSDT_d.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254,
+                     skiprows=[0])
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
@@ -63,15 +63,15 @@ def main():
                                     low=df['low'],
                                     close=df['close'])])
 
-    ss = []  # ss:Support list
-    rr = []  # rr:Resistance list
+    ss = []  # ss : Support list
+    rr = []  # rr : Resistance list
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df)):
         if support(df, row, 3, 1):
             ss.append((row, df.low[row], 1))
         if resistance(df, row, 3, 1):
             rr.append((row, df.high[row], 1))
-            # eğer dirençler birbirleri çok yakınsa x noktalarını biraz sağa sola kaydır???
+
 
     # Closest sup-res lines
     sup_below = []
@@ -172,7 +172,7 @@ def main():
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
-                      paper_bgcolor='#FFE4F5',  plot_bgcolor='#fcedfa', height=1250, width=1900,
+                      paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', height=1250, width=1900,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
