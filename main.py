@@ -5,7 +5,8 @@ import pandas_ta as ta
 
 def main():
     # nrows -> Number of candlesticks
-    df = pd.read_csv("Binance_BTCUSDT_d.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254,
+    csv = "Binance_BTCUSDT_d.csv"
+    df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254,
                      skiprows=[0])
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
