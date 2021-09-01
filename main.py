@@ -3,13 +3,6 @@ import plotly.graph_objects as go
 import pandas_ta as ta
 
 
-# NOTES
-# chart size set-> legend section with chart
-# hourly?- macd + 200 ema -> signal sell-buy. price over 200ma-> buy, price under 200ma sell is trend direction. be careful.
-# rest ile api yaz-kripto seçmece yap
-# paritelerin hepsini tek fotoda-> twitter?
-
-
 def main():
     # nrows -> Number of candlesticks
     df = pd.read_csv("Binance_BTCUSDT_d.csv", delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254,
@@ -71,7 +64,6 @@ def main():
             ss.append((row, df.low[row], 1))
         if resistance(df, row, 3, 1):
             rr.append((row, df.high[row], 1))
-
 
     # Closest sup-res lines
     sup_below = []
