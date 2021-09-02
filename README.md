@@ -16,6 +16,9 @@ pip install plotly
 
 Your csv file should be in the folder where the python code is. Then you should write the file name to the csv variable in the code, probably "Binance_BTCUSDT_d.csv" is written in the code, you will write the name of your file there.
 
+````bash
+csv="Binance_BTCUDT_d.csv"
+````
 You can get various csv files from [here](https://www.cryptodatadownload.com/data/). You can select the exchanges and then download the csv files of the what crypto you want.
 
 When you run the code, the local web page will open where you can see the support resistance zones, rsi, sma, fibonacci.
