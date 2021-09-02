@@ -1,6 +1,6 @@
 # Sup-Res
 
-A great helper for drawing support and resistance lines.
+A great companion for drawing support and resistance lines.
 
 ## Installation
 
@@ -33,6 +33,7 @@ I worked on a code that could provide help for users who don't have much experie
 
 Every investor's wallet and strategy is different. Stay away from high leverage if you don't trust your experience. Your priority should not be to make money, you should be try to protect your money. 
 Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. Not every support and resistance works. 
+
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
 
