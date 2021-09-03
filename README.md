@@ -14,7 +14,7 @@ pip install plotly
 
 ## Usage
 
-Your csv file should be in the folder where the python code is. Then you should write the file name to the csv variable in the code, probably "Binance_BTCUSDT_d.csv" is written in the code, you will write the name of your file there.
+Your csv file should be in the folder where the python code is. Then you should write the file name to the csv variable in the code, probably "Binance_BTCUSDT_d.csv" is written in the code, you will write the name of your csv file there.
 
 ````bash
 csv="Binance_BTCUDT_d.csv"
