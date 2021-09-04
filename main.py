@@ -72,6 +72,7 @@ def main():
     sup = list(map(lambda sup1: sup1[1], ss))
     res = list(map(lambda res1: res1[1], rr))
     latest_close = list(df['close'])[-1]
+
     for s in sup:
         if s < latest_close:
             sup_below.append(s)
@@ -148,6 +149,7 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
     # fibs [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
+    # add class
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
