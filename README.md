@@ -47,3 +47,5 @@ If a pair has failed to break a point multiple times or has risen by repeatedly 
 Never rely on just one piece of data, it can be misleading. Always include fundamental analysis alongside technical analysis. Be careful not to miss the news. 
 
 ![legend](https://user-images.githubusercontent.com/32988819/131736679-16f3b6c7-7a63-474d-a776-c9e24d8467f1.png)
+
+## LINKS - ADDs
