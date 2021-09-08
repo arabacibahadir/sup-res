@@ -4,7 +4,7 @@ import pandas_ta as ta
 
 # Refactor var's
 # Add classes
-
+# price>res -> support, price< support -> res ->>> add
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_BTCUSDT_d.csv"
