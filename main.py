@@ -2,6 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
+# Refactor var's
+# Add classes
 
 def main():
     # nrows -> Number of candlesticks
