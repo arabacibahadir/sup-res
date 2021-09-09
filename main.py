@@ -61,6 +61,7 @@ def main():
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
+    # ASAPBUG : 3,1 with low sens sometimes giving short list -> list error
     for row in range(3, len(df)):
         if support(df, row, 3, 1):
             ss.append((row, df.low[row], 1))
