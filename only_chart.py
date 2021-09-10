@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.graph_objects as go
 
-
+# get data 1h
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_ETHUSDT_d.csv"
