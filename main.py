@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
+# Twitter api add
 # Refactor var's
 # Add classes
 # price>res -> support, price< support -> res ->>> add
