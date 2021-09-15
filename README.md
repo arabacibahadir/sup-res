@@ -1,5 +1,5 @@
 # Sup-Res
-
+# Details...->
 A great companion for drawing support and resistance lines.
 
 ## Installation
