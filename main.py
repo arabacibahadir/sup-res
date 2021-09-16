@@ -2,12 +2,14 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
-# daily-hourly?
+# check csv files some data broken
+# daily-hourly? hourly priced model?
 # Rest api for other coins
 # Twitter api add
 # Refactor var's
 # Add classes
 # price>res -> support, price< support -> res ->>> add
+
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_BTCUSDT_d.csv"
