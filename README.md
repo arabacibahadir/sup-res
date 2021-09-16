@@ -49,3 +49,7 @@ Never rely on just one piece of data, it can be misleading. Always include funda
 ![legend](https://user-images.githubusercontent.com/32988819/131736679-16f3b6c7-7a63-474d-a776-c9e24d8467f1.png)
 
 ## LINKS - ADDs
+## Proofs
+![48500proof](https://user-images.githubusercontent.com/32988819/133648941-de7f0b2d-0780-4a11-8e6f-98d06b1f6ad1.png)
+![works](https://user-images.githubusercontent.com/32988819/133649195-6645e31b-1736-4076-ba26-385063d4915e.png)
+
