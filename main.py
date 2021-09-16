@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 
+
 # check csv files some data broken
 # daily-hourly? hourly priced model?
 # Rest api for other coins
@@ -9,10 +10,11 @@ import pandas_ta as ta
 # Refactor var's
 # Add classes
 # price>res -> support, price< support -> res ->>> add
-
+# under current price, res'es are supports-> change line colors
+# from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 def main():
     # nrows -> Number of candlesticks
-    csv = "Binance_BTCUSDT_d.csv"
+    csv = "Binance_solUSDT_d.csv"
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
@@ -90,6 +92,7 @@ def main():
 
     sup_below = sorted(sup_below)
     res_above = sorted(res_above)
+    # FIX HERE
     next_res = str(res_above[1]) + ", " + str(res_above[2]) + ", " + str(res_above[3])
     next_sup = str(sup_below[-2]) + ", " + str(sup_below[-3]) + ", " + str(sup_below[-4])
     fib_pl(res_above[-1], sup_below[0])  # Fibonacci func
