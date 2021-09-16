@@ -40,7 +40,7 @@ Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier
 
 ## Support-Resistance Lines
 If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this process is touched at least 2 times, if possible 3 times. If there are more touches, the reliability increases. 
-
+If the current price is above the old resistance, this resistance will act as support. Vice versa is also true. 
 ## Indicators
 [MA](https://www.investopedia.com/terms/m/movingaverage.asp), 
 [RSI](https://www.investopedia.com/terms/r/rsi.asp), [Fibonacci Retracement Levels](https://www.investopedia.com/terms/f/fibonacciretracement.asp)
