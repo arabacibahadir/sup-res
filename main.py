@@ -4,7 +4,8 @@ import pandas_ta as ta
 from itertools import repeat
 
 
-# check csv files some data broken
+# daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
+# check csv files some data broken -> eth daily
 # daily-hourly? hourly priced model?
 # Rest api for other coins
 # Twitter api add
@@ -15,7 +16,7 @@ from itertools import repeat
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 def main():
     # nrows -> Number of candlesticks
-    csv = "Binance_solUSDT_d.csv"
+    csv = "Binance_btcUSDT_d.csv"
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
@@ -26,6 +27,8 @@ def main():
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
     fib = []
+    new_sup = []
+    new_res = []
 
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
@@ -68,13 +71,13 @@ def main():
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
+
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
-    # ASAPBUG : 3,1 with low sens sometimes giving short list -> list error
     for row in range(3, len(df)):
         if support(df, row, 3, 1):
-            ss.append((row, df.low[row], 1))
+            ss.append((row, df.low[row]))
         if resistance(df, row, 3, 1):
-            rr.append((row, df.high[row], 1))
+            rr.append((row, df.high[row]))
 
     # Closest sup-res lines
     sup_below = []
@@ -86,18 +89,23 @@ def main():
     for s in sup:
         if s < latest_close:
             sup_below.append(s)
-
+        else:
+            new_res.append(s)
     for r in res:
         if r > latest_close:
             res_above.append(r)
-
+        else:
+            new_sup.append(r)
+    # print(new_sup,"newres",new_res)
+    sup_below.extend(new_sup)
+    res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    if len(sup_below) < 3:
-        sup_below.extend(repeat(sup_below[0], 2))
+    if len(sup_below) < 5:
+        sup_below.extend(repeat(sup_below[0], 4))
 
     res_above = sorted(res_above)
-    if len(res_above) < 3:
-        res_above.extend(repeat(res_above[0], 2))
+    if len(res_above) < 5:
+        res_above.extend(repeat(res_above[0], 4))
 
     fib_pl(res_above[-1], sup_below[0])  # Fibonacci func
 
@@ -140,14 +148,14 @@ def main():
         y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines",
         marker=dict(color="MediumPurple", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:3]))}", mode="lines",
+        y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
         marker=dict(color="MediumPurple", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:3]))}", mode="lines",
+        y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[2:5]))}", mode="lines",
         marker=dict(color="LightSeaGreen", size=8)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
