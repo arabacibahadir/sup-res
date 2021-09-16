@@ -10,7 +10,6 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install librari
 pip install pandas
 pip install pandas-ta
 pip install plotly
-from itertools import repeat
 ```
 
 ## Usage
