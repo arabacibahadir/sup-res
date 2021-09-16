@@ -107,7 +107,7 @@ def main():
     if len(res_above) < 5:
         res_above.extend(repeat(res_above[0], 4))
 
-    fib_pl(res_above[-1], sup_below[0])  # Fibonacci func
+    fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
 
     c = 0
     # Drawing support lines
