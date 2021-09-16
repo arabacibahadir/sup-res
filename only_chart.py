@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 # get data 1h
 def main():
     # nrows -> Number of candlesticks
-    csv = "Binance_ETHUSDT_d.csv"
+    csv = "Binance_BTCUSDT_D.csv"
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254,
                      skiprows=[0])
     df = df.iloc[::-1]
