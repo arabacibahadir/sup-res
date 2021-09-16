@@ -145,20 +145,20 @@ def main():
         y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Resistance : {int(rr[-1][1])}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Resistance : {res_above[0]}", mode="markers+lines",
         marker=dict(color="MediumPurple", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
         marker=dict(color="MediumPurple", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Support : {int(ss[-1][1])}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Support : {sup_below[0]}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[2:5]))}", mode="lines",
-        marker=dict(color="LightSeaGreen", size=8)))
+        y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
+        marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" -------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
+        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
     fig.add_trace(go.Scatter(
