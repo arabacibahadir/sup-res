@@ -116,10 +116,10 @@ def main():
             break
         # Support Lines
         fig.add_shape(type='line', x0=ss[c][0] - 1, y0=ss[c][1],
-                      x1=len(df) + 30,
+                      x1=len(df) + 25,
                       y1=ss[c][1], line=dict(color="LightSeaGreen", width=2))
         # Support annotations
-        fig.add_annotation(x=len(df) + 10, y=ss[c][1], text=str(ss[c][1]),
+        fig.add_annotation(x=len(df) + 7, y=ss[c][1], text=str(ss[c][1]),
                            font=dict(size=15, color="LightSeaGreen"))
         c += 1
 
@@ -130,10 +130,10 @@ def main():
             break
         # Resistance Lines
         fig.add_shape(type='line', x0=rr[c][0] - 1, y0=rr[c][1],
-                      x1=len(df) + 30,
+                      x1=len(df) + 25,
                       y1=rr[c][1], line=dict(color="MediumPurple", width=1))
         # Resistance annotations
-        fig.add_annotation(x=len(df) + 30, y=rr[c][1], text=str(rr[c][1]),
+        fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
                            font=dict(size=15, color="MediumPurple"))
         c += 1
 
