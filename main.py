@@ -5,14 +5,10 @@ from itertools import repeat
 
 
 # daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
-# check csv files some data broken -> eth daily
 # daily-hourly? hourly priced model?
+# check csv files some data broken -> eth daily
 # Rest api for other coins
 # Twitter api add
-# Refactor var's
-# Add classes
-# price>res -> support, price< support -> res ->>> add
-# under current price, res'es are supports-> change line colors and for reverse
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 def main():
     # nrows -> Number of candlesticks
@@ -96,7 +92,7 @@ def main():
             res_above.append(r)
         else:
             new_sup.append(r)
-    # print(new_sup,"newres",new_res)
+
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
@@ -164,15 +160,13 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"RSI : {int(rsi[100])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume : {int(volume[1])} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
+        y=[ss[0]], name=f"Volume : {int(volume[1]):,.3f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10 : {int(sma10[-1])}",
                              line=dict(color='#5c6cff', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50 : {int(sma50[-1])}",
                              line=dict(color='#950fba', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
-    # fibs [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
-    # add class
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
