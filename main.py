@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 from itertools import repeat
-
+from candlestick import candlestick
 
 # daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
 # daily-hourly? hourly priced model?
@@ -10,6 +10,7 @@ from itertools import repeat
 # Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
+# Candlestick patterns
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_btcUSDT_d.csv"
@@ -64,6 +65,34 @@ def main():
                                     high=df['high'],
                                     low=df['low'],
                                     close=df['close'])])
+
+
+    df = candlestick.inverted_hammer(df, target='inverted_hammer')
+    df = candlestick.hammer(df, target='hammer')
+    df = candlestick.doji(df, target='doji')
+    df = candlestick.doji_star(df, target='doji_star')
+    df = candlestick.bearish_harami(df, target='bearish_harami')
+    df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
+    df = candlestick.bullish_harami(df, target='bullish_harami')
+    df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
+    df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
+    df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
+    df = candlestick.hanging_man(df, target='hanging_man')
+    df = candlestick.gravestone_doji(df, target='gravestone_doji')
+    df = candlestick.morning_star(df, target='morning_star')
+    df = candlestick.morning_star_doji(df, target='morning_star_doji')
+    df = candlestick.piercing_pattern(df, target='piercing_pattern')
+    df = candlestick.rain_drop(df, target='rain_drop')
+    df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
+    df = candlestick.star(df, target='star')
+    df = candlestick.shooting_star(df, target='shooting_star')
+    last_row = df.iloc[-1]
+    print(last_row)
+    # add -> if last_row True then add annotation about it
+    # ihammer=df.loc[df['inverted_hammer']==True,'inverted_hammer']
+    #
+    # df.to_csv('patterns.csv')
+
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
