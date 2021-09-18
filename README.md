@@ -32,7 +32,7 @@ A lot of investors are investing without having any technical knowledge. Those w
 I worked on a code that could provide help for users who don't have much experience. Errors can happen, support and resistance are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop. Watch out for high volume breakouts, sudden price changes and trend reversals.
 
 Every investor's wallet and strategy is different. Stay away from high leverage if you don't trust your experience. Your priority should not be to make money, you should be try to protect your money. 
-Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. Not every support and resistance works. 
+Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. Not every support and resistance works in high volatility. 
 
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
@@ -48,8 +48,12 @@ Never rely on just one piece of data, it can be misleading. Always include funda
 
 ![legend](https://user-images.githubusercontent.com/32988819/131736679-16f3b6c7-7a63-474d-a776-c9e24d8467f1.png)
 
-## LINKS - ADDs
-## Proofs
+## Proofs and some tests
 ![48500proof](https://user-images.githubusercontent.com/32988819/133648941-de7f0b2d-0780-4a11-8e6f-98d06b1f6ad1.png)
 ![works](https://user-images.githubusercontent.com/32988819/133649195-6645e31b-1736-4076-ba26-385063d4915e.png)
+
+## Contributing
+Pull requests are welcome. Before PR please open an issue what you would like to change.
+
+Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
 
