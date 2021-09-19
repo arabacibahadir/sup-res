@@ -94,11 +94,12 @@ def main():
                     pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
                 t += 1
 
-        for item in range(-2, -20, -1):
+        for item in range(-2, -38, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         print(pattern_list)
 
+    candlestick_patterns()
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
@@ -107,7 +108,6 @@ def main():
                                     high=df['high'],
                                     low=df['low'],
                                     close=df['close'])])
-    candlestick_patterns()
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
@@ -230,27 +230,13 @@ def main():
         y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
-    # !!! fix here -- add func
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[1]} -> {pattern_list[0]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[3]} -> {pattern_list[2]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[5]} -> {pattern_list[4]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[7]} -> {pattern_list[6]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[9]} -> {pattern_list[8]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[11]} -> {pattern_list[10]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[13]} -> {pattern_list[12]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[15]} -> {pattern_list[14]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"{pattern_list[17]} -> {pattern_list[16]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    for pat1 in range(1, 38, 2):
+        fig.add_trace(go.Scatter(
+            y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
+            marker=dict(color="#fcedfa", size=10)))
+
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', height=1250, width=2100,
