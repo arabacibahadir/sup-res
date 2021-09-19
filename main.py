@@ -94,7 +94,7 @@ def main():
                     pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
                 t += 1
 
-        for item in range(-2, -10, -1):
+        for item in range(-2, -20, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         print(pattern_list)
@@ -148,6 +148,8 @@ def main():
         res_above.extend(repeat(res_above[0], 4))
 
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
+    res_above = [int(a) for a in res_above]
+    sup_below = [int(a) for a in sup_below]
 
     c = 0
     # Drawing support lines
@@ -185,14 +187,14 @@ def main():
         y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Resistance : {res_above[0]}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Resistance : {int(res_above[0])}", mode="markers+lines",
         marker=dict(color="MediumPurple", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
         marker=dict(color="MediumPurple", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Support : {sup_below[0]}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Support : {int(sup_below[0])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
@@ -211,6 +213,7 @@ def main():
                              line=dict(color='#950fba', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
+    # add func? f string->namefunc
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
@@ -225,7 +228,29 @@ def main():
         y=[ss[0]], name=f"Fib 0.382: {int(fib[1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
+    # !!! fix here -- add func
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[1]} -> {pattern_list[0]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[3]} -> {pattern_list[2]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[5]} -> {pattern_list[4]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[7]} -> {pattern_list[6]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[9]} -> {pattern_list[8]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[11]} -> {pattern_list[10]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[13]} -> {pattern_list[12]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[15]} -> {pattern_list[14]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"{pattern_list[17]} -> {pattern_list[16]}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', height=1250, width=2100,
