@@ -27,7 +27,7 @@ def main():
     fib = []
     new_sup = []
     new_res = []
-
+    pattern_list = []
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
             if price1.low[i] > price1.low[i - 1]:
@@ -82,17 +82,22 @@ def main():
         last_row = df.iloc[-1]
 
         # add func
-        t=0
-        pattern_find=[]
-        for col in df.columns:
-            pattern_find.append(col)
-        print(pattern_find)
-        for i in last_row:
-            if i == True:
-                print(f"{t=}",df.iloc[-1][t])
-                print(pattern_find[t])
-            t+=1
-
+        def pattern_find_func():
+            t=0
+            pattern_find=[]
+            for col in df.columns:
+                pattern_find.append(col)
+            # print(pattern_find)
+            for i in last_row:
+                if i == True:
+                    # list'e ekle önce list tanımla. bu listte tarih ve pattern adı olacak.
+                    # print(f"{t=}",df.iloc[-1][t])
+                    pattern_list.append(pattern_find[t])
+                    print(pattern_find[t])
+                    print(pattern_list)
+                # else listeye ekleme
+                t+=1
+        pattern_find_func()
 
         # print(last_row)  # Instead of print, add annotations
         # add a variable for history and annotations -- maybe pandastail?
@@ -107,14 +112,6 @@ def main():
                                     low=df['low'],
                                     close=df['close'])])
     candlestick_patterns()
-    # df.to_csv('all.csv')
-
-    # trues.to_csv('trues.csv')
-
-    # trues.to_csv('trues.csv')
-    # ihammer=df.loc[df['inverted_hammer']==True,'inverted_hammer']
-    #
-    # df.to_csv('patterns.csv')
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
