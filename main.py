@@ -80,7 +80,23 @@ def main():
         df = candlestick.star(df, target='star')
         df = candlestick.shooting_star(df, target='shooting_star')
         last_row = df.iloc[-1]
-        print(last_row)  # Instead of print, add annotations
+
+        # add func
+        t=0
+        pattern_find=[]
+        for col in df.columns:
+            pattern_find.append(col)
+        print(pattern_find)
+        for i in last_row:
+            if i == True:
+                print(f"{t=}",df.iloc[-1][t])
+                print(pattern_find[t])
+            t+=1
+
+
+        # print(last_row)  # Instead of print, add annotations
+        # add a variable for history and annotations -- maybe pandastail?
+        # last trueları bul ve son 10 tanesini yaz?
 
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
@@ -90,9 +106,12 @@ def main():
                                     high=df['high'],
                                     low=df['low'],
                                     close=df['close'])])
-
     candlestick_patterns()
-    # add -> if last_row True then add annotation about it
+    # df.to_csv('all.csv')
+
+    # trues.to_csv('trues.csv')
+
+    # trues.to_csv('trues.csv')
     # ihammer=df.loc[df['inverted_hammer']==True,'inverted_hammer']
     #
     # df.to_csv('patterns.csv')
@@ -221,7 +240,7 @@ def main():
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
-    fig.show()
+    # fig.show()
 
 
 if __name__ == "__main__":
