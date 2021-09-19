@@ -4,6 +4,7 @@ import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
 
+
 # daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
 # daily-hourly? hourly priced model?
 # check csv files some data broken -> eth daily
@@ -57,6 +58,30 @@ def main():
             retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
+    def candlestick_patterns():
+        nonlocal df
+        df = candlestick.inverted_hammer(df, target='inverted_hammer')
+        df = candlestick.hammer(df, target='hammer')
+        df = candlestick.doji(df, target='doji')
+        df = candlestick.doji_star(df, target='doji_star')
+        df = candlestick.bearish_harami(df, target='bearish_harami')
+        df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
+        df = candlestick.bullish_harami(df, target='bullish_harami')
+        df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
+        df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
+        df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
+        df = candlestick.hanging_man(df, target='hanging_man')
+        df = candlestick.gravestone_doji(df, target='gravestone_doji')
+        df = candlestick.morning_star(df, target='morning_star')
+        df = candlestick.morning_star_doji(df, target='morning_star_doji')
+        df = candlestick.piercing_pattern(df, target='piercing_pattern')
+        df = candlestick.rain_drop(df, target='rain_drop')
+        df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
+        df = candlestick.star(df, target='star')
+        df = candlestick.shooting_star(df, target='shooting_star')
+        last_row = df.iloc[-1]
+        print(last_row)  # Instead of print, add annotations
+
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
@@ -66,33 +91,11 @@ def main():
                                     low=df['low'],
                                     close=df['close'])])
 
-
-    df = candlestick.inverted_hammer(df, target='inverted_hammer')
-    df = candlestick.hammer(df, target='hammer')
-    df = candlestick.doji(df, target='doji')
-    df = candlestick.doji_star(df, target='doji_star')
-    df = candlestick.bearish_harami(df, target='bearish_harami')
-    df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
-    df = candlestick.bullish_harami(df, target='bullish_harami')
-    df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
-    df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
-    df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
-    df = candlestick.hanging_man(df, target='hanging_man')
-    df = candlestick.gravestone_doji(df, target='gravestone_doji')
-    df = candlestick.morning_star(df, target='morning_star')
-    df = candlestick.morning_star_doji(df, target='morning_star_doji')
-    df = candlestick.piercing_pattern(df, target='piercing_pattern')
-    df = candlestick.rain_drop(df, target='rain_drop')
-    df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
-    df = candlestick.star(df, target='star')
-    df = candlestick.shooting_star(df, target='shooting_star')
-    last_row = df.iloc[-1]
-    print(last_row)
+    candlestick_patterns()
     # add -> if last_row True then add annotation about it
     # ihammer=df.loc[df['inverted_hammer']==True,'inverted_hammer']
     #
     # df.to_csv('patterns.csv')
-
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
