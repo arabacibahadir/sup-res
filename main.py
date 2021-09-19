@@ -25,6 +25,7 @@ def main():
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
     fib = []
+    fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
     new_sup = []
     new_res = []
     pattern_list = []
@@ -48,12 +49,12 @@ def main():
         return 1
 
     # -> Fibonacci Price Level between highest resistance line and lowest support line
+
     def fib_pl(high_price, low_price):
         """ Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
          In this code section we will use only lines, not the highest and lowest prices on chart.
          Be careful on that, this fib levels can be wrong and irrelevant.
         """
-        fib_multipliers = [0.236, 0.382, 0.5, 0.618, 0.786, 1.382, 1.618]
         for multi in fib_multipliers:
             # -> Downtrend Fibonacci Retracement Formula we use in here
             retracement_levels = low_price + (high_price - low_price) * multi
@@ -94,7 +95,7 @@ def main():
                     pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
                 t += 1
 
-        for item in range(-2, -38, -1):
+        for item in range(-2, -34, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         print(pattern_list)
@@ -214,28 +215,21 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
     # add func? f string->namefunc
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 1.618: {int(fib[6])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 1.382: {int(fib[5])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 0.786: {int(fib[4])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 0.618: {int(fib[3])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 0.500: {int(fib[2])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 0.382: {int(fib[1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Fib 0.236: {int(fib[0])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    mtp = 6
+    for _ in fib:
+        fig.add_trace(go.Scatter(
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f}: {int(fib[mtp])}", mode="lines",
+            marker=dict(color="#fcedfa", size=10)))
+        mtp -= 1
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    for pat1 in range(1, 38, 2):
+    for pat1 in range(1, 34, 2):
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
+
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
