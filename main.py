@@ -11,7 +11,7 @@ from candlestick import candlestick
 # Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
-# Candlestick patterns
+# add new func for download-api-csv
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_btcUSDT_d.csv"
@@ -28,6 +28,7 @@ def main():
     new_sup = []
     new_res = []
     pattern_list = []
+
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
             if price1.low[i] > price1.low[i - 1]:
@@ -79,29 +80,24 @@ def main():
         df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
         df = candlestick.star(df, target='star')
         df = candlestick.shooting_star(df, target='shooting_star')
-        last_row = df.iloc[-1]
+        pattern_find = []
 
-        # add func
-        def pattern_find_func():
-            t=0
-            pattern_find=[]
+        def pattern_find_func(last_row):
+
             for col in df.columns:
                 pattern_find.append(col)
-            # print(pattern_find)
+            t = 0
             for i in last_row:
                 if i == True:
-                    # list'e ekle önce list tanımla. bu listte tarih ve pattern adı olacak.
-                    # print(f"{t=}",df.iloc[-1][t])
+                    # even pattern, odd date
                     pattern_list.append(pattern_find[t])
-                    print(pattern_find[t])
-                    print(pattern_list)
-                # else listeye ekleme
-                t+=1
-        pattern_find_func()
+                    pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
+                t += 1
 
-        # print(last_row)  # Instead of print, add annotations
-        # add a variable for history and annotations -- maybe pandastail?
-        # last trueları bul ve son 10 tanesini yaz?
+        for item in range(-1, -10, -1):
+            last_row = df.iloc[item]
+            pattern_find_func(last_row)
+        print(pattern_list)
 
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
@@ -237,7 +233,7 @@ def main():
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
-    # fig.show()
+    fig.show()
 
 
 if __name__ == "__main__":
