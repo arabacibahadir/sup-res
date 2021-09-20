@@ -24,7 +24,9 @@ You can get various csv files from [here](https://www.cryptodatadownload.com/dat
 When you run the code, the local web page will open where you can see the support resistance zones, rsi, sma, fibonacci.
 
 *May not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing the data. 
-![btc_daily](https://user-images.githubusercontent.com/32988819/131736526-fdd818d1-f52b-4f33-be98-eb8810f4fa01.png)
+
+![btc_daily20eylul](https://user-images.githubusercontent.com/32988819/133989548-a22acc25-bd41-4a3f-90a7-0b9bd21a7f39.png)
+
 If you encounter an index error, try the only_chart.py version. 
 ## Main Motivation
 A lot of investors are investing without having any technical knowledge. Those with a little experience follow the price movements and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
