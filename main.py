@@ -6,12 +6,12 @@ from candlestick import candlestick
 
 
 # daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
-# daily-hourly? hourly priced model?
 # check csv files some data broken -> eth daily
 # Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
+# For daily chart usage.
 def main():
     # nrows -> Number of candlesticks
     csv = "Binance_btcUSDT_d.csv"
@@ -205,7 +205,7 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI : {int(rsi[100])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+        y=[ss[0]], name=f"RSI : {int(rsi[-1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume : {int(volume[1]):,.3f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10 : {int(sma10[-1])}",
@@ -214,7 +214,6 @@ def main():
                              line=dict(color='#950fba', width=3)))
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
-    # add func? f string->namefunc
     mtp = 6
     for _ in fib:
         fig.add_trace(go.Scatter(
@@ -229,7 +228,6 @@ def main():
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
-
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
