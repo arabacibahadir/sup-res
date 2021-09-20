@@ -208,12 +208,12 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"RSI : {int(rsi[-1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume : {int(volume[1]):,.3f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10 : {int(sma10[-1])}",
+        y=[ss[0]], name=f"Volume   : {int(volume[1]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10    : {int(sma10[-1])}",
                              line=dict(color='#5c6cff', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50 : {int(sma50[-1])}",
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50    : {int(sma50[-1])}",
                              line=dict(color='#950fba', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100 : {int(sma100[-1])}",
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100  : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
     mtp = 6
     for _ in fib:
