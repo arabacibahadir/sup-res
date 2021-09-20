@@ -23,7 +23,7 @@ You can get various csv files from [here](https://www.cryptodatadownload.com/dat
 
 When you run the code, the local web page will open where you can see the support resistance zones, rsi, sma, fibonacci.
 
-*May not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing the data. 
+*May not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data. 
 
 ![btc_daily20eylul](https://user-images.githubusercontent.com/32988819/133989548-a22acc25-bd41-4a3f-90a7-0b9bd21a7f39.png)
 
