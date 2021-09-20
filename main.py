@@ -4,7 +4,7 @@ import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
 
-
+# more sup and res -> legend
 # daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
 # check csv files some data broken -> eth daily
 # Rest api for other coins
@@ -142,12 +142,12 @@ def main():
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    if len(sup_below) < 5:
-        sup_below.extend(repeat(sup_below[0], 4))
+    if len(sup_below) < 10:
+        sup_below.extend(repeat(sup_below[0], 9))
 
     res_above = sorted(res_above)
-    if len(res_above) < 5:
-        res_above.extend(repeat(res_above[0], 4))
+    if len(res_above) < 10:
+        res_above.extend(repeat(res_above[0], 9))
 
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
     res_above = [int(a) for a in res_above]
@@ -194,6 +194,9 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
         marker=dict(color="MediumPurple", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:9]))}", mode="lines",
+        marker=dict(color="#fcedfa", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {int(sup_below[0])}", mode="markers+lines",
@@ -201,6 +204,9 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
         marker=dict(color="LightSeaGreen", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:9]))}", mode="lines",
+        marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
