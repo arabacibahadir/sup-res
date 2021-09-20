@@ -29,7 +29,7 @@ When you run the code, the local web page will open where you can see the suppor
 
 _Click an image to view at full size._
 
-If you encounter an index error, try the *only_chart.py* version. Index bugs will be fixed.
+>If you encounter an index error, try the *only_chart.py* version. Index bugs will be fixed.
 ## Main Motivation
 A lot of investors are investing without having any technical knowledge. Those with a little experience follow the price movements and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
 
