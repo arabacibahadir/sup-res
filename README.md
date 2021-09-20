@@ -25,7 +25,8 @@ When you run the code, the local web page will open where you can see the suppor
 
 *May not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data. 
 
-![btc_daily20eylul](https://user-images.githubusercontent.com/32988819/133989548-a22acc25-bd41-4a3f-90a7-0b9bd21a7f39.png)
+![btc_daily20sepwithchart](https://user-images.githubusercontent.com/32988819/133991640-b20ac4c8-f4be-4af7-a279-5118a5b490b5.png)
+
 _Click an image to view at full size._
 
 If you encounter an index error, try the only_chart.py version. 
