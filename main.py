@@ -11,6 +11,7 @@ from candlestick import candlestick
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
+# Trendline?
 # For daily chart usage.
 def main():
     # nrows -> Number of candlesticks
