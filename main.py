@@ -5,8 +5,8 @@ from itertools import repeat
 from candlestick import candlestick
 import get_data
 
+# ADD Settings file
 # For hourly chart fix xaxis error - xtick?
-# Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
@@ -102,6 +102,7 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         # print(pattern_list)
+
     candlestick_patterns()
 
     def drop_null():  # Drop NULL values
