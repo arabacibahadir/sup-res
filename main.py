@@ -4,37 +4,28 @@ import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
 
-# more sup and res -> legend
-# daily working but hourly gives same date -> add hours for chart !DAILY -> try without dates--x-line
-# check csv files some data broken -> eth daily
+
 # Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
-# Trendline?
-# For daily chart usage.
+# add macd crossovers on chart? compare negative to positive
 def main():
-    # nrows -> Number of candlesticks
     csv = "Binance_btcUSDT_d.csv"
-    df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
-
-    # def remove_null():    # Drop zeros
-    #     print(len(df))
-    #     for col in
-    #     indexZeros = df[df['tradecount']==0].index
-    #     df.drop(indexZeros,inplace=True)
-    #     df.isna().sum()
-    #     print(len(df))
-    # remove_null()
+    candle_count = 254  # Number of candlesticks
+    df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, skiprows=[0], nrows=candle_count,
+                     keep_default_na=False)
     df = df.iloc[::-1]
+    for_macd = df['close']
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
-    df = df.append(df.tail(1), ignore_index = True) # Dodging algorithm issue
+    df = df.append(df.tail(1), ignore_index=True)  # Dodging algorithm issue
     volume = list(reversed((df['Volume USDT'])))
     sma10 = list((df.ta.sma(10)))
     sma50 = list((df.ta.sma(50)))
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
+    macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
     fib = []
     fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
     new_sup = []
@@ -106,12 +97,22 @@ def main():
                     pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
                 t += 1
 
-        for item in range(-2, -34, -1):
+        for item in range(-2, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
-        print(pattern_list)
+        # print(pattern_list)
 
     candlestick_patterns()
+
+    def drop_null():  # Drop NULL values
+
+        for col in df.columns:
+            index_null = df[df[col] == "NULL"].index
+            df.drop(index_null, inplace=True)
+            df.isna().sum()
+
+    drop_null()
+
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
@@ -125,7 +126,7 @@ def main():
     rr = []  # rr : Resistance list
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
-    for row in range(3, len(df)-1):
+    for row in range(3, len(df) - 1):
         if support(df, row, 3, 1):
             ss.append((row, df.low[row]))
         if resistance(df, row, 3, 1):
@@ -222,26 +223,29 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI : {int(rsi[-1])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+        y=[ss[0]], name=f"RSI         : {int(rsi[-3])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume   : {int(volume[1]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10    : {int(sma10[-1])}",
+        y=[ss[0]], name=f"MACD      : {int(macd['MACDs_12_26_9'][1])}", mode="lines",
+        marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
                              line=dict(color='#5c6cff', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50    : {int(sma50[-1])}",
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
                              line=dict(color='#950fba', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100  : {int(sma100[-1])}",
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
     mtp = 6
     for _ in fib:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f}: {int(fib[mtp])}", mode="lines",
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {int(fib[mtp])}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
         mtp -= 1
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    for pat1 in range(1, 34, 2):
+    for pat1 in range(1, 30, 2):
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
