@@ -5,6 +5,7 @@ from itertools import repeat
 from candlestick import candlestick
 
 
+# For hourly chart fix xaxis error - xtick?
 # Rest api for other coins
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
@@ -26,7 +27,6 @@ def main():
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    print(macd)
     fib = []
     fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
     new_sup = []
@@ -102,7 +102,6 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         # print(pattern_list)
-
     candlestick_patterns()
 
     def drop_null():  # Drop NULL values
