@@ -12,5 +12,3 @@ def download_data():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     open('Binance_BTCUSDT_d.csv', 'wb').write(req.content)
 
-
-download_data()
