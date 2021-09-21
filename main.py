@@ -26,6 +26,7 @@ def main():
     sma100 = list((df.ta.sma(100)))
     rsi = list((ta.rsi(df['close'])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
+    print(macd)
     fib = []
     fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
     new_sup = []
@@ -225,7 +226,7 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"RSI         : {int(rsi[-3])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"MACD      : {int(macd['MACDs_12_26_9'][1])}", mode="lines",
+        y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
         marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
