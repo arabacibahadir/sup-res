@@ -18,7 +18,7 @@ pip install candlestick-patterns-subodh101
 Your csv file should be in the folder where the python code is. Then you should write the file name to the csv variable in the code, probably "Binance_BTCUSDT_d.csv" is written in the code, you will write the name of your csv file there.
 
 ````bash
-csv="Binance_BTCUDT_d.csv"
+csv="Binance_BTCUSDT_d.csv"
 ````
 You can get various csv files from [here](https://www.cryptodatadownload.com/data/). You can select the exchanges and then download the csv files of the what crypto you want.
 
