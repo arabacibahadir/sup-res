@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
-
+import get_data
 
 # For hourly chart fix xaxis error - xtick?
 # Rest api for other coins
@@ -261,4 +261,5 @@ def main():
 
 
 if __name__ == "__main__":
+    get_data.download_data()
     main()
