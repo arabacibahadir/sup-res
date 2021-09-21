@@ -17,9 +17,19 @@ def main():
     # nrows -> Number of candlesticks
     csv = "Binance_btcUSDT_d.csv"
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, skiprows=[0])
+
+    # def remove_null():    # Drop zeros
+    #     print(len(df))
+    #     for col in
+    #     indexZeros = df[df['tradecount']==0].index
+    #     df.drop(indexZeros,inplace=True)
+    #     df.isna().sum()
+    #     print(len(df))
+    # remove_null()
     df = df.iloc[::-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
+    df = df.append(df.tail(1), ignore_index = True) # Dodging algorithm issue
     volume = list(reversed((df['Volume USDT'])))
     sma10 = list((df.ta.sma(10)))
     sma50 = list((df.ta.sma(50)))
@@ -115,7 +125,7 @@ def main():
     rr = []  # rr : Resistance list
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
-    for row in range(3, len(df)):
+    for row in range(3, len(df)-1):
         if support(df, row, 3, 1):
             ss.append((row, df.low[row]))
         if resistance(df, row, 3, 1):
