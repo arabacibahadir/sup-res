@@ -1,18 +1,18 @@
+import os
 import pandas as pd
 import plotly.graph_objects as go
 import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
-import os
 import get_data
-
+import settings
 # Heatmap?
 # For hourly chart fix xaxis error - xtick?
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
 # add macd crossovers on chart? compare negative to positive
-import settings
+
 
 
 def main():
