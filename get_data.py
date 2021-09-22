@@ -7,8 +7,7 @@ import settings
 
 def download_data():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    coin_url = 'https://www.cryptodatadownload.com/cdd/' + settings.exchange_name + "_" + settings.coin_name + settings.pair_name + "_" + settings.time_series + ".csv"
+    coin_url = str('https://www.cryptodatadownload.com/cdd/' + settings.exchange_name + "_" + settings.coin_name + settings.pair_name + "_" + settings.time_series + ".csv")
     req = requests.get(coin_url, verify=False)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    open('Binance_BTCUSDT_d.csv', 'wb').write(req.content)
+    open(settings.full_filename, 'wb').write(req.content)
 

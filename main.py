@@ -3,16 +3,21 @@ import plotly.graph_objects as go
 import pandas_ta as ta
 from itertools import repeat
 from candlestick import candlestick
+import os
 import get_data
 
-# ADD Settings file
+# Heatmap?
 # For hourly chart fix xaxis error - xtick?
 # Twitter api add
 # from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
 # add new func for download-api-csv
 # add macd crossovers on chart? compare negative to positive
+import settings
+
+
 def main():
-    csv = "Binance_btcUSDT_d.csv"
+    csv = settings.full_filename
+    print(f"{csv} data analysis in progress.")
     candle_count = 254  # Number of candlesticks
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, skiprows=[0], nrows=candle_count,
                      keep_default_na=False)
@@ -259,8 +264,19 @@ def main():
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.show()
+    print("Data analysis is done. Browser opening.")
 
 
 if __name__ == "__main__":
     get_data.download_data()
+    if os.path.isfile(settings.full_filename):  # <- Checks .csv file is there or not
+        print(f"{settings.full_filename} downloaded and created.")
+    else:
+        print(
+            "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
     main()
+    if os.path.exists(settings.full_filename):  # <- Deleting .csv file
+        os.remove(settings.full_filename)
+        print(f"{settings.full_filename} deleted.")
+    else:
+        print("The file does not exist.")
