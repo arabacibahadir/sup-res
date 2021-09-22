@@ -26,7 +26,8 @@ When you run the code, the local web page will open where you can see the suppor
 
 >May not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
 
-![btc_daily20sepwithchart](https://user-images.githubusercontent.com/32988819/133991640-b20ac4c8-f4be-4af7-a279-5118a5b490b5.png)
+![mainchart](https://user-images.githubusercontent.com/32988819/134344413-47181df6-9fab-4ad0-b3a5-96311ae6af22.png)
+
 
 _Click an image to view at full size._
 
@@ -57,6 +58,8 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 
 ## Proofs and some tests
 ![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
+
+![proof22](https://user-images.githubusercontent.com/32988819/134344483-7bb93cb7-ab29-4505-82bd-06f387e992c5.png)
 
 ![48500proof](https://user-images.githubusercontent.com/32988819/133648941-de7f0b2d-0780-4a11-8e6f-98d06b1f6ad1.png)
 
