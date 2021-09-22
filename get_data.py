@@ -1,8 +1,8 @@
 # This is for updating and getting data.
 # https://www.cryptodatadownload.com/data/
-import urllib3
 import requests
 import settings
+import urllib3
 
 
 def download_data():
