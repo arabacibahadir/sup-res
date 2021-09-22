@@ -1,5 +1,6 @@
 # Settings
 # Which ones available usdt,usd,btc based like
+# Check strings
 
 exchange_name = 'Binance'
 coin_name = 'BTC'

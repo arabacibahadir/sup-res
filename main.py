@@ -1,19 +1,11 @@
 import os
 import pandas as pd
 import plotly.graph_objects as go
+from candlestick import candlestick
 import pandas_ta as ta
 from itertools import repeat
-from candlestick import candlestick
 import get_data
 import settings
-
-
-# Heatmap?
-# For hourly chart fix xaxis error - xtick?
-# Twitter api add
-# from other exchanges(ftx,coinbase etc.) sup res levels and difference and percentage of sup res levels?
-# add new func for download-api-csv
-# add macd crossovers on chart? compare negative to positive
 
 
 def main():
@@ -266,6 +258,11 @@ def main():
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.show()
     print("Data analysis is done. Browser opening.")
+    if os.path.exists(settings.full_filename):  # <- Delete .csv file
+        os.remove(settings.full_filename)
+        print(f"{settings.full_filename} deleted.")
+    else:
+        print("The file does not exist.")
 
 
 if __name__ == "__main__":
@@ -276,8 +273,3 @@ if __name__ == "__main__":
         print(
             "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
     main()
-    if os.path.exists(settings.full_filename):  # <- Deleting .csv file
-        os.remove(settings.full_filename)
-        print(f"{settings.full_filename} deleted.")
-    else:
-        print("The file does not exist.")
