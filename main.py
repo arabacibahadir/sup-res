@@ -1,9 +1,13 @@
 import os
+
+import pandas
 import pandas as pd
 import plotly.graph_objects as go
 from candlestick import candlestick
 import pandas_ta as ta
 from itertools import repeat
+
+import delete_file
 import get_data
 import settings
 
@@ -257,15 +261,11 @@ def main():
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.show()
-    print("Data analysis is done. Browser opening.")
-    if os.path.exists(settings.full_filename):  # <- Delete .csv file
-        os.remove(settings.full_filename)
-        print(f"{settings.full_filename} deleted.")
-    else:
-        print("The file does not exist.")
 
 
 if __name__ == "__main__":
+
+    settings.check_names()
     get_data.download_data()
     if os.path.isfile(settings.full_filename):  # <- Checks .csv file is there or not
         print(f"{settings.full_filename} downloaded and created.")
@@ -273,3 +273,4 @@ if __name__ == "__main__":
         print(
             "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
     main()
+    delete_file.remove()
