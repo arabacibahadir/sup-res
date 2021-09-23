@@ -1,4 +1,4 @@
-import sys,os
+import sys
 """
 SETTINGS -> exchange_coins.xlsx
 Exchanges : BINANCE, BITFINEX, BITSTAMP, FTX, GEMINI, KUCOIN, POLONIEX
@@ -47,6 +47,3 @@ def check_names():
     if time_series not in ('d', 'h'):
         print("Time series should be \'d' for daily, 'h' for hourly. Please check 'time_series' variable")
         sys.exit()
-
-
-
