@@ -1,6 +1,6 @@
 import os
 
-import pandas
+
 import pandas as pd
 import plotly.graph_objects as go
 from candlestick import candlestick
