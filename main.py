@@ -9,6 +9,7 @@ import delete_file
 import get_data
 import settings
 import tweet
+import time
 
 
 def main():
@@ -264,11 +265,11 @@ def main():
     image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
     fig.write_image(image)  # Save image for tweet
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-    # add linked tweet to this tweet -> sup res list
-
+    tweet.api.update_status(
+        f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}")
     tweet.send_tweet(image,
-                     f"#{settings.exchange_name}  #{settings.coin_name}{settings.pair_name} support and resistance levels")
-    # tweet.api.update_status("RESsup list") #add here
+                     f"#{settings.exchange_name}  #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%y')[candle_count]}")
+
     fig.show()
 
 
