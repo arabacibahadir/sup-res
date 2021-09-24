@@ -1,6 +1,6 @@
 # This is for tweeting through api.
 import tweepy
-import twaccess
+import twaccess # Change this as git_tw_access.py
 
 api_key = twaccess.tw_api
 api_key_secret = twaccess.tw_key_secret
