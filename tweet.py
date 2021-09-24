@@ -12,4 +12,7 @@ authenticator.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(authenticator, wait_on_rate_limit=True)
 
-api.update_status("test")
+
+def send_tweet(media,tweet):
+    return api.update_with_media(media,tweet)
+

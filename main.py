@@ -8,6 +8,7 @@ from itertools import repeat
 import delete_file
 import get_data
 import settings
+import tweet
 
 
 def main():
@@ -260,9 +261,14 @@ def main():
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     if not os.path.exists("images"):
         os.mkdir("images")
-    fig.write_image(
-        f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg")  # Save image for tweet
+    image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
+    fig.write_image(image)  # Save image for tweet
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
+    # add linked tweet to this tweet -> sup res list
+
+    tweet.send_tweet(image,
+                     f"#{settings.exchange_name}  #{settings.coin_name}{settings.pair_name} support and resistance levels")
+    # tweet.api.update_status("RESsup list") #add here
     fig.show()
 
 
@@ -277,5 +283,3 @@ if __name__ == "__main__":
             "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
     main()
     delete_file.remove()
-
-    # tweet önce sup-res listesi ardından foto.
