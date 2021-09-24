@@ -21,6 +21,7 @@ exchange_name = 'Binance'
 coin_name = 'BTC'
 pair_name = 'USDT'
 time_series = 'd'
+file_name = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series)
 full_filename = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series + ".csv")
 exc_pair = coin_name + "/" + pair_name
 

@@ -1,4 +1,5 @@
 import os
+import kaleido
 import pandas as pd
 import plotly.graph_objects as go
 from candlestick import candlestick
@@ -257,7 +258,11 @@ def main():
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
+    if not os.path.exists("images"):
+        os.mkdir("images")
+    fig.write_image(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg") # Save image for tweet
     fig.show()
+
 
 
 if __name__ == "__main__":
@@ -270,4 +275,8 @@ if __name__ == "__main__":
         print(
             "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
     main()
+
+    # foto al
     delete_file.remove()
+
+    # tweet önce sup-res listesi ardından foto.
