@@ -45,5 +45,5 @@ def check_names():
         sys.exit()
 
     if time_series not in ('d', 'h'):
-        print("Time series should be \'d' for daily, 'h' for hourly. Please check 'time_series' variable")
+        print("Time series should be 'd' for daily, 'h' for hourly. Please check 'time_series' variable")
         sys.exit()
