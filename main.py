@@ -265,11 +265,19 @@ def main():
     image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
     fig.write_image(image)  # Save image for tweet
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-    tweet.api.update_status(
-        f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}")
-    tweet.send_tweet(image,
-                     f"#{settings.exchange_name}  #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%y')[candle_count]}")
 
+    # print(tweet.statuses[0].text,tweet.statuses[0].id)
+    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
+    tweet.send_tweet(image, text_image)
+    # check for bugs -> while true it doesnt work. if not works?
+    while tweet.is_image_tweet().text != text_image:
+        time.sleep(1)
+        if tweet.is_image_tweet().text != text_image:
+            tweet.api.update_status(status=
+                                    f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                    f"daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                    in_reply_to_status_id=tweet.is_image_tweet().id)
+        break
     fig.show()
 
 
