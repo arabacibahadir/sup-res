@@ -1,6 +1,6 @@
 # Sup-Res
 
-Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with scalable chart.
+Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart.
 
 ![cropedgif](https://user-images.githubusercontent.com/32988819/134764951-b52bb659-f0d6-455d-a995-05c716564a12.gif)
 _Click an image to view at full size._
