@@ -96,3 +96,6 @@ Pull requests are welcome. Before PR please open an issue what you would like to
 
 Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
 
+## License
+Sup-Res is licensed under the GNU General Public License v3.0
+
