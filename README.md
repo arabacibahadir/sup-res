@@ -6,7 +6,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for d
 _Click an image to view at full size._
 ## Features
 
-- Easily find support and resistance levels on the daily chart
+- Easily find support and resistance levels on the chart
 - Using it in almost any time series with sensitivity adjustment 
 - Export documents as HTML, PDF, .jpeg, .png
 - Share to twitter easily with image and support and resistance levels text automatically
