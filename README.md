@@ -1,5 +1,5 @@
 # Sup-Res
-_For online preview_ -> https://git.io/JzXJq
+_For online preview_ -> https://arabacibahadir.github.io/sup-res/
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart.
 
