@@ -256,7 +256,7 @@ def main():
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
-                      paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', height=1250, width=2100,
+                      paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa',
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
