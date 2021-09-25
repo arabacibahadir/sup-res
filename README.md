@@ -3,7 +3,7 @@
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with scalable chart.
 
 ![cropedgif](https://user-images.githubusercontent.com/32988819/134764951-b52bb659-f0d6-455d-a995-05c716564a12.gif)
-
+_Click an image to view at full size._
 
 ## Features
 
@@ -51,7 +51,7 @@ When you run the code, the local web page will open where you can see the suppor
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
 
 ![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
-_Click an image to view at full size._
+
 
 
 >If you encounter an index error, try the *only_chart.py* version. Some data may be corrupt or not working. 
