@@ -62,8 +62,11 @@ I worked on a code that could provide help for users who don't have much experie
 
 Support and resistance are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop. Watch out for high volume breakouts, sudden price changes and trend reversals. If you are investing low volume coin, it is very dangerous to trade on new coin charts without support and resistance levels. 
 
-Every investor's wallet and strategy is different. Stay away from **high leverage** if you don't trust your experience. Your priority should **not** be to make money, you should be try to save your money. 
-Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. Not every support and resistance works in **high volatility**. 
+- Every investor's wallet and strategy is different.
+- Stay away from **high leverage** if you don't trust your experience.
+- Your priority should **not** be to make money, you should be try to save your money. 
+- Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. 
+- Not every support and resistance works in **high volatility**. 
 
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
