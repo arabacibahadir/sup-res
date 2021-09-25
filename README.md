@@ -2,8 +2,9 @@
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with scalable chart.
 
-![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
-_Click an image to view at full size._
+![cropedgif](https://user-images.githubusercontent.com/32988819/134764951-b52bb659-f0d6-455d-a995-05c716564a12.gif)
+
+
 ## Features
 
 - Easily find support and resistance levels on the chart
@@ -49,10 +50,8 @@ When you run the code, the local web page will open where you can see the suppor
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
 
-
-_ETHUSDT_ example chart
-![ethusdt](https://user-images.githubusercontent.com/32988819/134763471-d5abe6ac-bb80-4dcb-94db-5d491802a8d7.png)
-
+![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
+_Click an image to view at full size._
 
 
 >If you encounter an index error, try the *only_chart.py* version. Some data may be corrupt or not working. 
@@ -85,6 +84,12 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 
 
 ## Some screenshots
+_ETHUSDT_ example chart
+
+![ethusdt](https://user-images.githubusercontent.com/32988819/134763471-d5abe6ac-bb80-4dcb-94db-5d491802a8d7.png)
+
+_BTCUSDT_ levels
+
 ![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
 
 ![proof22](https://user-images.githubusercontent.com/32988819/134344483-7bb93cb7-ab29-4505-82bd-06f387e992c5.png)
