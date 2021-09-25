@@ -10,6 +10,7 @@ import get_data
 import settings
 import tweet
 import time
+# #BUGFIX: If price float returns int
 
 
 def main():
@@ -267,17 +268,22 @@ def main():
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
 
     # print(tweet.statuses[0].text,tweet.statuses[0].id)
-    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
-    tweet.send_tweet(image, text_image)
     # check for bugs -> while true it doesnt work. if not works?
-    while tweet.is_image_tweet().text != text_image:
-        time.sleep(1)
-        if tweet.is_image_tweet().text != text_image:
-            tweet.api.update_status(status=
-                                    f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                    f"daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
-                                    in_reply_to_status_id=tweet.is_image_tweet().id)
-        break
+
+    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
+
+    def for_tweet():
+        tweet.send_tweet(image, text_image)
+        while tweet.is_image_tweet().text != text_image:
+            time.sleep(1)
+            if tweet.is_image_tweet().text != text_image:
+                tweet.api.update_status(status=
+                                        f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                        f"daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                        in_reply_to_status_id=tweet.is_image_tweet().id)
+            break
+
+    # for_tweet()
     fig.show()
 
 
