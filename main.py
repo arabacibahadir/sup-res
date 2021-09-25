@@ -258,7 +258,7 @@ def main():
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa',
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
-                      legend=dict(bgcolor='#fcedfa'))
+                      legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     if not os.path.exists("images"):
