@@ -10,6 +10,8 @@ import get_data
 import settings
 import tweet
 import time
+
+
 # #BUGFIX: If price float returns int
 
 
@@ -195,7 +197,6 @@ def main():
         fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
                            font=dict(size=15, color="MediumPurple"))
         c += 1
-
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name="Resistance", mode="lines", marker=dict(color="MediumPurple", size=10)))
