@@ -159,16 +159,16 @@ def main():
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    if len(sup_below) < 10:
-        sup_below.extend(repeat(sup_below[0], 9))
+    if len(sup_below) < 9:
+        sup_below.extend(repeat(sup_below[0], 8))
 
     res_above = sorted(res_above)
-    if len(res_above) < 10:
-        res_above.extend(repeat(res_above[0], 9))
+    if len(res_above) < 9:
+        res_above.extend(repeat(res_above[0], 8))
 
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
-    res_above = [int(a) for a in res_above]
-    sup_below = [int(a) for a in sup_below]
+    res_above = [float(a) for a in res_above]
+    sup_below = [float(a) for a in sup_below]
 
     c = 0
     # Drawing support lines
@@ -211,7 +211,7 @@ def main():
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
         marker=dict(color="MediumPurple", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:9]))}", mode="lines",
+        y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:8]))}", mode="lines",
         marker=dict(color="#fcedfa", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
@@ -221,7 +221,7 @@ def main():
         y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:9]))}", mode="lines",
+        y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:8]))}", mode="lines",
         marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
