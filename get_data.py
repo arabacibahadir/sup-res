@@ -10,4 +10,3 @@ def download_data():
     coin_url = str('https://www.cryptodatadownload.com/cdd/' + settings.exchange_name + "_" + settings.coin_name + settings.pair_name + "_" + settings.time_series + ".csv")
     req = requests.get(coin_url, verify=False)
     open(settings.full_filename, 'wb').write(req.content)
-
