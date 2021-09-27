@@ -205,7 +205,7 @@ def main():
         y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Resistance : {int(res_above[0])}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
         marker=dict(color="MediumPurple", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
@@ -215,7 +215,7 @@ def main():
         marker=dict(color="#fcedfa", size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Support : {int(sup_below[0])}", mode="markers+lines",
+        y=[ss[0]], name=f"Current Support : {float(sup_below[0])}", mode="markers+lines",
         marker=dict(color="LightSeaGreen", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
@@ -243,14 +243,14 @@ def main():
     mtp = 6
     for _ in fib:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {int(fib[mtp])}", mode="lines",
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp])}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
         mtp -= 1
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    for pat1 in range(1, 30, 2):
+    for pat1 in range(1, 26, 2):
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
