@@ -271,8 +271,10 @@ def main():
             time.sleep(1)
             if tweet.is_image_tweet().text != text_image:
                 tweet.api.update_status(status=
-                                        f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                        f"daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                        f"#{settings.coin_name}{settings.pair_name} "
+                                        f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                        f"daily support and resistance levels #{settings.coin_name}"
+                                        f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                         in_reply_to_status_id=tweet.is_image_tweet().id)
             break
 
@@ -288,6 +290,7 @@ if __name__ == "__main__":
         print(f"{settings.full_filename} downloaded and created.")
     else:
         print(
-            "One or more issues caused the download to fail. Make sure you typed the filename correctly in the settings. ")
+            "One or more issues caused the download to fail. "
+            "Make sure you typed the filename correctly in the settings.")
     main()
     delete_file.remove()
