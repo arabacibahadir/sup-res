@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from candlestick import candlestick
 import pandas_ta as ta
-from itertools import repeat
 import delete_file
 import get_data
 import settings
