@@ -14,7 +14,7 @@ POLONIEX :  BTC/USD,ETH/USDT,LTC/USDT,XRP/USDT,BCH/USDT,XMR/USD,DASH/USDT,ETC/US
 
 Pair     :  BTC, ETH, EUR, GBP, JPY, USD, USDC, USDT
 
-Time series : d, h
+Time series : d, 1h
 """
 
 # Example -> Binance_BTCUSDT_d.csv
@@ -47,5 +47,5 @@ def check_names():
         sys.exit()
 
     if time_series not in ('d', '1h'):
-        print("Time series should be 'd' for daily, 'h' for hourly. Please check 'time_series' variable")
+        print("Time series should be 'd' for daily, '1h' for hourly. Please check 'time_series' variable")
         sys.exit()
