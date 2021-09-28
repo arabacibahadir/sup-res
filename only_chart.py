@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import plotly.graph_objects as go
-from candlestick import candlestick
 import pandas_ta as ta
 import delete_file
 import get_data
@@ -28,7 +27,6 @@ def main():
     fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
     new_sup = []
     new_res = []
-    pattern_list = []
 
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
