@@ -1,4 +1,5 @@
 import sys
+
 """
 SETTINGS -> exchange_coins.xlsx
 Exchanges : BINANCE, BITFINEX, BITSTAMP, FTX, GEMINI, KUCOIN, POLONIEX
@@ -20,7 +21,7 @@ Time series : d, h
 exchange_name = 'Binance'
 coin_name = 'BTC'
 pair_name = 'USDT'
-time_series = 'd'
+time_series = 'd'  # 'd' and '1h' available
 file_name = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series)
 full_filename = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series + ".csv")
 exc_pair = coin_name + "/" + pair_name
@@ -45,6 +46,6 @@ def check_names():
         print(f"{exc_pair} pair not available.")
         sys.exit()
 
-    if time_series not in ('d', 'h'):
+    if time_series not in ('d', '1h'):
         print("Time series should be 'd' for daily, 'h' for hourly. Please check 'time_series' variable")
         sys.exit()
