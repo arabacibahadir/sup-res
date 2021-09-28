@@ -60,48 +60,6 @@ def main():
             retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
-    def candlestick_patterns():
-        nonlocal df
-        df = candlestick.inverted_hammer(df, target='inverted_hammer')
-        df = candlestick.hammer(df, target='hammer')
-        df = candlestick.doji(df, target='doji')
-        df = candlestick.doji_star(df, target='doji_star')
-        df = candlestick.bearish_harami(df, target='bearish_harami')
-        df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
-        df = candlestick.bullish_harami(df, target='bullish_harami')
-        df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
-        df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
-        df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
-        df = candlestick.hanging_man(df, target='hanging_man')
-        df = candlestick.gravestone_doji(df, target='gravestone_doji')
-        df = candlestick.morning_star(df, target='morning_star')
-        df = candlestick.morning_star_doji(df, target='morning_star_doji')
-        df = candlestick.piercing_pattern(df, target='piercing_pattern')
-        df = candlestick.rain_drop(df, target='rain_drop')
-        df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
-        df = candlestick.star(df, target='star')
-        df = candlestick.shooting_star(df, target='shooting_star')
-        pattern_find = []
-
-        def pattern_find_func(last_row):
-
-            for col in df.columns:
-                pattern_find.append(col)
-            t = 0
-            for i in last_row:
-                if i == True:
-                    # even pattern, odd date
-                    pattern_list.append(pattern_find[t])
-                    pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
-                t += 1
-
-        for item in range(-2, -30, -1):
-            last_row = df.iloc[item]
-            pattern_find_func(last_row)
-        # print(pattern_list)
-
-    # candlestick_patterns()
-
     def drop_null():  # Drop NULL values
 
         for col in df.columns:
@@ -113,12 +71,12 @@ def main():
 
     df = df[:len(df)]
     fig = go.Figure([go.Candlestick(
-                                    name="Candlestick",
-                                    text=df['date'].dt.strftime('%b-%d-%y'),
-                                    open=df['open'],
-                                    high=df['high'],
-                                    low=df['low'],
-                                    close=df['close'])])
+        name="Candlestick",
+        text=df['date'].dt.strftime('%b-%d-%y'),
+        open=df['open'],
+        high=df['high'],
+        low=df['low'],
+        close=df['close'])])
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
@@ -151,13 +109,6 @@ def main():
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    # if len(sup_below) < 9:
-    #     sup_below.extend(repeat(sup_below[0], 8))
-    #
-    # res_above = sorted(res_above)
-    # if len(res_above) < 9:
-    #     res_above.extend(repeat(res_above[0], 8))
-
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
@@ -253,8 +204,10 @@ def main():
             time.sleep(1)
             if tweet.is_image_tweet().text != text_image:
                 tweet.api.update_status(status=
-                                        f"#{settings.coin_name}{settings.pair_name} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                        f"daily support and resistance levels #{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                        f"#{settings.coin_name}{settings.pair_name} "
+                                        f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                        f"daily support and resistance levels "
+                                        f"#{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                         in_reply_to_status_id=tweet.is_image_tweet().id)
             break
 
