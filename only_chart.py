@@ -204,12 +204,12 @@ def main():
                 tweet.api.update_status(status=
                                         f"#{settings.coin_name}{settings.pair_name} "
                                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                        f"daily support and resistance levels "
+                                        f"support and resistance levels "
                                         f"#{settings.coin_name}\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                         in_reply_to_status_id=tweet.is_image_tweet().id)
             break
 
-    # for_tweet()
+    for_tweet()
     fig.show()
 
 
