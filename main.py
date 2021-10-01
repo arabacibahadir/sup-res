@@ -99,7 +99,7 @@ def main():
                     pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
                 t += 1
 
-        for item in range(-2, -30, -1):
+        for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
         # print(pattern_list)
