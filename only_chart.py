@@ -209,7 +209,7 @@ def main():
                                         in_reply_to_status_id=tweet.is_image_tweet().id)
             break
 
-    for_tweet()
+    # for_tweet()
     fig.show()
 
 
