@@ -265,8 +265,20 @@ def main():
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
     text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
 
-    def hor_lines():
-        pass
+    def pinescript_code():
+
+        print("------- Pinescript codes -------\n\n"
+              "//@version=5\nindicator('My Script', overlay=true)")
+        for line_res in res_above[:10]:
+            print(
+                f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)")
+        for line_sup in sup_below[:10]:
+            print(
+                f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)")
+        print("plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n"
+              "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n"
+              "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n")
+        print("\n------- Pinescript codes -------\n")
 
     def for_tweet():
         tweet.send_tweet(image, text_image)
@@ -282,13 +294,11 @@ def main():
             break
 
     # for_tweet()
+    pinescript_code()
     fig.show()
 
 
 if __name__ == "__main__":
-    # Trading view draw hline pine script
-    # hline( 50, "+50",  color.lime)
-    # hline( 25, "+25",  color.green)
     settings.check_names()
     get_data.download_data()
     if os.path.isfile(settings.full_filename):  # <- Checks .csv file is there or not
