@@ -1,7 +1,7 @@
 # Sup-Res
 _For online preview_ -> https://arabacibahadir.github.io/sup-res/
 
-Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart which is supports Tradingview pine script.
+Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart which is supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html).
 
 ![cropedgif](https://user-images.githubusercontent.com/32988819/134764951-b52bb659-f0d6-455d-a995-05c716564a12.gif)
 
@@ -93,6 +93,7 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 ![legend](https://user-images.githubusercontent.com/32988819/134764245-18551144-ec9c-4489-9a0a-495e49de9a9d.png)
 
 
+
 ## Some screenshots
 _ETHUSDT_ example chart
 
@@ -107,6 +108,17 @@ _BTCUSDT_ levels
 ![48500proof](https://user-images.githubusercontent.com/32988819/133648941-de7f0b2d-0780-4a11-8e6f-98d06b1f6ad1.png)
 
 ![works](https://user-images.githubusercontent.com/32988819/133649195-6645e31b-1736-4076-ba26-385063d4915e.png)
+
+## Pine Script
+
+Sup-Res supports Pine Script scripting language. Just run main.py file, then copy "pinescript" output and paste Tradingview Pine Script section.
+
+![pinecodes](https://user-images.githubusercontent.com/32988819/136625978-355c9591-6865-441a-871a-dd3526b4308f.png)
+
+![pine_trade](https://user-images.githubusercontent.com/32988819/136625994-1f0400a6-6c97-4126-b1b2-0f630f739133.png)
+
+![lines](https://user-images.githubusercontent.com/32988819/136626000-85bb5d7d-73d3-4568-bd0d-61d17dbc67b6.png)
+
 
 ## Contributing
 Pull requests are welcome. Before PR please open an issue what you would like to change.
