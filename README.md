@@ -111,7 +111,7 @@ _BTCUSDT_ levels
 
 ## Pine Script
 
-Sup-Res supports Pine Script scripting language. Just run main.py file, then copy "pinescript" output and paste Tradingview Pine Script section.
+Sup-Res supports Pine Script scripting language. Just **run** *main.py* file, then **copy** "pinescript" output and **paste** *Tradingview Pine Script* section.
 
 ![pinecodes](https://user-images.githubusercontent.com/32988819/136625978-355c9591-6865-441a-871a-dd3526b4308f.png)
 
