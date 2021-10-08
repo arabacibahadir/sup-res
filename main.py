@@ -265,6 +265,9 @@ def main():
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
     text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
 
+    def hor_lines():
+        pass
+
     def for_tweet():
         tweet.send_tweet(image, text_image)
         while tweet.is_image_tweet().text != text_image:
