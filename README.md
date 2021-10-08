@@ -27,7 +27,7 @@ pip install tweepy
 ```
 
 ## Usage
-In 'settings.py' file you should change what pair do you want to use.
+In 'settings.py' file you should **change** what pair do you want to use.
 ````python
 exchange_name = 'Binance' # Which exchange you want to use
 coin_name = 'BTC' 
