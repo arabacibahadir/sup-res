@@ -283,7 +283,9 @@ def main():
 
 
 if __name__ == "__main__":
-
+    # Trading view draw hline pine script
+    # hline( 50, "+50",  color.lime)
+    # hline( 25, "+25",  color.green)
     settings.check_names()
     get_data.download_data()
     if os.path.isfile(settings.full_filename):  # <- Checks .csv file is there or not
