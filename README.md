@@ -11,7 +11,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for d
 - Using it in almost any time series with sensitivity adjustment 
 - Export documents as HTML, PDF, .jpeg, .png
 - Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html)
-- Share to your twitter timeline easily with image and support-resistance levels text automatically
+- Share to your twitter timeline easily with an image and support-resistance levels text automatically
 ![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png)
 
 ## Installation
