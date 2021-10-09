@@ -294,7 +294,7 @@ def main():
             break
 
     # for_tweet()
-    pinescript_code()
+    # pinescript_code()
     fig.show()
 
 
