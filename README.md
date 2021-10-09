@@ -1,5 +1,5 @@
 # Sup-Res
-_For online preview_ -> https://arabacibahadir.github.io/sup-res/
+_For online demonstration_ -> https://arabacibahadir.github.io/sup-res/
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart which is supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html).
 
@@ -9,7 +9,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for d
 
 - Easily find support and resistance levels on the chart
 - Using it in almost any time series with sensitivity adjustment 
-- Export documents as HTML, PDF, .jpeg, .png
+- Export documents as `HTML, PDF, .jpeg, .png`
 - Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html)
 - Share to your twitter timeline easily with an image and support-resistance levels text automatically
 ![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png)
@@ -27,7 +27,7 @@ pip install tweepy
 ```
 
 ## Usage
-In 'settings.py' file you should **change** what pair do you want to use.
+In `settings.py` file you should **change** what pair do you want to use.
 ````python
 exchange_name = 'Binance' # Which exchange you want to use
 coin_name = 'BTC' 
@@ -35,7 +35,7 @@ pair_name = 'USDT'
 time_series = 'd' # "d" for daily chart
 # Example -> Output should looks like "Binance_BTCUSDT_d.csv" end of the code
 ````
-If you want to share as a tweet, change api keys with yours in 'git_tw_access.py' file.
+If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file.
 
 ````python
 # Twitter api keys
