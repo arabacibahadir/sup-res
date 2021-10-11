@@ -88,7 +88,7 @@ _28 September 2021 BTCUSDT Binance_
 [RSI](https://www.investopedia.com/terms/r/rsi.asp), 
 [MACD](https://www.investopedia.com/terms/m/macd.asp),
 [Fibonacci Retracement Levels](https://www.investopedia.com/terms/f/fibonacciretracement.asp),
-[Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/).
+[Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/)
 
 Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_. **Be careful** not to miss the _news_ and _fundamental analysis_. 
 
