@@ -97,11 +97,11 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 
 
 ## Some screenshots
-_ETHUSDT_ example chart
+_ETHUSDT_ chart
 
 ![ethusdt](https://user-images.githubusercontent.com/32988819/134763471-d5abe6ac-bb80-4dcb-94db-5d491802a8d7.png)
 
-_BTCUSDT_ levels
+_BTCUSDT_ chart
 
 ![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
 
