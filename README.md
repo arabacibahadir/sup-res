@@ -75,6 +75,7 @@ Support and resistance are generally zones, not just lines. Especially in crypto
 
 
 ## Support-Resistance Lines
+
 If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this price is touched at least 2 times, if possible 3 times. If there are more touches, the reliability increases. 
 If the current price is above the old resistance, this resistance will act as support. Vice versa is also true. 
 
