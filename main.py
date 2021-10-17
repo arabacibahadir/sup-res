@@ -10,7 +10,7 @@ import settings
 import tweet
 import time
 
-
+# BUG: Next res-sups do like only_chart.py
 def main():
     csv = settings.full_filename
     print(f"{csv} data analysis in progress.")
@@ -129,9 +129,9 @@ def main():
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 1):
+        if support(df, row, 3, 0):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 1):
+        if resistance(df, row, 3, 0):
             rr.append((row, df.high[row]))
 
     # Closest sup-res lines
@@ -263,7 +263,7 @@ def main():
     image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
     fig.write_image(image, width=1920, height=1080)  # Save image for tweet
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
+    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
 
     def pinescript_code():
 
@@ -286,7 +286,7 @@ def main():
             time.sleep(1)
             if tweet.is_image_tweet().text != text_image:
                 tweet.api.update_status(status=
-                                        f"#{settings.coin_name}{settings.pair_name} "
+                                        f"#{settings.coin_name}{settings.pair_name}  "
                                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
                                         f"support and resistance levels #{settings.coin_name}"
                                         f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
