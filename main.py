@@ -11,6 +11,7 @@ import tweet
 import time
 
 # BUG: Next res-sups do like only_chart.py
+# BUG: Delete last candle
 def main():
     csv = settings.full_filename
     print(f"{csv} data analysis in progress.")
