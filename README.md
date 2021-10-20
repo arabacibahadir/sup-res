@@ -1,5 +1,5 @@
 # Sup-Res
-_For online demonstration_ -> https://arabacibahadir.github.io/sup-res/ 
+_For online demonstration_ -> https://arabacibahadir.github.io/sup-res/  
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for drawing support and resistance lines with a scalable chart which is supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html).
 
