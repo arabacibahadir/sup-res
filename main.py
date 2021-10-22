@@ -10,7 +10,6 @@ import tweet
 import time
 
 
-# BUG: Delete last candle
 def main():
     csv = settings.full_filename
     print(f"{csv} data analysis in progress.")
@@ -116,7 +115,7 @@ def main():
     drop_null()
 
     df = df[:len(df)]
-    fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y'),
+    fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime('%b-%d-%y'),
                                     open=df['open'],
