@@ -130,9 +130,9 @@ def main():
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 0):
+        if support(df, row, 3, 1):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 0):
+        if resistance(df, row, 3, 1):
             rr.append((row, df.high[row]))
 
     # Closest sup-res lines
@@ -156,12 +156,12 @@ def main():
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    if len(sup_below) < 9:
-        sup_below.extend(repeat(sup_below[0], 8))
+    # if len(sup_below) < 9:
+    #     sup_below.extend(repeat(sup_below[0], 8))
 
     res_above = sorted(res_above)
-    if len(res_above) < 9:
-        res_above.extend(repeat(res_above[0], 8))
+    # if len(res_above) < 9:
+    #     res_above.extend(repeat(res_above[0], 8))
 
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
     res_above = [float(a) for a in res_above]
@@ -240,7 +240,7 @@ def main():
     mtp = 6
     for _ in fib:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp])}", mode="lines",
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
         mtp -= 1
     fig.add_trace(go.Scatter(
