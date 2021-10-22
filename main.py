@@ -3,14 +3,13 @@ import pandas as pd
 import plotly.graph_objects as go
 from candlestick import candlestick
 import pandas_ta as ta
-from itertools import repeat
 import delete_file
 import get_data
 import settings
 import tweet
 import time
 
-# BUG: Next res-sups do like only_chart.py
+
 # BUG: Delete last candle
 def main():
     csv = settings.full_filename
@@ -30,7 +29,7 @@ def main():
     rsi = list((ta.rsi(df['close'])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
     fib = []
-    fib_multipliers = [0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618]
+    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618)
     new_sup = []
     new_res = []
     pattern_list = []
