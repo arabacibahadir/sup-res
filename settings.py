@@ -21,7 +21,7 @@ Time series : d, 1h
 exchange_name = 'Binance'
 coin_name = 'BTC'
 pair_name = 'USDT'
-time_series = '1h'.lower()  # 'd' and '1h' available
+time_series = 'd'.lower()  # 'd' and '1h' available
 file_name = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series)
 full_filename = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series + ".csv")
 exc_pair = coin_name + "/" + pair_name
