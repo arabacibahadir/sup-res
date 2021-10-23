@@ -19,8 +19,8 @@ Time series : d, 1h
 
 # Example -> Binance_BTCUSDT_d.csv
 exchange_name = 'Binance'
-coin_name = 'BTC'
-pair_name = 'USDT'
+coin_name = 'BTC'.upper()
+pair_name = 'USDT'.upper()
 time_series = 'd'.lower()  # 'd' and '1h' available
 file_name = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series)
 full_filename = str(exchange_name + "_" + coin_name + pair_name + "_" + time_series + ".csv")
