@@ -68,7 +68,7 @@ def main():
     drop_null()
 
     df = df[:len(df)]
-    fig = go.Figure([go.Candlestick(
+    fig = go.Figure([go.Candlestick(x=df['date'].dt.strftime('%b-%d-%y %H:%M'),
         name="Candlestick",
         text=df['date'].dt.strftime('%b-%d-%y'),
         open=df['open'],
