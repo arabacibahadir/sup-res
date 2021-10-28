@@ -262,7 +262,9 @@ def main():
     image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
     fig.write_image(image, width=1920, height=1080)  # Save image for tweet
     fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n#{settings.coin_name} ${settings.coin_name}"
+    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
+                 f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
+                 f"#{settings.coin_name} ${settings.coin_name}"
 
     def pinescript_code():
 
