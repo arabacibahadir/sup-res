@@ -154,13 +154,7 @@ def main():
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
-    # if len(sup_below) < 9:
-    #     sup_below.extend(repeat(sup_below[0], 8))
-
     res_above = sorted(res_above)
-    # if len(res_above) < 9:
-    #     res_above.extend(repeat(res_above[0], 8))
-
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
