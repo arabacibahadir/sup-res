@@ -1,13 +1,13 @@
 import os
+import time
 import pandas as pd
+import pandas_ta as ta
 import plotly.graph_objects as go
 from candlestick import candlestick
-import pandas_ta as ta
 import delete_file
 import get_data
 import settings
 import tweet
-import time
 
 
 def main():
@@ -114,7 +114,7 @@ def main():
 
     drop_null()
 
-    df = df[:len(df)]
+    df = df[:len(df)] # Candle range
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime('%b-%d-%y'),
@@ -140,7 +140,7 @@ def main():
     res = list(map(lambda res1: res1[1], rr))
     latest_close = list(df['close'])[-1]
 
-    for s in sup:
+    for s in sup: # Find closes
         if s < latest_close:
             sup_below.append(s)
         else:
