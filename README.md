@@ -48,7 +48,7 @@ tw_token_secret = 'TOKEN-SECRET'
 ````
 
 
-When you run the code, the local web page will open where you can see the support resistance zones, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically.
+When you run the code, the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically.
 
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
