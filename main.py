@@ -230,7 +230,7 @@ def main():
     fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
                              line=dict(color='#a69b05', width=3)))
     mtp = 6
-    for _ in fib:
+    for _ in fib:  # fib lines
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
@@ -239,7 +239,7 @@ def main():
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    for pat1 in range(1, 26, 2):
+    for pat1 in range(1, 26, 2):  # candlestick patterns
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
