@@ -25,8 +25,8 @@ def historical_Data_Write():
     df = pd.read_csv(symbol + "btc.csv")
     df.to_csv(symbol + "btc.csv", header=headerList, index=False)
     df = pd.read_csv(symbol + "btc.csv")
-    df['unix'] = pd.to_datetime(df['unix'], unit='ms')
-    print(df.head(10))
+    date = pd.to_datetime(df['unix'], unit='ms')
+    df.insert(1, 'date', date)
     df.to_csv(symbol + "btc.csv", index=False)
 
 
