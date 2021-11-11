@@ -2,36 +2,41 @@ from binance import Client
 import csv
 import binance_api
 import pandas as pd
-import datetime
-import time
 
 duration = 1000  # milliseconds
 freq = 440  # Hz
-
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
-symbol_list = ["BTCUSDT"]
-headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'quote asset volume', 'number of trades',
-              'taker buy vol', 'takerbuy quote vol', 'ignore']
+symbol_list = ["BTCUSDT"]  # Add which pairs do you want
+symbol = symbol_list[0]
+file_name = symbol_list[0] + ".csv"
 
 
-def historical_Data_Write():
-    csvFileW = open(symbol + "btc.csv", "w", newline='')
-    klines_writer = csv.writer(csvFileW, delimiter=",")
+def hist_data():
+    headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
+                  'taker buy vol', 'taker buy quote vol', 'ignore']
 
-    for candlestick in candlesticks:
-        klines_writer.writerow(candlestick)
+    def historical_Data_Write():
+        csvFileW = open(symbol + ".csv", "w", newline='')
+        klines_writer = csv.writer(csvFileW, delimiter=",")
 
-    csvFileW.close()
-    df = pd.read_csv(symbol + "btc.csv")
-    df.to_csv(symbol + "btc.csv", header=headerList, index=False)
-    df = pd.read_csv(symbol + "btc.csv")
-    date = pd.to_datetime(df['unix'], unit='ms')
-    df.insert(1, 'date', date)
-    df.to_csv(symbol + "btc.csv", index=False)
+        for candlestick in candlesticks:
+            klines_writer.writerow(candlestick)
 
+        csvFileW.close()
+        df = pd.read_csv(symbol + ".csv")
+        df = df.iloc[::-1]
+        df.to_csv(symbol + ".csv", header=headerList, index=False)
+        df = pd.read_csv(symbol + ".csv")
+        date = pd.to_datetime(df['unix'], unit='ms')
+        df.insert(1, 'date', date)
+        del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], df[
+            'tradecount']
+        df.to_csv(symbol + ".csv", index=False)
 
-for symbol in symbol_list:
-    print("Data writing: ", symbol)
-    candlesticks = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1HOUR,
-                                                "2 November, 2021")  # KLINE_INTERVAL_1DAY= '1d'
-    historical_Data_Write()
+    for s in symbol_list:
+        print("Data writing: ", s)
+        candlesticks = client.get_historical_klines(s, Client.KLINE_INTERVAL_1DAY,
+                                                    "2 October, 2020")  # KLINE_INTERVAL_1DAY= '1d', Client.KLINE_INTERVAL_1HOUR
+        historical_Data_Write()
+
+# hist_data()
