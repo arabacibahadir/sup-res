@@ -6,7 +6,7 @@ import pandas as pd
 duration = 1000  # milliseconds
 freq = 440  # Hz
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
-symbol_list = ["BTCUSDT"]  # Pair
+symbol_list = ["BTCUSDT"]  # Pairs
 file_name = symbol_list[0] + ".csv"
 
 
@@ -34,8 +34,8 @@ def hist_data():
 
     for s in symbol_list:
         print("Data writing: ", s)
-        candlesticks = client.get_historical_klines(s, Client.KLINE_INTERVAL_1DAY,
+        candlesticks = client.get_historical_klines(s, Client.KLINE_INTERVAL_1HOUR,
                                                     "2 October, 2020")  # KLINE_INTERVAL_1DAY= '1d', Client.KLINE_INTERVAL_1HOUR
         historical_Data_Write()
 
-# hist_data()
+
