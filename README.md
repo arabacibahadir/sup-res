@@ -34,7 +34,7 @@ In `settings.py` file you should **change** what pair do you want to use.
 exchange_name = 'Binance' # Which exchange you want to use
 coin_name = 'BTC' 
 pair_name = 'USDT'
-time_series = 'd' # "d" for daily chart
+time_series = 'd' # "d" for daily chart, "1h" for hourly chart
 # Example -> Output should looks like "Binance_BTCUSDT_d.csv" end of the code
 ````
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file.
