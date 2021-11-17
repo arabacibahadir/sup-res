@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import settings
 import urllib3
 
-URL = 'https://www.cryptodatadownload.com/data/poloniex'
+URL = 'https://www.cryptodatadownload.com/data/binance'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 page = requests.get(URL, verify=False)
 
