@@ -12,7 +12,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for d
 - Export documents as `HTML, PDF, .jpeg, .png`
 - Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html)
 - Automatically share to your twitter followers and timeline easily with an image and text of support-resistance levels
-
+- Supports Binance API
 
 ![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png)
 
