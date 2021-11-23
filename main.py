@@ -241,10 +241,12 @@ def main():
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
 
     # Candlestick patterns NOTE: If you have a problem about candlestick pattern index error, pass below func
-    for pat1 in range(1, 26, 2):
-        fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
-            marker=dict(color="#fcedfa", size=10)))
+    def candle_patterns():
+        for pat1 in range(1, 26, 2):
+            fig.add_trace(go.Scatter(
+                y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
+                marker=dict(color="#fcedfa", size=10)))
+    candle_patterns()
 
     # Chart updates
     fig.update_layout(title=str(df['symbol'][0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
