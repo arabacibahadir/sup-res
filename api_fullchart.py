@@ -257,14 +257,18 @@ def main():
                       legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
-    if not os.path.exists("images"):
-        os.mkdir("images")
-    image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.jpeg"
-    fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-    fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.html")
-    text_image = f"#Binance #{historical_data.file_name} " \
-                 f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
-                 f"#{historical_data.symbol_list[0]} ${historical_data.symbol_list[0]}"
+
+    def save():
+        if not os.path.exists("images"):
+            os.mkdir("images")
+        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.jpeg"
+        fig.write_image(image, width=1920, height=1080)  # Save image for tweet
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.html")
+        text_image = f"#Binance #{historical_data.file_name} " \
+                     f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
+                     f"#{historical_data.symbol_list[0]} ${historical_data.symbol_list[0]}"
+
+    save()
 
     def pinescript_code():
 

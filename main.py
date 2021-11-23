@@ -114,7 +114,7 @@ def main():
 
     drop_null()
 
-    df = df[:len(df)] # Candle range
+    df = df[:len(df)]  # Candle range
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime('%b-%d-%y'),
@@ -140,7 +140,7 @@ def main():
     res = list(map(lambda res1: res1[1], rr))
     latest_close = list(df['close'])[-1]
 
-    for s in sup: # Find closes
+    for s in sup:  # Find closes
         if s < latest_close:
             sup_below.append(s)
         else:
@@ -246,6 +246,7 @@ def main():
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color="#fcedfa", size=10)))
+
     candle_patterns()
 
     # Chart updates
@@ -255,14 +256,18 @@ def main():
                       legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
-    if not os.path.exists("images"):
-        os.mkdir("images")
-    image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
-    fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-    fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-    text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
-                 f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
-                 f"#{settings.coin_name} ${settings.coin_name}"
+
+    def save():
+        if not os.path.exists("images"):
+            os.mkdir("images")
+        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
+        fig.write_image(image, width=1920, height=1080)  # Save image for tweet
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
+        text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
+                     f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
+                     f"#{settings.coin_name} ${settings.coin_name}"
+
+    save()
 
     def pinescript_code():
 
