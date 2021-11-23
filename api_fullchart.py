@@ -261,12 +261,26 @@ def main():
     def save():
         if not os.path.exists("images"):
             os.mkdir("images")
-        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.jpeg"
+        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
         fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.file_name_wo}.html")
-        text_image = f"#Binance #{historical_data.file_name} " \
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
+        text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
                      f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
-                     f"#{historical_data.symbol_list[0]} ${historical_data.symbol_list[0]}"
+                     f"#{settings.coin_name} ${settings.coin_name}"
+
+        def for_tweet():
+            tweet.send_tweet(image, text_image)
+            while tweet.is_image_tweet().text != text_image:
+                time.sleep(1)
+                if tweet.is_image_tweet().text != text_image:
+                    tweet.api.update_status(status=
+                                            f"#{settings.coin_name}{settings.pair_name}  "
+                                            f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                            f"support and resistance levels #{settings.coin_name}"
+                                            f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                            in_reply_to_status_id=tweet.is_image_tweet().id)
+                break
+        # for_tweet()
 
     save()
 
@@ -285,20 +299,6 @@ def main():
               "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n")
         print("\n------- Pinescript codes -------\n")
 
-    def for_tweet():
-        tweet.send_tweet(image, text_image)
-        while tweet.is_image_tweet().text != text_image:
-            time.sleep(1)
-            if tweet.is_image_tweet().text != text_image:
-                tweet.api.update_status(status=
-                                        f"#{historical_data.symbol_list[0]}  "
-                                        f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                        f"support and resistance levels "
-                                        f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
-                                        in_reply_to_status_id=tweet.is_image_tweet().id)
-            break
-
-    # for_tweet()
     # pinescript_code()
     fig.show()
 
