@@ -239,7 +239,9 @@ def main():
         y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
-    for pat1 in range(1, 26, 2):  # candlestick patterns
+
+    # Candlestick patterns NOTE: If you have a problem about candlestick pattern index error, pass below func
+    for pat1 in range(1, 26, 2):
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
