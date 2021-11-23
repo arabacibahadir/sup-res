@@ -242,7 +242,7 @@ def main():
 
     # Candlestick patterns NOTE: If you have a problem about candlestick pattern index error, pass below func
     def candle_patterns():
-        for pat1 in range(1, 26, 2):
+        for pat1 in range(1, 24, 2):
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color="#fcedfa", size=10)))

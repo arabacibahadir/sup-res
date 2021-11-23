@@ -242,8 +242,7 @@ def main():
         y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
 
     def candle_patterns():
-        for pat1 in range(1, 26, 2):  # candlestick patterns
-            print(pat1)
+        for pat1 in range(1, 24, 2):  # candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color="#fcedfa", size=10)))
