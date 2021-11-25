@@ -34,7 +34,7 @@ def hist_data():
         df.to_csv(symbol_list[0] + ".csv", index=False)
 
     for s in symbol_list:
-        print("Data writing: ", s)
+        print("Data writing:", s)
         candlesticks = client.get_historical_klines(s, Client.KLINE_INTERVAL_1DAY,
                                                     "2 November, 2020")  # KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR
         historical_Data_Write()
