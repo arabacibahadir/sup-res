@@ -36,5 +36,5 @@ def hist_data():
     for s in symbol_list:
         print("Data writing:", s)
         candlesticks = client.get_historical_klines(s, Client.KLINE_INTERVAL_1DAY,
-                                                    "2 November, 2020")  # KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR
+                                                    "2 December, 2020")  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR
         historical_Data_Write()
