@@ -86,16 +86,16 @@ def main():
         df = candlestick.shooting_star(df, target='shooting_star')
         pattern_find = []
 
-        def pattern_find_func(last_row):
+        def pattern_find_func(self):
 
             for col in df.columns:
                 pattern_find.append(col)
             t = 0
-            for i in last_row:
+            for i in self:
                 if i == True:
                     # even pattern, odd date
                     pattern_list.append(pattern_find[t])
-                    pattern_list.append(last_row['date'].strftime('%b-%d-%y'))
+                    pattern_list.append(self['date'].strftime('%b-%d-%y'))
                 t += 1
 
         for item in range(-3, -30, -1):
