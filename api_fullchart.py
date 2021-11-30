@@ -129,9 +129,9 @@ def main():
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 1):
+        if support(df, row, 3, 2):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 1):
+        if resistance(df, row, 3, 2):
             rr.append((row, df.high[row]))
 
     # Closest sup-res lines
