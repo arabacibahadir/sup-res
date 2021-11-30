@@ -124,10 +124,10 @@ def main():
                                         high=df['high'],
                                         low=df['low'],
                                         close=df['close'])])
-    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
+    elif historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
                                         name="Candlestick",
-                                        text=df['date'].dt.strftime('%b-%d-%y'),
+                                        text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
                                         open=df['open'],
                                         high=df['high'],
                                         low=df['low'],
@@ -270,7 +270,7 @@ def main():
     candle_patterns()
 
     # Chart updates
-    fig.update_layout(title=str(historical_data.symbol_list[0] + ' Daily Chart'), hovermode='x', dragmode="zoom",
+    fig.update_layout(title=str(historical_data.symbol_list[0] + ' Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
