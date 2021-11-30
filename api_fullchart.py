@@ -116,13 +116,22 @@ def main():
     drop_null()
 
     df = df[:len(df)]  # Candle range
-    fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
-                                    name="Candlestick",
-                                    text=df['date'].dt.strftime('%b-%d-%y'),
-                                    open=df['open'],
-                                    high=df['high'],
-                                    low=df['low'],
-                                    close=df['close'])])
+    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1DAY:
+        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
+                                        name="Candlestick",
+                                        text=df['date'].dt.strftime('%b-%d-%y'),
+                                        open=df['open'],
+                                        high=df['high'],
+                                        low=df['low'],
+                                        close=df['close'])])
+    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
+        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
+                                        name="Candlestick",
+                                        text=df['date'].dt.strftime('%b-%d-%y'),
+                                        open=df['open'],
+                                        high=df['high'],
+                                        low=df['low'],
+                                        close=df['close'])])
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
@@ -224,12 +233,23 @@ def main():
         marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
-                             line=dict(color='#5c6cff', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
-                             line=dict(color='#950fba', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
-                             line=dict(color='#a69b05', width=3)))
+    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1DAY:
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
+                                 line=dict(color='#5c6cff', width=3)))
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
+                                 line=dict(color='#950fba', width=3)))
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
+                                 line=dict(color='#a69b05', width=3)))
+    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
+                       line=dict(color='#5c6cff', width=3)))
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
+                       line=dict(color='#950fba', width=3)))
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
+                       line=dict(color='#a69b05', width=3)))
     mtp = 6
     for _ in fib:  # fib lines
         fig.add_trace(go.Scatter(
