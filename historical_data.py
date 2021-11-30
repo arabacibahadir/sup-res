@@ -10,6 +10,7 @@ symbol_list = ["BTCUSDT"]  # Pairs
 file_name = symbol_list[0] + ".csv"
 file_name_wo = symbol_list[0]
 time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR
+start = "2 December, 2020"  # Start date to now
 
 
 def hist_data():
@@ -36,6 +37,5 @@ def hist_data():
 
     for s in symbol_list:
         print("Data writing:", s)
-        candlesticks = client.get_historical_klines(s, time_frame,
-                                                    "2 December, 2020")
+        candlesticks = client.get_historical_klines(s, time_frame, start)
         historical_Data_Write()
