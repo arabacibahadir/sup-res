@@ -4,8 +4,6 @@ import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
 from candlestick import candlestick
-import delete_file
-import get_data
 import settings
 import tweet
 import historical_data
@@ -102,7 +100,6 @@ def main():
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
-        # print(pattern_list)
 
     candlestick_patterns()
 
@@ -331,4 +328,3 @@ if __name__ == "__main__":
             "One or more issues caused the download to fail. "
             "Make sure you typed the filename correctly in the settings.")
     main()
-    # delete_file.remove()
