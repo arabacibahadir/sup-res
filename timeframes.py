@@ -75,12 +75,6 @@ def timeframe(self):
         start_date = current + timedelta(days=-780)
         start = start_date.strftime("%d %B, %Y")
 
-    elif self == Client.KLINE_INTERVAL_1WEEK:
-        return print("This time frame is not allowed.")
-
-    elif self == Client.KLINE_INTERVAL_1MONTH:
-        return print("This time frame is not allowed.")
-
     else:
         return print("This time frame is not allowed.")
 
