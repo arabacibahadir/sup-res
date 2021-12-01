@@ -2,15 +2,18 @@ from binance import Client
 import csv
 import binance_api
 import pandas as pd
+from datetime import datetime, timedelta
+import timeframes
 
-duration = 1000  # milliseconds
-freq = 440  # Hz
+current = datetime.now()
+current_time = current.strftime("%b-%d-%y %H:%M")
+time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
+start = timeframes.timeframe(time_frame)
+print(start)
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
 symbol_list = ["BTCUSDT"]  # Pairs
 file_name = symbol_list[0] + ".csv"
 file_name_wo = symbol_list[0]
-time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR
-start = "2 December, 2020"  # Start date to now
 
 
 def hist_data():
