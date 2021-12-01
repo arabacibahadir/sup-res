@@ -7,7 +7,7 @@ import timeframes
 
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
-time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
+time_frame = Client.KLINE_INTERVAL_1HOUR  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
 start = timeframes.timeframe(time_frame)
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
 symbol_list = ["BTCUSDT"]  # Pairs
