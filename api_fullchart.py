@@ -113,7 +113,21 @@ def main():
     drop_null()
 
     df = df[:len(df)]  # Candle range
-    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1DAY:
+    hist_htf = [historical_data.Client.KLINE_INTERVAL_1DAY,
+                historical_data.Client.KLINE_INTERVAL_3DAY]
+    hist_ltf = [historical_data.Client.KLINE_INTERVAL_1MINUTE,
+                historical_data.Client.KLINE_INTERVAL_3MINUTE,
+                historical_data.Client.KLINE_INTERVAL_5MINUTE,
+                historical_data.Client.KLINE_INTERVAL_15MINUTE,
+                historical_data.Client.KLINE_INTERVAL_30MINUTE,
+                historical_data.Client.KLINE_INTERVAL_1HOUR,
+                historical_data.Client.KLINE_INTERVAL_2HOUR,
+                historical_data.Client.KLINE_INTERVAL_4HOUR,
+                historical_data.Client.KLINE_INTERVAL_6HOUR,
+                historical_data.Client.KLINE_INTERVAL_8HOUR,
+                historical_data.Client.KLINE_INTERVAL_12HOUR]
+
+    if historical_data.time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                         name="Candlestick",
                                         text=df['date'].dt.strftime('%b-%d-%y'),
@@ -121,7 +135,8 @@ def main():
                                         high=df['high'],
                                         low=df['low'],
                                         close=df['close'])])
-    elif historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
+
+    if historical_data.time_frame in hist_ltf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
                                         name="Candlestick",
                                         text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
@@ -135,9 +150,9 @@ def main():
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 2):
+        if support(df, row, 3, 1):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 2):
+        if resistance(df, row, 3, 1):
             rr.append((row, df.high[row]))
 
     # Closest sup-res lines
