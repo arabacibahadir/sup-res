@@ -14,7 +14,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for d
 - Automatically share to your twitter followers and timeline easily with an image and text of support-resistance levels
 - Supports Binance API
 
-![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png)
+![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png) 
 
 ## Installation
 Sup-Res requires Python 3.6+ to run.
