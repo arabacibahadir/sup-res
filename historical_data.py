@@ -10,7 +10,7 @@ current_time = current.strftime("%b-%d-%y %H:%M")
 time_frame = Client.KLINE_INTERVAL_1HOUR  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
 start = timeframes.timeframe(time_frame)
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
-symbol_list = ["BTCUSDT"]  # Pairs
+symbol_list = ["BTCUSDT"]  # Pairs !!!sysarg here
 file_name = symbol_list[0] + ".csv"
 file_name_wo = symbol_list[0]
 
@@ -41,4 +41,3 @@ def hist_data():
         print("Data writing:", s)
         candlesticks = client.get_historical_klines(s, time_frame, start)
         historical_Data_Write(s)
-
