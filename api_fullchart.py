@@ -101,18 +101,6 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
 
-    candlestick_patterns()
-
-    def drop_null():  # Drop NULL values
-
-        for col in df.columns:
-            index_null = df[df[col] == "NULL"].index
-            df.drop(index_null, inplace=True)
-            df.isna().sum()
-
-    drop_null()
-
-    df = df[:len(df)]  # Candle range
     hist_htf = [historical_data.Client.KLINE_INTERVAL_1DAY,
                 historical_data.Client.KLINE_INTERVAL_3DAY]
     hist_ltf = [historical_data.Client.KLINE_INTERVAL_1MINUTE,
@@ -126,6 +114,19 @@ def main():
                 historical_data.Client.KLINE_INTERVAL_6HOUR,
                 historical_data.Client.KLINE_INTERVAL_8HOUR,
                 historical_data.Client.KLINE_INTERVAL_12HOUR]
+    if historical_data.time_frame in hist_htf:
+        candlestick_patterns()
+
+    def drop_null():  # Drop NULL values
+
+        for col in df.columns:
+            index_null = df[df[col] == "NULL"].index
+            df.drop(index_null, inplace=True)
+            df.isna().sum()
+
+    drop_null()
+
+    df = df[:len(df)]  # Candle range
 
     if historical_data.time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
@@ -272,18 +273,20 @@ def main():
             y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
             marker=dict(color="#fcedfa", size=10)))
         mtp -= 1
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
 
     def candle_patterns():
+        fig.add_trace(go.Scatter(
+            y=[ss[0]], name=f" --------------------------------- ", mode="markers",
+            marker=dict(color="#f5efc4", size=0)))
+        fig.add_trace(go.Scatter(
+            y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
         for pat1 in range(1, 24, 2):  # candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color="#fcedfa", size=10)))
 
-    candle_patterns()
+    if historical_data.time_frame in hist_htf:
+        candle_patterns()
 
     # Chart updates
     fig.update_layout(title=str(historical_data.symbol_list[0] + ' Chart'), hovermode='x', dragmode="zoom",
