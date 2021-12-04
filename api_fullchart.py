@@ -10,6 +10,7 @@ import historical_data
 
 
 def main():
+
     csv = historical_data.file_name
     print(f"{csv} data analysis in progress.")
     candle_count = 254  # Number of candlesticks
@@ -339,9 +340,11 @@ def main():
 
     # pinescript_code()
     fig.show()
+    print(f"Completed Execution in {time.perf_counter() - perf} seconds")
 
 
 if __name__ == "__main__":
+    perf = time.perf_counter()
     historical_data.hist_data()
     if os.path.isfile(historical_data.file_name):  # <- Checks .csv file is there or not
         print(f"{historical_data.file_name} downloaded and created.")
@@ -349,4 +352,5 @@ if __name__ == "__main__":
         print(
             "One or more issues caused the download to fail. "
             "Make sure you typed the filename correctly in the settings.")
+
     main()
