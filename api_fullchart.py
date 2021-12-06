@@ -22,10 +22,10 @@ def main():
     df.reset_index(drop=True, inplace=True)
     df = df.append(df.tail(1), ignore_index=True)  # Dodging algorithm issue
     volume = list(reversed((df['Volume USDT'])))
-    sma10 = list((df.ta.sma(10)))
-    sma50 = list((df.ta.sma(50)))
-    sma100 = list((df.ta.sma(100)))
-    rsi = list((ta.rsi(df['close'])))
+    sma10 = tuple((df.ta.sma(10)))
+    sma50 = tuple((df.ta.sma(50)))
+    sma100 = tuple((df.ta.sma(100)))
+    rsi = tuple((ta.rsi(df['close'])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
     fib = []
     fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618)
@@ -157,9 +157,9 @@ def main():
     # Closest sup-res lines
     sup_below = []
     res_above = []
-    sup = list(map(lambda sup1: sup1[1], ss))
-    res = list(map(lambda res1: res1[1], rr))
-    latest_close = list(df['close'])[-1]
+    sup = tuple(map(lambda sup1: sup1[1], ss))
+    res = tuple(map(lambda res1: res1[1], rr))
+    latest_close = tuple(df['close'])[-1]
 
     for s in sup:  # Find closes
         if s < latest_close:
@@ -248,14 +248,14 @@ def main():
         marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
-    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1DAY:
+    if historical_data.time_frame in hist_htf:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
                                  line=dict(color='#5c6cff', width=3)))
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
                                  line=dict(color='#950fba', width=3)))
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
                                  line=dict(color='#a69b05', width=3)))
-    if historical_data.time_frame == historical_data.Client.KLINE_INTERVAL_1HOUR:
+    if historical_data.time_frame in hist_ltf:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
                        line=dict(color='#5c6cff', width=3)))
