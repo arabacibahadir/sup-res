@@ -102,9 +102,9 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
 
-    hist_htf = [historical_data.Client.KLINE_INTERVAL_1DAY,
-                historical_data.Client.KLINE_INTERVAL_3DAY]
-    hist_ltf = [historical_data.Client.KLINE_INTERVAL_1MINUTE,
+    hist_htf = (historical_data.Client.KLINE_INTERVAL_1DAY,
+                historical_data.Client.KLINE_INTERVAL_3DAY)
+    hist_ltf = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
                 historical_data.Client.KLINE_INTERVAL_3MINUTE,
                 historical_data.Client.KLINE_INTERVAL_5MINUTE,
                 historical_data.Client.KLINE_INTERVAL_15MINUTE,
@@ -114,22 +114,18 @@ def main():
                 historical_data.Client.KLINE_INTERVAL_4HOUR,
                 historical_data.Client.KLINE_INTERVAL_6HOUR,
                 historical_data.Client.KLINE_INTERVAL_8HOUR,
-                historical_data.Client.KLINE_INTERVAL_12HOUR]
+                historical_data.Client.KLINE_INTERVAL_12HOUR)
     if historical_data.time_frame in hist_htf:
-
         candlestick_patterns()
 
     def drop_null():  # Drop NULL values
-
         for col in df.columns:
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
             df.isna().sum()
 
     drop_null()
-
     df = df[:len(df)]  # Candle range
-
     if historical_data.time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                         name="Candlestick",
@@ -291,7 +287,7 @@ def main():
         candle_patterns()
 
     # Chart updates
-    fig.update_layout(title=str(historical_data.symbol_list[0] + ' Chart'), hovermode='x', dragmode="zoom",
+    fig.update_layout(title=str(historical_data.symbol_list + ' Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
@@ -321,7 +317,6 @@ def main():
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
-
     save()
 
     def pinescript_code():
