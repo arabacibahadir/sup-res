@@ -19,7 +19,7 @@ def hist_data():
                   'taker buy vol', 'taker buy quote vol', 'ignore']
 
     def historical_Data_Write(self):
-        data = self.join(".csv")
+        data = self+".csv"
         csvFileW = open(data, "w", newline='')
         klines_writer = csv.writer(csvFileW, delimiter=",")
 
