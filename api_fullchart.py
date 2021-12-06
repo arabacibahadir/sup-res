@@ -10,7 +10,7 @@ import historical_data
 
 
 def main():
-
+    print(f"Start Execution in {time.perf_counter() - perf} seconds")
     csv = historical_data.file_name
     print(f"{csv} data analysis in progress.")
     candle_count = 254  # Number of candlesticks
@@ -116,6 +116,7 @@ def main():
                 historical_data.Client.KLINE_INTERVAL_8HOUR,
                 historical_data.Client.KLINE_INTERVAL_12HOUR]
     if historical_data.time_frame in hist_htf:
+
         candlestick_patterns()
 
     def drop_null():  # Drop NULL values
