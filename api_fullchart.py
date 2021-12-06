@@ -10,7 +10,7 @@ import historical_data
 
 
 def main():
-    print(f"Start Execution in {time.perf_counter() - perf} seconds")
+    print(f"Start main function in {time.perf_counter() - perf} seconds")
     csv = historical_data.file_name
     print(f"{csv} data analysis in progress.")
     candle_count = 254  # Number of candlesticks
