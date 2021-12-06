@@ -2,7 +2,7 @@ from binance import Client
 import csv
 import binance_api
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import timeframes
 
 current = datetime.now()
@@ -12,7 +12,6 @@ start = timeframes.timeframe(time_frame)
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
 symbol_list = ["BTCUSDT"]  # Pairs !!!sysarg here
 file_name = symbol_list[0] + ".csv"
-file_name_wo = symbol_list[0]
 
 
 def hist_data():
@@ -20,24 +19,24 @@ def hist_data():
                   'taker buy vol', 'taker buy quote vol', 'ignore']
 
     def historical_Data_Write(self):
-        csvFileW = open(self + ".csv", "w", newline='')
+        data = self.join(".csv")
+        csvFileW = open(data, "w", newline='')
         klines_writer = csv.writer(csvFileW, delimiter=",")
 
         for candlestick in candlesticks:
             klines_writer.writerow(candlestick)
 
         csvFileW.close()
-        df = pd.read_csv(self + ".csv")
+        df = pd.read_csv(data)
         df = df.iloc[::-1]
-        df.to_csv(self + ".csv", header=headerList, index=False)
-        df = pd.read_csv(self + ".csv")
+        df.to_csv(data, header=headerList, index=False)
+        df = pd.read_csv(data)
         date = pd.to_datetime(df['unix'], unit='ms')
         df.insert(1, 'date', date)
         del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], df[
             'tradecount']
-        df.to_csv(self + ".csv", index=False)
+        df.to_csv(data, index=False)
 
-    for s in symbol_list:
-        print("Data writing:", s)
-        candlesticks = client.get_historical_klines(s, time_frame, start)
-        historical_Data_Write(s)
+    print("Data writing:", symbol_list[0])
+    candlesticks = client.get_historical_klines(symbol_list[0], time_frame, start)
+    historical_Data_Write(symbol_list[0])
