@@ -68,7 +68,6 @@ def main():
         df = candlestick.inverted_hammer(df, target='inverted_hammer')
         df = candlestick.hammer(df, target='hammer')
         df = candlestick.doji(df, target='doji')
-        df = candlestick.doji_star(df, target='doji_star')
         df = candlestick.bearish_harami(df, target='bearish_harami')
         df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
         df = candlestick.bullish_harami(df, target='bullish_harami')
@@ -80,8 +79,6 @@ def main():
         df = candlestick.morning_star(df, target='morning_star')
         df = candlestick.morning_star_doji(df, target='morning_star_doji')
         df = candlestick.piercing_pattern(df, target='piercing_pattern')
-        df = candlestick.rain_drop(df, target='rain_drop')
-        df = candlestick.rain_drop_doji(df, target='rain_drop_doji')
         df = candlestick.star(df, target='star')
         df = candlestick.shooting_star(df, target='shooting_star')
         pattern_find = []
@@ -135,7 +132,7 @@ def main():
                                         low=df['low'],
                                         close=df['close'])])
 
-    if historical_data.time_frame in hist_ltf:
+    elif historical_data.time_frame in hist_ltf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
                                         name="Candlestick",
                                         text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
@@ -255,7 +252,7 @@ def main():
                                  line=dict(color='#950fba', width=3)))
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
                                  line=dict(color='#a69b05', width=3)))
-    if historical_data.time_frame in hist_ltf:
+    elif historical_data.time_frame in hist_ltf:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
                        line=dict(color='#5c6cff', width=3)))
@@ -265,6 +262,8 @@ def main():
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
                        line=dict(color='#a69b05', width=3)))
+    else:
+        print("Time frame error.")
     mtp = 6
     for _ in fib:  # fib lines
         fig.add_trace(go.Scatter(
@@ -297,15 +296,15 @@ def main():
     def save():
         if not os.path.exists("images"):
             os.mkdir("images")
-        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
-        fig.write_image(image, width=1920, height=1080)  # Save image for tweet
+        # image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
+        # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
         fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
         text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
                      f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
                      f"#{settings.coin_name} ${settings.coin_name}"
 
         def for_tweet():
-            tweet.send_tweet(image, text_image)
+            # tweet.send_tweet(image, text_image)
             while tweet.is_image_tweet().text != text_image:
                 time.sleep(1)
                 if tweet.is_image_tweet().text != text_image:
