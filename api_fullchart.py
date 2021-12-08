@@ -245,6 +245,7 @@ def main():
         marker=dict(color="#fcedfa", size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
+
     if historical_data.time_frame in hist_htf:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
                                  line=dict(color='#5c6cff', width=3)))
@@ -264,6 +265,7 @@ def main():
                        line=dict(color='#a69b05', width=3)))
     else:
         print("Time frame error.")
+
     mtp = 6
     for _ in fib:  # fib lines
         fig.add_trace(go.Scatter(
@@ -316,6 +318,7 @@ def main():
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
+
     save()
 
     def pinescript_code():
@@ -335,7 +338,7 @@ def main():
 
     # pinescript_code()
     fig.show()
-    print(f"Completed Execution in {time.perf_counter() - perf} seconds")
+    print(f"Completed execution in {time.perf_counter() - perf} seconds")
 
 
 if __name__ == "__main__":

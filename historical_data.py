@@ -10,7 +10,9 @@ current_time = current.strftime("%b-%d-%y %H:%M")
 time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
 start = timeframes.timeframe(time_frame)
 client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
-symbol_list = "BTCUSDT"  # Pair !!!sysarg here
+symbol_list = "BTCUSDT"  # Pair
+# print("symbol:")
+# symbol_list = input()
 file_name = symbol_list + ".csv"
 
 
@@ -19,7 +21,7 @@ def hist_data():
                   'taker buy vol', 'taker buy quote vol', 'ignore']
 
     def historical_Data_Write(self):
-        data = self+".csv"
+        data = self + ".csv"
         csvFileW = open(data, "w", newline='')
         klines_writer = csv.writer(csvFileW, delimiter=",")
 
