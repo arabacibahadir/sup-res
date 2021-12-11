@@ -1,18 +1,19 @@
 from binance import Client
 import csv
-import binance_api
+import api_binance
 import pandas as pd
 from datetime import datetime
+import frameselect
 import timeframes
 
-symbol_list = "BTCUSDT"  # Pair
-time_frame = Client.KLINE_INTERVAL_1DAY  # Client.KLINE_INTERVAL_1DAY, Client.KLINE_INTERVAL_1HOUR etc.
-client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
+print("Symbol:")  # Pair
+symbol_list = input()
+print("Time frame:")  # 1H,1D etc.
+frame_s = str(input())
+time_frame = frameselect.frame_select(frame_s)
+client = Client(api_binance.api, api_binance.secret)  # Your Binance api and secret key
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
-# print("Symbol:")
-# symbol_list = input()
-# frameselect()
 start = timeframes.timeframe(time_frame)
 file_name = symbol_list + ".csv"
 
