@@ -2,7 +2,7 @@ from binance import Client
 from datetime import datetime, timedelta
 
 
-""" Timeframes:
+""" Supported time frames:
 Client.KLINE_INTERVAL_1MINUTE
 Client.KLINE_INTERVAL_3MINUTE
 Client.KLINE_INTERVAL_5MINUTE
@@ -16,8 +16,6 @@ Client.KLINE_INTERVAL_8HOUR
 Client.KLINE_INTERVAL_12HOUR
 Client.KLINE_INTERVAL_1DAY
 Client.KLINE_INTERVAL_3DAY
-Client.KLINE_INTERVAL_1WEEK
-Client.KLINE_INTERVAL_1MONTH
 """
 
 
