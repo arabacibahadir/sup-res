@@ -7,9 +7,9 @@ import frameselect
 import timeframes
 
 print("Symbol:")  # Pair
-symbol_list = input()
+symbol_list = input().upper()
 print("Time frame:")  # 1H,1D etc.
-frame_s = str(input())
+frame_s = str(input().upper())
 time_frame = frameselect.frame_select(frame_s)
 client = Client(api_binance.api, api_binance.secret)  # Your Binance api and secret key
 current = datetime.now()
