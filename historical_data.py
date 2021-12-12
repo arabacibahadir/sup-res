@@ -6,8 +6,8 @@ from datetime import datetime
 import frameselect
 import timeframes
 
-print("Symbol:")  # Pair
-symbol_list = input().upper()
+print("Ticker:")  # Pair
+ticker = input().upper()
 print("Time frame:")  # 1H,1D etc.
 frame_s = str(input().upper())
 time_frame = frameselect.frame_select(frame_s)
@@ -15,7 +15,7 @@ client = Client(api_binance.api, api_binance.secret)  # Your Binance api and sec
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
 start = timeframes.timeframe(time_frame)
-file_name = symbol_list + ".csv"
+file_name = ticker + ".csv"
 
 
 def hist_data():
@@ -26,10 +26,8 @@ def hist_data():
         data = self + ".csv"
         csvFileW = open(data, "w", newline='')
         klines_writer = csv.writer(csvFileW, delimiter=",")
-
         for candlestick in candlesticks:
             klines_writer.writerow(candlestick)
-
         csvFileW.close()
         df = pd.read_csv(data)
         df = df.iloc[::-1]
@@ -42,5 +40,5 @@ def hist_data():
         df.to_csv(data, index=False)
 
     print("Data writing:", file_name)
-    candlesticks = client.get_historical_klines(symbol_list, time_frame, start)
-    historical_Data_Write(symbol_list)
+    candlesticks = client.get_historical_klines(ticker, time_frame, start)
+    historical_Data_Write(ticker)
