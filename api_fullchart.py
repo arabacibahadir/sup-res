@@ -4,7 +4,6 @@ import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
 from candlestick import candlestick
-import settings
 import tweet
 import historical_data
 
@@ -84,7 +83,6 @@ def main():
         pattern_find = []
 
         def pattern_find_func(self):
-
             for col in df.columns:
                 pattern_find.append(col)
             t = 0
@@ -94,7 +92,6 @@ def main():
                     pattern_list.append(pattern_find[t])
                     pattern_list.append(self['date'].strftime('%b-%d-%y'))
                 t += 1
-
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
@@ -120,7 +117,6 @@ def main():
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
             df.isna().sum()
-
     drop_null()
     df = df[:len(df)]  # Candle range
     if historical_data.time_frame in hist_htf:
@@ -143,14 +139,12 @@ def main():
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
-
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 1):
+        if support(df, row, 3, 2):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 1):
+        if resistance(df, row, 3, 2):
             rr.append((row, df.high[row]))
-
     # Closest sup-res lines
     sup_below = []
     res_above = []
@@ -168,7 +162,6 @@ def main():
             res_above.append(r)
         else:
             new_sup.append(r)
-
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
@@ -288,7 +281,7 @@ def main():
         candle_patterns()
 
     # Chart updates
-    fig.update_layout(title=str(historical_data.symbol_list + ' Chart'), hovermode='x', dragmode="zoom",
+    fig.update_layout(title=str(historical_data.ticker + ' Chart'), hovermode='x', dragmode="zoom",
                       paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
@@ -298,12 +291,11 @@ def main():
     def save():
         if not os.path.exists("images"):
             os.mkdir("images")
-        # image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.jpeg"
+        # image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
         # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{settings.file_name}.html")
-        text_image = f"#{settings.exchange_name} #{settings.coin_name}{settings.pair_name} {settings.coin_name} " \
-                     f"support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}\n" \
-                     f"#{settings.coin_name} ${settings.coin_name}"
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
+        text_image = f"#{historical_data.ticker} " \
+                     f"Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
         def for_tweet():
             # tweet.send_tweet(image, text_image)
@@ -311,9 +303,9 @@ def main():
                 time.sleep(1)
                 if tweet.is_image_tweet().text != text_image:
                     tweet.api.update_status(status=
-                                            f"#{settings.coin_name}{settings.pair_name}  "
+                                            f"#{historical_data.ticker}  "
                                             f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                            f"support and resistance levels #{settings.coin_name}"
+                                            f"support and resistance levels"
                                             f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
@@ -350,5 +342,4 @@ if __name__ == "__main__":
         print(
             "One or more issues caused the download to fail. "
             "Make sure you typed the filename correctly in the settings.")
-
     main()
