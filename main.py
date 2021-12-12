@@ -336,7 +336,7 @@ def main():
 if __name__ == "__main__":
     perf = time.perf_counter()
     historical_data.hist_data()
-    if os.path.isfile(historical_data.file_name):  # <- Checks .csv file is there or not
+    if os.path.isfile(historical_data.file_name):  # <- Check .csv file is there or not
         print(f"{historical_data.file_name} downloaded and created.")
     else:
         print(
