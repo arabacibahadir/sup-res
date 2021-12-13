@@ -19,7 +19,7 @@ def main():
     for_macd = df['close']
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
-    df = df.append(df.tail(1), ignore_index=True)  # Dodging algorithm issue
+    df = df.append(df.tail(1), ignore_index=True)
     volume = list(reversed((df['Volume USDT'])))
     sma10 = tuple((df.ta.sma(10)))
     sma50 = tuple((df.ta.sma(50)))
@@ -119,6 +119,7 @@ def main():
             df.isna().sum()
     drop_null()
     df = df[:len(df)]  # Candle range
+
     if historical_data.time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                         name="Candlestick",
@@ -162,6 +163,7 @@ def main():
             res_above.append(r)
         else:
             new_sup.append(r)
+
     sup_below.extend(new_sup)
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
