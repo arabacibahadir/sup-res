@@ -31,6 +31,11 @@ def main():
     new_sup = []
     new_res = []
     pattern_list = []
+    legend_color = "#D8D8D8"
+    plot_color = "#E7E7E7"
+    bg_color = "#E7E7E7"
+    support_color = "LightSeaGreen"
+    res_color = "MediumPurple"
 
     def support(price1, l, n1, n2):
         for i in range(l - n1 + 1, l + 1):
@@ -184,10 +189,10 @@ def main():
         # Support Lines
         fig.add_shape(type='line', x0=ss[c][0] - 1, y0=ss[c][1],
                       x1=len(df) + 25,
-                      y1=ss[c][1], line=dict(color="LightSeaGreen", width=2))
+                      y1=ss[c][1], line=dict(color=support_color, width=2))
         # Support annotations
         fig.add_annotation(x=len(df) + 7, y=ss[c][1], text=str(ss[c][1]),
-                           font=dict(size=15, color="LightSeaGreen"))
+                           font=dict(size=15, color=support_color))
         c += 1
 
     # Drawing resistance lines
@@ -198,48 +203,48 @@ def main():
         # Resistance Lines
         fig.add_shape(type='line', x0=rr[c][0] - 1, y0=rr[c][1],
                       x1=len(df) + 25,
-                      y1=rr[c][1], line=dict(color="MediumPurple", width=1))
+                      y1=rr[c][1], line=dict(color=res_color, width=1))
         # Resistance annotations
         fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
-                           font=dict(size=15, color="MediumPurple"))
+                           font=dict(size=15, color=res_color))
         c += 1
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Resistance", mode="lines", marker=dict(color="MediumPurple", size=10)))
+        y=[ss[0]], name="Resistance", mode="lines", marker=dict(color=res_color, size=10)))
     # Legend -> Support
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Support", mode="lines", marker=dict(color="LightSeaGreen", size=10)))
+        y=[ss[0]], name="Support", mode="lines", marker=dict(color=support_color, size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
-        marker=dict(color="MediumPurple", size=10)))
+        marker=dict(color=res_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
-        marker=dict(color="MediumPurple", size=10)))
+        marker=dict(color=res_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:8]))}", mode="lines",
-        marker=dict(color="#fcedfa", size=10)))
+        marker=dict(color=legend_color, size=10)))
     # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {float(sup_below[0])}", mode="markers+lines",
-        marker=dict(color="LightSeaGreen", size=10)))
+        marker=dict(color=support_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
-        marker=dict(color="LightSeaGreen", size=10)))
+        marker=dict(color=support_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:8]))}", mode="lines",
-        marker=dict(color="#fcedfa", size=10)))
+        marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color="#f5efc4", size=0)))
+        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color="#fcedfa", size=14)))
+        y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI         : {int(rsi[-3])}", mode="lines", marker=dict(color="#fcedfa", size=10)))
+        y=[ss[0]], name=f"RSI         : {int(rsi[-3])}", mode="lines", marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
-        marker=dict(color="#fcedfa", size=10)))
+        marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color="#fcedfa", size=10)))
+        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color=legend_color, size=10)))
 
     if historical_data.time_frame in hist_htf:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
@@ -265,28 +270,28 @@ def main():
     for _ in fib:  # fib lines
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
-            marker=dict(color="#fcedfa", size=10)))
+            marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
     def candle_patterns():
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f" --------------------------------- ", mode="markers",
-            marker=dict(color="#f5efc4", size=0)))
+            marker=dict(color=legend_color, size=0)))
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color="#fcedfa", size=14)))
+            y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
         for pat1 in range(1, 24, 2):  # candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
-                marker=dict(color="#fcedfa", size=10)))
+                marker=dict(color=legend_color, size=10)))
 
     if historical_data.time_frame in hist_htf:
         candle_patterns()
 
     # Chart updates
     fig.update_layout(title=str(historical_data.ticker + ' Chart'), hovermode='x', dragmode="zoom",
-                      paper_bgcolor='#FFE4F5', plot_bgcolor='#fcedfa', xaxis_rangeslider_visible=False,
+                      paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
-                      legend=dict(bgcolor='#fcedfa'))  # Ignore slider -> xaxis_rangeslider_visible=False
+                      legend=dict(bgcolor=legend_color))  # Ignore slider -> xaxis_rangeslider_visible=False
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
