@@ -97,6 +97,7 @@ def main():
                     pattern_list.append(pattern_find[t])
                     pattern_list.append(self['date'].strftime('%b-%d-%y'))
                 t += 1
+
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
@@ -122,6 +123,7 @@ def main():
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
             df.isna().sum()
+
     drop_null()
     df = df[:len(df)]  # Candle range
 
@@ -235,7 +237,8 @@ def main():
         y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:8]))}", mode="lines",
         marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" --------------------------------- ", mode="markers", marker=dict(color=legend_color, size=0)))
+        y=[ss[0]], name=f" --------------------------------- ", mode="markers",
+        marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
     fig.add_trace(go.Scatter(
@@ -244,7 +247,8 @@ def main():
         y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
         marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines", marker=dict(color=legend_color, size=10)))
+        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines",
+        marker=dict(color=legend_color, size=10)))
 
     if historical_data.time_frame in hist_htf:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
@@ -300,9 +304,9 @@ def main():
             os.mkdir("images")
         # image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
         # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
+        # fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
         text_image = f"#{historical_data.ticker} " \
-                     f"Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
+                     f"{historical_data.time_frame} Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
         def for_tweet():
             # tweet.send_tweet(image, text_image)
@@ -312,13 +316,13 @@ def main():
                     tweet.api.update_status(status=
                                             f"#{historical_data.ticker}  "
                                             f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                            f"support and resistance levels"
+                                            f"Support and resistance levels"
                                             f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
 
-    save()
+    # save()
 
     def pinescript_code():
 
