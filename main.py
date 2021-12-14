@@ -292,7 +292,7 @@ def main():
         candle_patterns()
 
     # Chart updates
-    fig.update_layout(title=str(historical_data.ticker + ' Chart'), hovermode='x', dragmode="zoom",
+    fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"), hovermode='x', dragmode="zoom",
                       paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor=legend_color))  # Ignore slider -> xaxis_rangeslider_visible=False
@@ -306,7 +306,7 @@ def main():
         # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
         # fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
         text_image = f"#{historical_data.ticker} " \
-                     f"{historical_data.time_frame} Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
+                     f"{historical_data.time_frame.upper()} Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
         def for_tweet():
             # tweet.send_tweet(image, text_image)
@@ -316,7 +316,7 @@ def main():
                     tweet.api.update_status(status=
                                             f"#{historical_data.ticker}  "
                                             f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                            f"Support and resistance levels"
+                                            f"{historical_data.time_frame.upper()} Support and resistance levels"
                                             f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
