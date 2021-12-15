@@ -29,14 +29,7 @@ pip install tweepy
 ```
 
 ## Usage
-If you are not using Binance API in `settings.py` file you should **change** what pair do you want to use.
-````python
-exchange_name = 'Binance' # Which exchange you want to use
-coin_name = 'BTC' 
-pair_name = 'USDT'
-time_series = 'd' # "d" for daily chart, "1h" for hourly chart
-# Example -> Output should looks like "Binance_BTCUSDT_d.csv" end of the code
-````
+
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file.
 
 ````python
@@ -48,7 +41,7 @@ tw_token_secret = 'TOKEN-SECRET'
 ````
 
 
-When you run the code, the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically.
+When you run the code, the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically if you want.
 
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
@@ -56,8 +49,7 @@ When you run the code, the local web page will open where you can see the suppor
 ![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
 
 
-
->If you encounter an index error, try the *only_chart.py* version. Some data may be corrupt or not working. 
+ 
 ## Main Motivation
 A lot of new investors are investing without having any technical knowledge. Also those with a little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
 
