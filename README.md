@@ -29,7 +29,12 @@ pip install tweepy
 ```
 
 ## Usage
+Change api and secret key with your api keys in `api_binance.py` file. To create your api keys you can follow [this guide](https://www.binance.com/en/support/faq/360002502072).
 
+````python
+api = "Your-API-Key"
+secret = "Your-Secret-Key"
+````
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file.
 
 ````python
