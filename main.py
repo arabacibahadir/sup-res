@@ -4,8 +4,8 @@ import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
 from candlestick import candlestick
-import tweet
 import historical_data
+import tweet
 
 
 def main():
@@ -58,7 +58,8 @@ def main():
     # -> Fibonacci Price Level between highest resistance line and lowest support line
 
     def fib_pl(high_price, low_price):
-        """ Uptrend Fibonacci Retracement Formula => Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+        """ Uptrend Fibonacci Retracement Formula =>
+         Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
          In this code section we will use only lines, not the highest and lowest prices on chart.
          Be careful on that, this fib levels can be wrong and irrelevant.
         """
@@ -292,7 +293,8 @@ def main():
         candle_patterns()
 
     # Chart updates
-    fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"), hovermode='x', dragmode="zoom",
+    fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
+                      hovermode='x', dragmode="zoom",
                       paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
                       xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
                       legend=dict(bgcolor=legend_color))  # Ignore slider -> xaxis_rangeslider_visible=False
@@ -306,7 +308,8 @@ def main():
         # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
         # fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
         text_image = f"#{historical_data.ticker} " \
-                     f"{historical_data.time_frame.upper()} Support and resistance levels \n {df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
+                     f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
+                     f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
         def for_tweet():
             # tweet.send_tweet(image, text_image)
