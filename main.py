@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from candlestick import candlestick
 import historical_data
 import tweet
+import delete_file
 
 
 def main():
@@ -357,3 +358,4 @@ if __name__ == "__main__":
             "One or more issues caused the download to fail. "
             "Make sure you typed the filename correctly in the settings.")
     main()
+    delete_file.remove()
