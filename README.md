@@ -59,7 +59,7 @@ When you run the code, the local web page will open where you can see the suppor
 
 >If you encounter an index error, try the *only_chart.py* version. Some data may be corrupt or not working. 
 ## Main Motivation
-A lot of new investors are investing without having any technical knowledge. Also those with a little experience follow the price movements and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
+A lot of new investors are investing without having any technical knowledge. Also those with a little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
 
 I worked on a code that could provide help for users who don't have much experience about _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**. This is not a game and every day people lose all their money. Get your priorities straight.
 
