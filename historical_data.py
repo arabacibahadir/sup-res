@@ -1,8 +1,8 @@
-from binance import Client
 import csv
-import api_binance
-import pandas as pd
 from datetime import datetime
+import pandas as pd
+from binance import Client
+import binance_api
 import frameselect
 
 print("Ticker:")  # Pair
@@ -10,7 +10,7 @@ ticker = input().upper()
 print("Time frame:")  # 1H,1D etc.
 frame_s = str(input().upper())
 time_frame = frameselect.frame_select(frame_s)[0]
-client = Client(api_binance.api, api_binance.secret)  # Your Binance api and secret key
+client = Client(binance_api.api, binance_api.secret)  # Your Binance api and secret key
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
 start = frameselect.frame_select(frame_s)[1]
