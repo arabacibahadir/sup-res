@@ -54,7 +54,7 @@ def is_image_tweet():
 
 If you don't want to use twitter, save or pinescript functions you can comment `save`, `for_tweet` or `pinescript_code` these functions.
 
-When you run the code, main function will ask ticker and timeframe and then the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically if you want.
+When you run the code, main function will ask ticker and timeframe and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. It will share tweet automatically if you want.
 
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
