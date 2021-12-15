@@ -16,5 +16,5 @@ def send_tweet(media, tweet):
 
 
 def is_image_tweet():
-    stat = api.user_timeline(screen_name='@sup_res', count=1)
+    stat = api.user_timeline(screen_name='@HANDLE-NAME', count=1)
     return stat[0]
