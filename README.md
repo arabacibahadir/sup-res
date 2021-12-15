@@ -25,6 +25,7 @@ pip install candlestick-patterns-subodh101
 pip install pandas
 pip install pandas-ta
 pip install plotly
+pip install python-binance
 pip install tweepy 
 ```
 
@@ -51,6 +52,7 @@ def is_image_tweet():
     return stat[0]
 ````
 
+If you don't want to use twitter, save or pinescript functions you can comment `save`, `for_tweet` or `pinescript_code` these functions.
 
 When you run the code, main function will ask ticker and timeframe and then the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically if you want.
 
