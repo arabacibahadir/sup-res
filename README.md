@@ -35,7 +35,7 @@ Change api and secret key with your api keys in `api_binance.py` file. To create
 api = "Your-API-Key"
 secret = "Your-Secret-Key"
 ````
-If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file.
+If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api).
 
 ````python
 # Twitter api keys
@@ -44,9 +44,15 @@ tw_key_secret = 'API-SECRET'
 tw_token = 'TOKEN'
 tw_token_secret = 'TOKEN-SECRET'
 ````
+Also change twitter handle name with your twitter handle name in `is_image_tweet` func in `tweet.py` file.
+````python
+def is_image_tweet():
+    stat = api.user_timeline(screen_name='@HANDLE-NAME', count=1)
+    return stat[0]
+````
 
 
-When you run the code, the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically if you want.
+When you run the code, main function will ask ticker and timeframe and then the local web page will open where you can see the support-resistance levels, rsi, sma, macd, fibonacci, candlestick patterns. It will share tweet automatically if you want.
 
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
