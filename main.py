@@ -180,7 +180,8 @@ def main():
     if len(sup_below) == 0:
         sup_below.append(min(df['low']))
     if len(res_above) == 0:
-        sup_below.append(min(df['high']))
+        res_above.append(min(df['high']))
+    
     fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
