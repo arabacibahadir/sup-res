@@ -345,7 +345,7 @@ def main():
         print("\n------- Pinescript codes -------\n")
 
     # pinescript_code()
-    fig.show()
+    fig.show(id='the_graph', config={'displaylogo': False})
     print(f"Completed execution in {time.perf_counter() - perf} seconds")
 
 
