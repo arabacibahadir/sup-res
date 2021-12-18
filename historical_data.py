@@ -39,5 +39,5 @@ def hist_data():
         df.to_csv(data, index=False)
 
     print("Data writing:", file_name)
-    candlesticks = client.get_historical_klines(ticker, time_frame, start)
+    candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
     historical_Data_Write(ticker)
