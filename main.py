@@ -363,7 +363,6 @@ if __name__ == "__main__":
                 "Make sure you typed the filename correctly in the settings.")
         main()
         delete_file.remove()
-    except KeyError as ke:
-        print(ke)
-        print("Key error, algorithm issue")
+    except KeyError:
         delete_file.remove()
+        raise KeyError("Key error, algorithm issue")
