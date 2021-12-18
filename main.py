@@ -152,9 +152,9 @@ def main():
     rr = []  # rr : Resistance list
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 2):
+        if support(df, row, 3, 3):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 2):
+        if resistance(df, row, 3, 3):
             rr.append((row, df.high[row]))
     # Closest sup-res lines
     sup_below = []
@@ -329,7 +329,7 @@ def main():
                 break
         # for_tweet()
 
-    # save()
+    save()
 
     def pinescript_code():
 
@@ -352,13 +352,18 @@ def main():
 
 
 if __name__ == "__main__":
-    perf = time.perf_counter()
-    historical_data.hist_data()
-    if os.path.isfile(historical_data.file_name):  # <- Check .csv file is there or not
-        print(f"{historical_data.file_name} downloaded and created.")
-    else:
-        print(
-            "One or more issues caused the download to fail. "
-            "Make sure you typed the filename correctly in the settings.")
-    main()
-    delete_file.remove()
+    try:
+        perf = time.perf_counter()
+        historical_data.hist_data()
+        if os.path.isfile(historical_data.file_name):  # <- Check .csv file is there or not
+            print(f"{historical_data.file_name} downloaded and created.")
+        else:
+            print(
+                "One or more issues caused the download to fail. "
+                "Make sure you typed the filename correctly in the settings.")
+        main()
+        delete_file.remove()
+    except KeyError as ke:
+        print(ke)
+        print("Key error, algorithm issue")
+        delete_file.remove()
