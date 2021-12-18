@@ -17,15 +17,16 @@ def main():
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                      keep_default_na=False)
     df = df.iloc[::-1]
-    for_macd = df['close']
+    for_macd = df['close'][:-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
     df = df.append(df.tail(1), ignore_index=True)
     volume = list(reversed((df['Volume USDT'])))
-    sma10 = tuple((df.ta.sma(10)))
-    sma50 = tuple((df.ta.sma(50)))
-    sma100 = tuple((df.ta.sma(100)))
-    rsi = tuple((ta.rsi(df['close'])))
+    dfsma = df[:-1]
+    sma10 = tuple((dfsma.ta.sma(10)))
+    sma50 = tuple((dfsma.ta.sma(50)))
+    sma100 = tuple((dfsma.ta.sma(100)))
+    rsi = tuple((ta.rsi(df['close'][:-1])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
     fib = []
     fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618)
@@ -213,6 +214,7 @@ def main():
         fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
                            font=dict(size=15, color=res_color))
         c += 1
+        
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name="Resistance", mode="lines", marker=dict(color=res_color, size=10)))
@@ -245,7 +247,7 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI         : {int(rsi[-3])}", mode="lines", marker=dict(color=legend_color, size=10)))
+        y=[ss[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines", marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
         marker=dict(color=legend_color, size=10)))
