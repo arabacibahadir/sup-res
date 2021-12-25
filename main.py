@@ -308,9 +308,9 @@ def main():
     def save():
         if not os.path.exists("images"):
             os.mkdir("images")
-        # image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
-        # fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        # fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html")
+        image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
+        fig.write_image(image, width=1920, height=1080)  # Save image for tweet
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html", full_html=False, include_plotlyjs='cdn')
         text_image = f"#{historical_data.ticker} " \
                      f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
