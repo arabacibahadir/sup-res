@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 import pandas as pd
-from binance import Client
+from binance.client import Client
 import api_binance
 import frameselect
 
