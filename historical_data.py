@@ -15,6 +15,7 @@ current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
 start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
+symbol_info = client.get_symbol_info(ticker)
 
 
 def hist_data():
