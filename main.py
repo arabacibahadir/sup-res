@@ -118,6 +118,7 @@ def main():
                 historical_data.Client.KLINE_INTERVAL_6HOUR,
                 historical_data.Client.KLINE_INTERVAL_8HOUR,
                 historical_data.Client.KLINE_INTERVAL_12HOUR)
+
     if historical_data.time_frame in hist_htf:
         candlestick_patterns()
 
@@ -150,12 +151,16 @@ def main():
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
+
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
-    for row in range(3, len(df) - 1):
-        if support(df, row, 3, 1):
-            ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 1):
-            rr.append((row, df.high[row]))
+    def sensitivity(sens):
+        for row in range(3, len(df) - 1):
+            if support(df, row, 3, sens):
+                ss.append((row, df.low[row]))
+            if resistance(df, row, 3, sens):
+                rr.append((row, df.high[row]))
+
+    sensitivity(2)
     # Closest sup-res lines
     sup_below = []
     res_above = []
@@ -163,16 +168,19 @@ def main():
     res = tuple(map(lambda res1: res1[1], rr))
     latest_close = tuple(df['close'])[-1]
 
-    for s in sup:  # Find closes
-        if s < latest_close:
-            sup_below.append(s)
-        else:
-            new_res.append(s)
-    for r in res:
-        if r > latest_close:
-            res_above.append(r)
-        else:
-            new_sup.append(r)
+    def supres():
+        for s in sup:  # Find closes
+            if s < latest_close:
+                sup_below.append(s)
+            else:
+                new_res.append(s)
+        for r in res:
+            if r > latest_close:
+                res_above.append(r)
+            else:
+                new_sup.append(r)
+
+    supres()
 
     sup_below.extend(new_sup)
     res_above.extend(new_res)
@@ -214,7 +222,7 @@ def main():
         fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
                            font=dict(size=15, color=res_color))
         c += 1
-        
+
     # Legend -> Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name="Resistance", mode="lines", marker=dict(color=res_color, size=10)))
@@ -310,7 +318,8 @@ def main():
             os.mkdir("images")
         image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
         fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html", full_html=False, include_plotlyjs='cdn')
+        fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
+                       full_html=False, include_plotlyjs='cdn')
         text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
                      f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
