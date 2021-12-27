@@ -152,9 +152,9 @@ def main():
     rr = []  # rr : Resistance list
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     for row in range(3, len(df) - 1):
-        if support(df, row, 3, 2):
+        if support(df, row, 3, 1):
             ss.append((row, df.low[row]))
-        if resistance(df, row, 3, 2):
+        if resistance(df, row, 3, 1):
             rr.append((row, df.high[row]))
     # Closest sup-res lines
     sup_below = []
@@ -311,12 +311,12 @@ def main():
         image = f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
         fig.write_image(image, width=1920, height=1080)  # Save image for tweet
         fig.write_html(f"images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html", full_html=False, include_plotlyjs='cdn')
-        text_image = f"#{historical_data.ticker} #{historical_data.symbol_info('baseAsset')}" \
+        text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
                      f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
         def for_tweet():
-            # tweet.send_tweet(image, text_image)
+            tweet.send_tweet(image, text_image)
             while tweet.is_image_tweet().text != text_image:
                 time.sleep(1)
                 if tweet.is_image_tweet().text != text_image:
