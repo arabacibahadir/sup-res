@@ -56,9 +56,9 @@ If you don't want to use twitter, save or pinescript functions you can comment `
 
 When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. It will share tweet automatically if you want.
 ````
-Ticker:  #Which pair do you want "btcusdt, ethusdt, ethbtc, bnbbusd" etc.
+Ticker:  # Which pair do you want "btcusdt, ethusdt, ethbtc, bnbbusd" etc.
 btcusdt
-Time frame: #1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d is supported (m:minute, h:hour, d:day)
+Time frame: # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d is supported (m:minute, h:hour, d:day)
 1d
 ````
 
