@@ -223,12 +223,6 @@ def main():
                            font=dict(size=15, color=res_color))
         c += 1
 
-    # Legend -> Resistance
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Resistance", mode="lines", marker=dict(color=res_color, size=10)))
-    # Legend -> Support
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name="Support", mode="lines", marker=dict(color=support_color, size=10)))
     # Legend -> Current Resistance
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
@@ -308,8 +302,7 @@ def main():
     fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
                       hovermode='x', dragmode="zoom",
                       paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-                      xaxis_title="Date", yaxis_title="Price", legend_title="Legend",
-                      legend=dict(bgcolor=legend_color))  # Ignore slider -> xaxis_rangeslider_visible=False
+                      xaxis_title="Date", yaxis_title="Price", legend=dict(bgcolor=legend_color))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
