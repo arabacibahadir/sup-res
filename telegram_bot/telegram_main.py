@@ -5,7 +5,7 @@ import subprocess
 import telegram
 import time
 
-telegram_api = "api"
+telegram_api = "your-api"  # Change this with your telegram bot api
 client = Client("", "")
 print("Bot started.")
 widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
