@@ -65,7 +65,7 @@ def responses(input_text):
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3]
-        bot.send_photo(chat_id=chat_id, photo=open(content_list[0], 'rb'), caption=text)
+        bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
 
     return "Error"
