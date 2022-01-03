@@ -223,6 +223,21 @@ def main():
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
 
+    fig.layout.annotations = [
+            dict(
+                name="draft watermark",
+                text="twitter.com/sup_res",
+                textangle=-30,
+                opacity=0.1,
+                font=dict(color="black", size=100),
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=0.5,
+                showarrow=False,
+            )
+        ]
+
     c = 0
     # Drawing support lines
     while 1:
@@ -326,20 +341,6 @@ def main():
     if time_frame in hist_htf:
         candle_patterns()
 
-    fig.layout.annotations = [
-        dict(
-            name="draft watermark",
-            text="twitter.com/sup_res",
-            textangle=-30,
-            opacity=0.1,
-            font=dict(color="black", size=100),
-            xref="paper",
-            yref="paper",
-            x=0.5,
-            y=0.5,
-            showarrow=False,
-        )
-    ]
     # Chart updates
     fig.update_layout(
         title=str(f"{ticker} {time_frame.upper()} Chart"),
@@ -360,6 +361,7 @@ def main():
 
         with open('output.txt', 'w') as f:
             f.write(f"{image}\n{text_image}")
+
 
     save()
 
@@ -383,4 +385,3 @@ if __name__ == "__main__":
             "One or more issues caused the download to fail. "
             "Make sure you typed the filename correctly in the settings.")
     main()
-
