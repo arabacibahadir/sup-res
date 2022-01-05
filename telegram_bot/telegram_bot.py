@@ -224,19 +224,19 @@ def main():
     sup_below = [float(a) for a in sup_below]
 
     fig.layout.annotations = [
-            dict(
-                name="draft watermark",
-                text="twitter.com/sup_res",
-                textangle=-30,
-                opacity=0.1,
-                font=dict(color="black", size=100),
-                xref="paper",
-                yref="paper",
-                x=0.5,
-                y=0.5,
-                showarrow=False,
-            )
-        ]
+        dict(
+            name="draft watermark",
+            text="twitter.com/sup_res",
+            textangle=-30,
+            opacity=0.1,
+            font=dict(color="black", size=100),
+            xref="paper",
+            yref="paper",
+            x=0.5,
+            y=0.5,
+            showarrow=False,
+        )
+    ]
 
     c = 0
     # Drawing support lines
@@ -361,7 +361,6 @@ def main():
 
         with open('output.txt', 'w') as f:
             f.write(f"{image}\n{text_image}")
-
 
     save()
 
