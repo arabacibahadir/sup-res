@@ -80,9 +80,9 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("Start", start_command))
     dp.add_handler(CommandHandler("Help", help_command))
-    dp.add_handler(MessageHandler(Filters.text, handle_message))
+    dp.add_handler(MessageHandler(Filters.text, handle_message, pass_job_queue=True))
     dp.add_error_handler(error)
-    updater.start_polling(1)
+    updater.start_polling(1, timeout=10)
     updater.idle()
 
 
