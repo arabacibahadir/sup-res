@@ -11,9 +11,9 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 - Using it in almost any time series with sensitivity adjustment 
 - Export documents as `HTML, PDF, .jpeg, .png` 
 - Automatically share to your twitter followers with an image and text of support-resistance levels
-- Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html), Binance API, Telegram-bot
+- Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html), [Binance API](https://python-binance.readthedocs.io/en/latest/), [Telegram-bot](https://python-telegram-bot.org)
 
-![twitter](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png) 
+![twitter]](https://user-images.githubusercontent.com/32988819/134763396-4f5ef8a9-ffa3-4a71-99ad-ec3ea8b9770e.png) 
 
 ## Installation
 Sup-Res requires Python 3.6+ to run.
