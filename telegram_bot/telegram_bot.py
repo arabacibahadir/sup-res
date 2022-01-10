@@ -90,11 +90,8 @@ def main():
     def fib_pl(high_price, low_price):
         """ Uptrend Fibonacci Retracement Formula =>
          Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-         In this code section we will use only lines, not the highest and lowest prices on chart.
-         Be careful on that, this fib levels can be wrong and irrelevant.
         """
         for multi in fib_multipliers:
-            # -> Downtrend Fibonacci Retracement Formula we use in here
             retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
@@ -124,7 +121,6 @@ def main():
             t = 0
             for i in self:
                 if i == True:
-                    # even pattern, odd date
                     pattern_list.append(pattern_find[t])
                     pattern_list.append(self['date'].strftime('%b-%d-%y'))
                 t += 1
@@ -157,7 +153,7 @@ def main():
             df.isna().sum()
 
     drop_null()
-    df = df[:len(df)]  # Candle range
+    df = df[:len(df)]
 
     if time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
@@ -177,8 +173,8 @@ def main():
                                         low=df['low'],
                                         close=df['close'])])
 
-    ss = []  # ss : Support list
-    rr = []  # rr : Resistance list
+    ss = []  # Support list
+    rr = []  # Resistance list
 
     # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
     def sensitivity(sens):
@@ -189,7 +185,7 @@ def main():
                 rr.append((row, df.high[row]))
 
     sensitivity(2)
-    # Closest sup-res lines
+
     sup_below = []
     res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
@@ -197,7 +193,7 @@ def main():
     latest_close = tuple(df['close'])[-1]
 
     def supres():
-        for s in sup:  # Find closes
+        for s in sup:
             if s < latest_close:
                 sup_below.append(s)
             else:
@@ -219,7 +215,7 @@ def main():
     if len(res_above) == 0:
         res_above.append(min(df['high']))
 
-    fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
+    fib_pl(res_above[-1], sup_below[-1])
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
 
@@ -377,7 +373,7 @@ if __name__ == "__main__":
     file_name = ticker + ".csv"
     symbol_info = client.get_symbol_info(ticker)
     print("Data writing:", file_name)
-    if os.path.isfile(file_name):  # <- Check .csv file is there or not
+    if os.path.isfile(file_name):
         print(f"{file_name} downloaded and created.")
     else:
         print(
