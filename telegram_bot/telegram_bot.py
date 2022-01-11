@@ -1,13 +1,13 @@
+import csv
 import os
 import sys
 import time
+from datetime import datetime
 import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
-from candlestick import candlestick
-import csv
-from datetime import datetime
 from binance.client import Client
+from candlestick import candlestick
 import telegram_frameselect
 
 client = Client("", "")
@@ -85,7 +85,7 @@ def main():
                 return 0
         return 1
 
-    # -> Fibonacci Price Level between highest resistance line and lowest support line
+    # -> Fibonacci Price Level between the highest resistance line and lowest support line
 
     def fib_pl(high_price, low_price):
         """ Uptrend Fibonacci Retracement Formula =>
@@ -224,7 +224,7 @@ def main():
             name="draft watermark",
             text="twitter.com/sup_res",
             textangle=-30,
-            opacity=0.1,
+            opacity=0.2,
             font=dict(color="black", size=100),
             xref="paper",
             yref="paper",
