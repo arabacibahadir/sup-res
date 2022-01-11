@@ -1,9 +1,9 @@
 import os
-from telegram.ext import *
-from binance.client import Client
 import subprocess
-import telegram
 import time
+import telegram
+from binance.client import Client
+from telegram.ext import *
 
 telegram_api = "your-api"  # Change this with your telegram bot api
 client = Client("", "")
@@ -13,15 +13,15 @@ majors = []
 bot = telegram.Bot(token=telegram_api)
 
 
-def start_command(update, context):
+def start_command(update):
     update.message.reply_text("Type something random to get started!")
 
 
-def help_command(update, context):
+def help_command(update):
     update.message.reply_text("Commands")
 
 
-def handle_message(update, context):
+def handle_message(update):
     text = str(update.message.text).lower()
     r_text = responses(text)
     update.message.reply_text(r_text)
