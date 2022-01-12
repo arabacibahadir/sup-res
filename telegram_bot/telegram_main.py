@@ -13,15 +13,15 @@ majors = []
 bot = telegram.Bot(token=telegram_api)
 
 
-def start_command(update):
+def start_command(update, context):
     update.message.reply_text("Type something random to get started!")
 
 
-def help_command(update):
+def help_command(update, context):
     update.message.reply_text("Commands")
 
 
-def handle_message(update):
+def handle_message(update, context):
     text = str(update.message.text).lower()
     r_text = responses(text)
     update.message.reply_text(r_text)
