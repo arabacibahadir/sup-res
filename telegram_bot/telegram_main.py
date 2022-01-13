@@ -14,7 +14,7 @@ bot = telegram.Bot(token=telegram_api)
 
 
 def start_command(update, context):
-    update.message.reply_text("Type something random to get started!")
+    update.message.reply_text("For more info about bot: https://github.com/arabacibahadir/sup-res#readme ")
 
 
 def help_command(update, context):
@@ -42,10 +42,10 @@ def responses(input_text):
     chat_id = bot.get_updates()[-1].message.chat_id
 
     if user_message == "commands":
-        return "supres 'pair' 'timeframe', major coins, hi"
+        return "supres 'pair' 'timeframe', major coins, test"
 
-    if user_message == "hi":
-        return "hello"
+    if user_message == "test":
+        return "Bot is working."
 
     if user_message == "major coins":
         perf = time.perf_counter()
