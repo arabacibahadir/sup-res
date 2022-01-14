@@ -42,7 +42,7 @@ def responses(input_text):
     chat_id = bot.get_updates()[-1].message.chat_id
 
     if user_message == "commands":
-        return "supres 'pair' 'timeframe', major coins, test"
+        return "supres 'pair' 'timeframe', major coins, fear index, test"
 
     if user_message == "test":
         return "Bot is working."
@@ -67,6 +67,9 @@ def responses(input_text):
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3]
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
+
+    if user_message.startswith("fear index"):
+        return bot.send_message(chat_id=chat_id, text="https://alternative.me/crypto/fear-and-greed-index.png")
 
     return "Error"
 
