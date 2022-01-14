@@ -4,6 +4,7 @@ import time
 import telegram
 from binance.client import Client
 from telegram.ext import *
+import cmc
 
 telegram_api = "your-api"  # Change this with your telegram bot api
 client = Client("", "")
@@ -70,6 +71,9 @@ def responses(input_text):
 
     if user_message.startswith("fear index"):
         return bot.send_message(chat_id=chat_id, text="https://alternative.me/crypto/fear-and-greed-index.png")
+
+    if user_message.startswith("info"):
+        return bot.send_message(chat_id=chat_id, text=cmc.market())
 
     return "Error"
 
