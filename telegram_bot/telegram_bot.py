@@ -305,13 +305,13 @@ def main():
                                  line=dict(color='#a69b05', width=3)))
     elif time_frame in hist_ltf:
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {float(sma10[-1]):,.2f}",
                        line=dict(color='#5c6cff', width=3)))
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {float(sma50[-1]):,.2f}",
                        line=dict(color='#950fba', width=3)))
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {float(sma100[-1]):,.2f}",
                        line=dict(color='#a69b05', width=3)))
     else:
         print("Time frame error.")
