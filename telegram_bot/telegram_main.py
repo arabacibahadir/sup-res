@@ -76,6 +76,9 @@ def responses(input_text):
     if user_message.startswith("info"):
         return bot.send_message(chat_id=chat_id, text=cmc.market())
 
+    if user_message.startswith("alarm"):
+        pass
+
     return "Error"
 
 
