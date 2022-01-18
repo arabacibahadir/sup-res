@@ -79,6 +79,12 @@ def responses(input_text):
     if user_message.startswith("alarm"):
         pass
 
+    if user_message.startswith("price change distribution"):
+        pass
+
+    if user_message.startswith("news"):
+        pass
+
     return "Error"
 
 
