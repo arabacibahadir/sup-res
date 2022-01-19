@@ -7,7 +7,7 @@ from telegram.ext import *
 import cmc
 import fearindex
 
-telegram_api = "your-api"  # Change this with your telegram bot api
+telegram_api = "your-api"  # Replace this with your telegram bot api
 client = Client("", "")
 print("Bot started.")
 widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
@@ -58,6 +58,12 @@ def responses(input_text):
         return f"{majors[0]}:{majors[1]}, {majors[2]}:{majors[3]}, {majors[4]}:{majors[5]}, " \
                f"{majors[6]}:{majors[7]}, {majors[8]}:{majors[9]}, {majors[10]}:{majors[11]}"
 
+    if user_message == "fear index":
+        return bot.send_message(chat_id=chat_id, text=fearindex.fear())
+
+    if user_message == "info":
+        return bot.send_message(chat_id=chat_id, text=cmc.market())
+
     if user_message.startswith("supres"):
         msg = user_message.split(" ")
         tck = msg[1]
@@ -69,12 +75,6 @@ def responses(input_text):
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3]
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
-
-    if user_message.startswith("fear index"):
-        return bot.send_message(chat_id=chat_id, text=fearindex.fear())
-
-    if user_message.startswith("info"):
-        return bot.send_message(chat_id=chat_id, text=cmc.market())
 
     if user_message.startswith("alarm"):
         pass

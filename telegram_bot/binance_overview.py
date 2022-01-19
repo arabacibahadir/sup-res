@@ -6,7 +6,7 @@ page = requests.get(URL)
 soup = BeautifulSoup(page.content, "html.parser")
 
 
-def market():
+def ov():
     pcd = soup.find("div", class_="css-13dog1p")
     t = []
     for i in pcd:
