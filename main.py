@@ -57,7 +57,7 @@ def main():
                 return 0
         return 1
 
-    # -> Fibonacci Price Level between highest resistance line and lowest support line
+    # -> Fibonacci Price Level between the lines
 
     def fib_pl(high_price, low_price):
         """ Uptrend Fibonacci Retracement Formula =>
