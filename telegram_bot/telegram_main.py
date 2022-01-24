@@ -45,7 +45,7 @@ def responses(input_text):
     chat_id = bot.get_updates()[-1].message.chat_id
 
     if user_message == "commands":
-        return "supres 'pair' 'timeframe', major coins, fear index, test"
+        return "supres 'pair' 'timeframe', major coins, fear index, info, test"
 
     if user_message == "test":
         return "Bot is working."
@@ -64,9 +64,6 @@ def responses(input_text):
 
     if user_message == "info":
         return bot.send_message(chat_id=chat_id, text=cmc.market())
-
-    if user_message == "pcd":
-        return bot.send_message(chat_id=chat_id, text=binance_overview.ov())
 
     if user_message.startswith("supres"):
         msg = user_message.split(" ")
