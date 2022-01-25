@@ -50,7 +50,7 @@ tw_key_secret = 'API-SECRET'
 tw_token = 'TOKEN'
 tw_token_secret = 'TOKEN-SECRET'
 ````
-Also change twitter handle name with your twitter handle name in `is_image_tweet` func in `tweet.py` file.
+Also change twitter handle name with your twitter handle name in `is_image_tweet` func in `tweet.py` file. For telegram, change your telegram bot api.
 ````python
 def is_image_tweet():
     stat = api.user_timeline(screen_name='@HANDLE-NAME', count=1)
@@ -68,6 +68,7 @@ Time frame: # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d is supported
 ````
 
 >Alghoritms may not be able to catch some support and resistance lines due to sensitivity. You can get more precise lines by changing sensitivity of the data in the code. 
+
 
 ![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
 
