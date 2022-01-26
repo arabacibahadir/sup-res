@@ -12,3 +12,21 @@ def market():
         t.append(i.text.replace('\xa0', ' '))
 
     return "\n".join(t)
+
+
+def news():
+    URL = "https://coinmarketcap.com/headlines/news/"
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
+    t = []
+    n = []
+    append_str = "-"
+    for a_href in soup.find_all("a", href=True):
+        t.append(a_href.text)
+    index = t.index("Headlines")
+    for i in t[index:index + 15:2]:
+        n.append(i)
+    n = [append_str + sub for sub in n]
+    n.append("https://coinmarketcap.com/headlines/news/")
+    return "\n".join(n)
+
