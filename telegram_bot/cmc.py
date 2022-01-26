@@ -24,9 +24,8 @@ def news():
     for a_href in soup.find_all("a", href=True):
         t.append(a_href.text)
     index = t.index("Headlines")
-    for i in t[index:index + 15:2]:
-        n.append(i)
+    for _ in t[index:index + 15:2]:
+        n.append(_)
     n = [append_str + sub for sub in n]
-    n.append("https://coinmarketcap.com/headlines/news/")
+    n.append(URL)
     return "\n".join(n)
-
