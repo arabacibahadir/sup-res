@@ -6,7 +6,6 @@ from binance.client import Client
 from telegram.ext import *
 import cmc
 import fearindex
-import binance_overview
 
 telegram_api = "your-api"  # Replace this with your telegram bot api
 client = Client("", "")
@@ -45,7 +44,7 @@ def responses(input_text):
     chat_id = bot.get_updates()[-1].message.chat_id
 
     if user_message == "commands":
-        return "supres 'pair' 'timeframe', major coins, fear index, info, test"
+        return "supres 'pair' 'timeframe', major coins, fear index, info, news, test"
 
     if user_message == "test":
         return "Bot is working."
@@ -65,6 +64,9 @@ def responses(input_text):
     if user_message == "info":
         return bot.send_message(chat_id=chat_id, text=cmc.market())
 
+    if user_message.startswith("news"):
+        return bot.send_message(chat_id=chat_id, text=cmc.news())
+
     if user_message.startswith("supres"):
         msg = user_message.split(" ")
         tck = msg[1]
@@ -78,9 +80,6 @@ def responses(input_text):
         return remove_files()
 
     if user_message.startswith("alarm"):
-        pass
-
-    if user_message.startswith("news"):
         pass
 
     return "Error"
