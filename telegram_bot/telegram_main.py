@@ -9,9 +9,6 @@ import fearindex
 
 telegram_api = "your-api"  # Replace this with your telegram bot api
 client = Client("", "")
-print("Bot started.")
-widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
-majors = []
 bot = telegram.Bot(token=telegram_api)
 
 
@@ -50,6 +47,8 @@ def responses(input_text):
         return "Bot is working."
 
     if user_message == "major coins":
+        widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
+        majors = []
         perf = time.perf_counter()
         for w in widget_list:
             values = list(client.get_symbol_ticker(symbol=w).values())
@@ -101,4 +100,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Bot started.")
     main()
