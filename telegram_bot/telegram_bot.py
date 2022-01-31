@@ -346,7 +346,7 @@ def main():
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     text_image = f"{ticker} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} " \
-                 f"{time_frame.upper()} Support and resistance levels: \n" \
+                 f"{time_frame.upper()}\n Support and resistance levels: \n" \
                  f"Res={res_above[:7]} \nSup={sup_below[:7]}"
 
     def save():
