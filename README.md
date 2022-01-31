@@ -20,18 +20,7 @@ Sup-Res requires Python 3.6+ to run.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries.
 
 ```bash
-pip install candlestick-patterns-subodh101
-pip install pandas
-pip install pandas-ta
-pip install plotly
-pip install python-binance
-pip install tweepy 
-pip install kaleido
-```
-
-If you want to host telegram bot, install this package too:
-```bash
-pip install python-telegram-bot
+pip install -r requirements.txt
 ```
 
 ## Usage
