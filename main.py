@@ -3,10 +3,7 @@ import time
 import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
-from candlestick import candlestick
 import historical_data
-import tweet
-import delete_file
 
 
 def main():
@@ -60,17 +57,12 @@ def main():
     # -> Fibonacci Price Level between the lines
 
     def fib_pl(high_price, low_price):
-        """ Uptrend Fibonacci Retracement Formula =>
-         Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-         In this code section we will use only lines, not the highest and lowest prices on chart.
-         Be careful on that, this fib levels can be wrong and irrelevant.
-        """
         for multi in fib_multipliers:
-            # -> Downtrend Fibonacci Retracement Formula we use in here
             retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
     def candlestick_patterns():
+        from candlestick import candlestick
         nonlocal df
         df = candlestick.inverted_hammer(df, target='inverted_hammer')
         df = candlestick.hammer(df, target='hammer')
@@ -318,6 +310,7 @@ def main():
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
         def for_tweet():
+            import tweet
             tweet.send_tweet(image, text_image)
             while tweet.is_image_tweet().text != text_image:
                 time.sleep(1)
@@ -330,8 +323,6 @@ def main():
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
-
-    # save()
 
     def pinescript_code():
 
@@ -349,6 +340,7 @@ def main():
         print("\n------- Pinescript codes -------\n")
 
     # pinescript_code()
+    # save()
     fig.show(id='the_graph', config={'displaylogo': False})
     print(f"Completed execution in {time.perf_counter() - perf} seconds")
 
@@ -364,6 +356,8 @@ if __name__ == "__main__":
                 "One or more issues caused the download to fail. "
                 "Make sure you typed the filename correctly in the settings.")
         main()
+        import delete_file
+
         delete_file.remove()
     except KeyError:
         delete_file.remove()
