@@ -1,6 +1,5 @@
 /.gitignore.txt
 /twaccess.py
-/binance_api.py
 /.gitignore
 .idea/*
 __pycache__/
