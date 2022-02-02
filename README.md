@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. It will share tweet automatically if you want.
+When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. 
 ````
 Ticker:  # Which pair do you want "btcusdt, ethusdt, ethbtc, bnbbusd" etc.
 btcusdt
