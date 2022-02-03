@@ -7,7 +7,6 @@ import pandas as pd
 import pandas_ta as ta
 import plotly.graph_objects as go
 from binance.client import Client
-from candlestick import candlestick
 import telegram_frameselect
 
 client = Client("", "")
@@ -96,6 +95,7 @@ def main():
             fib.append(retracement_levels)
 
     def candlestick_patterns():
+        from candlestick import candlestick
         nonlocal df
         df = candlestick.inverted_hammer(df, target='inverted_hammer')
         df = candlestick.hammer(df, target='hammer')
