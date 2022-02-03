@@ -74,7 +74,7 @@ def responses(input_text):
         with open("output.txt") as f:
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
-        text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3]
+        text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3] + "\n" + content_list[4]
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
 
