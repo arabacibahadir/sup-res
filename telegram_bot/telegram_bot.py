@@ -84,8 +84,6 @@ def main():
                 return 0
         return 1
 
-    # -> Fibonacci Price Level between the highest resistance line and lowest support line
-
     def fib_pl(high_price, low_price):
         """ Uptrend Fibonacci Retracement Formula =>
          Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
@@ -176,7 +174,7 @@ def main():
     ss = []  # Support list
     rr = []  # Resistance list
 
-    # Sensitivity -> As the number increases, the detail decreases. (3,1) probably is the ideal one for daily charts.
+    # Sensitivity -> (3,1) probably is the ideal one for daily charts.
     def sensitivity(sens):
         for row in range(3, len(df) - 1):
             if support(df, row, 3, sens):
@@ -235,7 +233,7 @@ def main():
     ]
 
     c = 0
-    # Drawing support lines
+    # Add support lines to chart
     while 1:
         if c > len(ss) - 1:
             break
@@ -248,7 +246,7 @@ def main():
                            font=dict(size=15, color=support_color))
         c += 1
 
-    # Drawing resistance lines
+    # Add resistance lines to chart
     c = 0
     while 1:
         if c > len(rr) - 1:
@@ -262,7 +260,7 @@ def main():
                            font=dict(size=15, color=res_color))
         c += 1
 
-    # Legend -> Current Resistance
+    # Legend
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
         marker=dict(color=res_color, size=10)))
@@ -272,7 +270,6 @@ def main():
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:8]))}", mode="lines",
         marker=dict(color=legend_color, size=10)))
-    # Legend -> Current Support
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Support : {float(sup_below[0])}", mode="markers+lines",
         marker=dict(color=support_color, size=10)))
@@ -297,12 +294,15 @@ def main():
         marker=dict(color=legend_color, size=10)))
 
     if time_frame in hist_htf:
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {float(sma10[-1]):,.2f}",
-                                 line=dict(color='#5c6cff', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {float(sma50[-1]):,.2f}",
-                                 line=dict(color='#950fba', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {float(sma100[-1]):,.2f}",
-                                 line=dict(color='#a69b05', width=3)))
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {float(sma10[-1]):,.2f}",
+                       line=dict(color='#5c6cff', width=3)))
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {float(sma50[-1]):,.2f}",
+                       line=dict(color='#950fba', width=3)))
+        fig.add_trace(
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {float(sma100[-1]):,.2f}",
+                       line=dict(color='#a69b05', width=3)))
     elif time_frame in hist_ltf:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {float(sma10[-1]):,.2f}",
@@ -311,13 +311,14 @@ def main():
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {float(sma50[-1]):,.2f}",
                        line=dict(color='#950fba', width=3)))
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {float(sma100[-1]):,.2f}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100,
+                       name=f"SMA100   : {float(sma100[-1]):,.2f}",
                        line=dict(color='#a69b05', width=3)))
     else:
         print("Time frame error.")
 
     mtp = 6
-    for _ in fib:  # fib lines
+    for _ in fib:  # Fib lines
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
             marker=dict(color=legend_color, size=10)))
@@ -346,7 +347,7 @@ def main():
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     text_image = f"{ticker} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} " \
-                 f"{time_frame.upper()}\n Support and resistance levels: \n" \
+                 f"{time_frame.upper()}\n Support and resistance levels:\n" \
                  f"Res={res_above[:7]} \nSup={sup_below[:7]}"
 
     def save():
@@ -354,7 +355,6 @@ def main():
             os.mkdir("../telegram_bot")
         image = f"../telegram_bot/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{ticker}.jpeg"
         fig.write_image(image, width=1920, height=1080)
-
         with open('output.txt', 'w') as f:
             f.write(f"{image}\n{text_image}")
 
