@@ -72,7 +72,6 @@ Support and resistance are generally zones, not just lines. Especially in crypto
 - Stay away from **high leverage** if you don't trust your experience.
 - Your priority should **not** be to make money, you should be try to save your money. 
 - Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. 
-- Not every support and resistance works in **high volatility**. 
 
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
