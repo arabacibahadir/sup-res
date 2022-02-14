@@ -9,5 +9,4 @@ plotly==5.3.1
 python_binance==1.0.15
 python_telegram_bot==13.9
 requests==2.26.0
-telegram==0.0.1
 tweepy==3.10.0
