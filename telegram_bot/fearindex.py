@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 
 
 def fear():
+    """
+    It scrapes the Fear&Greed Index from alternative.me
+    :return: A string of Fear&Greed Index data.
+    """
     URL = "https://alternative.me/crypto/fear-and-greed-index/"
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")

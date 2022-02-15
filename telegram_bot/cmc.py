@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 
 
 def market():
+    """
+    This function scrapes the market data from the coinmarketcap.com website and returns a string with
+    the market data
+    :return: A string of text.
+    """
     URL = "https://coinmarketcap.com"
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
@@ -15,6 +20,10 @@ def market():
 
 
 def news():
+    '''
+    The function returns a list of news headlines from the coinmarketcap.com website
+    :return: A string of the news headlines.
+    '''
     URL = "https://coinmarketcap.com/headlines/news/"
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
