@@ -19,11 +19,18 @@ Client.KLINE_INTERVAL_3DAY
 
 
 def frame_select(self: str):
+    """
+    The function takes in a string and returns a time frame and start date
+    
+    :param self: str
+    :type self: str
+    :return: the time frame and the start date.
+    """
     current = datetime.now()
     if self == "1M":
         time_frame = Client.KLINE_INTERVAL_1MINUTE
         start_date = current + timedelta(minutes=-260)
-        start = start_date.strftime("%d %B, %Y")  # Start date to now
+        start = start_date.strftime("%d %B, %Y")
     elif self == "3M":
         time_frame = Client.KLINE_INTERVAL_3MINUTE
         start_date = current + timedelta(minutes=-780)
