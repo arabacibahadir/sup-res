@@ -10,6 +10,7 @@ import fearindex
 telegram_api = "your-api"  # Replace this with your telegram bot api
 client = Client("", "")
 bot = telegram.Bot(token=telegram_api)
+os.chdir("../telegram_bot")  # Changing the directory to the `telegram_bot` folder
 
 
 def start_command(update, context):
@@ -24,16 +25,6 @@ def handle_message(update, context):
     text = str(update.message.text).lower()
     r_text = responses(text)
     update.message.reply_text(r_text)
-
-
-def remove_files():
-    for x in os.listdir("../telegram_bot/"):
-        if x.endswith(".jpeg"):
-            os.unlink("../telegram_bot/" + x)
-        if x.endswith(".csv"):
-            os.unlink("../telegram_bot/" + x)
-        if x.endswith(".txt"):
-            os.unlink("../telegram_bot/" + x)
 
 
 def responses(input_text):
@@ -66,12 +57,22 @@ def responses(input_text):
     if user_message.startswith("news"):
         return bot.send_message(chat_id=chat_id, text=cmc.news())
 
+    msg = user_message.split(" ")
+    tck = msg[1]
+    tfr = msg[2]
+
+    def remove_files():
+        for x in os.listdir("../telegram_bot/"):
+            if x == f"{tck.upper()}.jpeg":
+                os.unlink(f"../telegram_bot/{tck.upper()}.jpeg")
+            if x == f"{tck.upper()}.csv":
+                os.unlink(f"../telegram_bot/{tck.upper()}.csv")
+            if x == "output.txt":
+                os.unlink("../telegram_bot/output.txt")
+
     if user_message.startswith("supres"):
-        msg = user_message.split(" ")
-        tck = msg[1]
-        tfr = msg[2]
-        subprocess.run(f"py telegram_bot.py {tck.upper()} {tfr.upper()}")
-        with open("output.txt") as f:
+        subprocess.run(f"py telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot")
+        with open("../telegram_bot/output.txt") as f:
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3] + "\n" + content_list[4]
