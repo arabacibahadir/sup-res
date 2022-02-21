@@ -71,7 +71,8 @@ def responses(input_text):
                 os.unlink("../telegram_bot/output.txt")
 
     if user_message.startswith("supres"):
-        subprocess.run(f"py ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot", shell=True)
+        # Which python path you are using, if it is not working, change "python3" command -> "py, python"
+        subprocess.run(f"python3 ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot", shell=True)
         with open("../telegram_bot/output.txt", "r+") as f:
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
