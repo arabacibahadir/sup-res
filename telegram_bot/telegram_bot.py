@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 from binance.client import Client
 import telegram_frameselect
 
+os.chdir("../telegram_bot")  # Changing the directory to the `telegram_bot` folder
 client = Client("", "")
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
@@ -25,7 +26,7 @@ def historical_data_write():
     candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
     headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                   'taker buy vol', 'taker buy quote vol', 'ignore']
-    csvFileW = open(data, "w", newline='')
+    csvFileW = open(f"../telegram_bot/{data}", "w", newline='')
     klines_writer = csv.writer(csvFileW, delimiter=",")
     # Writing the data to a CSV file.
     for c in candlesticks:
@@ -419,7 +420,7 @@ def main():
         """
         if not os.path.exists("../telegram_bot"):
             os.mkdir("../telegram_bot")
-        image = f"../telegram_bot/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{ticker}.jpeg"
+        image = f"../telegram_bot/{ticker}.jpeg"
         fig.write_image(image, width=1920, height=1080)
         with open('output.txt', 'w') as f:
             f.write(f"{image}\n{text_image}")
