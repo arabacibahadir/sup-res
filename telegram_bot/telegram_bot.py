@@ -12,17 +12,22 @@ import telegram_frameselect
 client = Client("", "")
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
+# Taking the arguments from the command line and assigning them to variables.
 ticker = sys.argv[1]  # Pair
 frame_s = sys.argv[2]  # Timeframe
 
 
 def historical_data_write():
+    """
+    This function writes the historical data to a csv file
+    """
     data = ticker + ".csv"
     candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
     headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                   'taker buy vol', 'taker buy quote vol', 'ignore']
     csvFileW = open(data, "w", newline='')
     klines_writer = csv.writer(csvFileW, delimiter=",")
+    # Writing the data to a CSV file.
     for c in candlesticks:
         klines_writer.writerow(c)
     csvFileW.close()
@@ -67,6 +72,16 @@ def main():
     res_color = "MediumPurple"
 
     def support(price1, l, n1, n2):
+        """
+        If the price of the asset is increasing for the last n1 days and decreasing for the last n2
+        days, then return 1. Otherwise return 0
+        
+        :param price1: The price data for the asset
+        :param l: The index of the first bar in the support
+        :param n1: The number of bars back you want to look
+        :param n2: The number of bars in the second trend
+        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
+        """
         for i in range(l - n1 + 1, l + 1):
             if price1.low[i] > price1.low[i - 1]:
                 return 0
@@ -76,6 +91,18 @@ def main():
         return 1
 
     def resistance(price1, l, n1, n2):
+        """
+        If the price of the stock is increasing for the last n1 days and decreasing for the last n2
+        days, then return 1. Otherwise return 0
+        
+        :param price1: The price data for the asset
+        :param l: The index of the first bar in the resistance
+        :param n1: The number of bars back you want to look
+        :param n2: The number of days after the first resistance line where the price will be considered
+        to be broken
+        :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
+        n2 periods.
+        """
         for i in range(l - n1 + 1, l + 1):
             if price1.high[i] < price1.high[i - 1]:
                 return 0
@@ -85,14 +112,23 @@ def main():
         return 1
 
     def fib_pl(high_price, low_price):
-        """ Uptrend Fibonacci Retracement Formula =>
-         Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+        """
+        The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
+        retracement levels
+        Uptrend Fibonacci Retracement Formula =>
+        Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+        :param high_price: The high price for the current price level
+        :param low_price: Low price for the period
         """
         for multi in fib_multipliers:
             retracement_levels = low_price + (high_price - low_price) * multi
             fib.append(retracement_levels)
 
     def candlestick_patterns():
+        """
+        The function takes in a dataframe and returns a list of candlestick patterns found in the
+        dataframe
+        """
         from candlestick import candlestick
         nonlocal df
         df = candlestick.inverted_hammer(df, target='inverted_hammer')
@@ -114,6 +150,11 @@ def main():
         pattern_find = []
 
         def pattern_find_func(self):
+            """
+            The function takes in a dataframe and a list of column names. It then iterates through the
+            list of column names and checks if the column name is in the dataframe. If it is, it adds
+            the column name to a list and adds the date of the match to another list
+            """
             for col in df.columns:
                 pattern_find.append(col)
             t = 0
@@ -123,6 +164,7 @@ def main():
                     pattern_list.append(self['date'].strftime('%b-%d-%y'))
                 t += 1
 
+        # Looping through the dataframe and finding the pattern in the dataframe.
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
@@ -144,7 +186,10 @@ def main():
     if time_frame in hist_htf:
         candlestick_patterns()
 
-    def drop_null():  # Drop NULL values
+    def drop_null():
+        """
+        Drop all rows with NULL values in the dataframe
+        """
         for col in df.columns:
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
@@ -153,6 +198,7 @@ def main():
     drop_null()
     df = df[:len(df)]
 
+    # The below code is creating a candlestick chart.
     if time_frame in hist_htf:
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                         name="Candlestick",
@@ -174,8 +220,12 @@ def main():
     ss = []  # Support list
     rr = []  # Resistance list
 
-    # Sensitivity -> (3,1) probably is the ideal one for daily charts.
     def sensitivity(sens):
+        """
+        Find the support and resistance levels for a given asset
+        sensitivity:1 is recommended for daily charts or high frequency trade scalping 
+        :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
+        """
         for row in range(3, len(df) - 1):
             if support(df, row, 3, sens):
                 ss.append((row, df.low[row]))
@@ -191,11 +241,15 @@ def main():
     latest_close = tuple(df['close'])[-1]
 
     def supres():
+        # Checking if the support is below the latest close. If it is, it is appending it to the list
+        # sup_below. If it isn't, it is appending it to the list new_res.
         for s in sup:
             if s < latest_close:
                 sup_below.append(s)
             else:
                 new_res.append(s)
+        # Checking if the price is above the latest close price. If it is, it is appending it to the
+        # res_above list. If it is not, it is appending it to the new_sup list.
         for r in res:
             if r > latest_close:
                 res_above.append(r)
@@ -208,15 +262,22 @@ def main():
     res_above.extend(new_res)
     sup_below = sorted(sup_below, reverse=True)
     res_above = sorted(res_above)
+    # Checking if the support level is empty. If it is, it appends the minimum value of the low
+    # column to the list.
     if len(sup_below) == 0:
         sup_below.append(min(df['low']))
+    # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
+    # column to the list.
     if len(res_above) == 0:
         res_above.append(min(df['high']))
 
+    # Computing the Fibonacci sequence for the numbers in the range of the last element of the
+    # res_above list and the last element of the sup_below list.
     fib_pl(res_above[-1], sup_below[-1])
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
 
+    # Adding a watermark to the plot.
     fig.layout.annotations = [
         dict(
             name="draft watermark",
@@ -233,7 +294,7 @@ def main():
     ]
 
     c = 0
-    # Add support lines to chart
+    # Adding the support lines and annotations to the chart.
     while 1:
         if c > len(ss) - 1:
             break
@@ -246,8 +307,8 @@ def main():
                            font=dict(size=15, color=support_color))
         c += 1
 
-    # Add resistance lines to chart
     c = 0
+    # Adding the resistance lines and annotations to the chart.
     while 1:
         if c > len(rr) - 1:
             break
@@ -293,6 +354,7 @@ def main():
         y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
+    # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
     if time_frame in hist_htf:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {float(sma10[-1]):,.2f}",
@@ -318,7 +380,8 @@ def main():
         print("Time frame error.")
 
     mtp = 6
-    for _ in fib:  # Fib lines
+    # Adding a line to the plot for each Fibonacci level.
+    for _ in fib:
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
             marker=dict(color=legend_color, size=10)))
@@ -351,6 +414,9 @@ def main():
                  f"Res={res_above[:7]} \nSup={sup_below[:7]}"
 
     def save():
+        """
+        Saves the image and text file.
+        """
         if not os.path.exists("../telegram_bot"):
             os.mkdir("../telegram_bot")
         image = f"../telegram_bot/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{ticker}.jpeg"
@@ -366,11 +432,14 @@ def main():
 
 if __name__ == "__main__":
 
+    # Selecting the time frame for the data to be retrieved.
     time_frame = telegram_frameselect.frame_select(frame_s)[0]
+    # Selecting the frame that the user wants to start from.
     start = telegram_frameselect.frame_select(frame_s)[1]
     perf = time.perf_counter()
     historical_data_write()
     file_name = ticker + ".csv"
+    # Getting the information about the asset from the Binance API.
     symbol_info = client.get_symbol_info(ticker)
     print("Data writing:", file_name)
     if os.path.isfile(file_name):
