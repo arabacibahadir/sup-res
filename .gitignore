@@ -3,4 +3,3 @@
 /.gitignore
 .idea/*
 __pycache__/
-/widget.py
