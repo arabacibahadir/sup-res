@@ -15,15 +15,14 @@ def market():
     t = []
     for i in info:
         t.append(i.text.replace('\xa0', ' '))
-
     return "\n".join(t)
 
 
 def news():
-    '''
+    """
     The function returns a list of news headlines from the coinmarketcap.com website
     :return: A string of the news headlines.
-    '''
+    """
     URL = "https://coinmarketcap.com/headlines/news/"
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
