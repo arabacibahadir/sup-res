@@ -72,7 +72,8 @@ def responses(input_text):
 
     if user_message.startswith("supres"):
         # Which python path you are using, if it is not working, change "python3" command -> "py, python"
-        subprocess.run(f"python3 ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot", shell=True)
+        subprocess.run(f"python3 ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot",
+                       shell=True)
         with open("../telegram_bot/output.txt", "r+") as f:
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
@@ -80,7 +81,13 @@ def responses(input_text):
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
 
-    if user_message.startswith("alarm"):
+    if user_message.startswith("set alarm"):
+        pass
+
+    if user_message.startswith("update alarm"):
+        pass
+
+    if user_message.startswith("delete alarm"):
         pass
 
     return "Error"
