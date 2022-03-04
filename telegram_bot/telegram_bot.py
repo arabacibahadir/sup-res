@@ -4,7 +4,7 @@ import sys
 import time
 from datetime import datetime
 import pandas as pd
-import pandas_ta as ta
+import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from binance.client import Client
 import telegram_frameselect
