@@ -426,8 +426,6 @@ def main():
             f.write(f"{image}\n{text_image}")
 
     save()
-
-    # fig.show(id='the_graph', config={'displaylogo': False})
     print(f"\nCompleted execution in {time.perf_counter() - perf} seconds")
 
 
