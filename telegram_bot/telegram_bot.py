@@ -23,7 +23,7 @@ def historical_data_write():
     This function writes the historical data to a csv file
     """
     data = ticker + ".csv"
-    candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
+    candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=270)
     headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                   'taker buy vol', 'taker buy quote vol', 'ignore']
     csvFileW = open(f"../telegram_bot/{data}", "w", newline='')
@@ -40,6 +40,17 @@ def historical_data_write():
     df.insert(1, 'date', date)
     del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], df[
         'tradecount']
+
+    def drop_null():
+        """
+        Drop all rows with NULL values in the dataframe
+        """
+        for col in df.columns:
+            index_null = df[df[col] == "NULL"].index
+            df.drop(index_null, inplace=True)
+            df.isna().sum()
+
+    drop_null()
     df.to_csv(data, index=False)
 
 
@@ -187,16 +198,6 @@ def main():
     if time_frame in hist_htf:
         candlestick_patterns()
 
-    def drop_null():
-        """
-        Drop all rows with NULL values in the dataframe
-        """
-        for col in df.columns:
-            index_null = df[df[col] == "NULL"].index
-            df.drop(index_null, inplace=True)
-            df.isna().sum()
-
-    drop_null()
     df = df[:len(df)]
 
     # The below code is creating a candlestick chart.
