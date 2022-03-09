@@ -26,5 +26,5 @@ def is_image_tweet():
     """
     This is getting the latest tweet from the user.
     """
-    stat = api.user_timeline(screen_name='@HANDLE-NAME', count=1) # Change with your twitter handle name
+    stat = api.user_timeline(screen_name=git_tw_access.user_handle, count=1) # Change with your twitter handle name
     return stat[0]
