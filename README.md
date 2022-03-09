@@ -35,7 +35,7 @@ Time frame: # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d (m:minute, h
 1d
 ````
 
-If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api).
+If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file, and change your user handle name. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api).
 
 ````python
 # Twitter api keys
@@ -43,14 +43,7 @@ tw_api = 'YOUR-API'
 tw_key_secret = 'API-SECRET'
 tw_token = 'TOKEN'
 tw_token_secret = 'TOKEN-SECRET'
-````
-
-Also change twitter handle name with your twitter handle name in `is_image_tweet` func in `tweet.py` file. For telegram, change your telegram bot api.
-
-````python
-def is_image_tweet():
-    stat = api.user_timeline(screen_name='@HANDLE-NAME', count=1)
-    return stat[0]
+user_handle='@HANDLE-NAME'
 ````
 
 If you don't want to use twitter, save or pinescript functions you can comment `save`, `for_tweet` or `pinescript_code` these functions.
