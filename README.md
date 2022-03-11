@@ -47,7 +47,14 @@ user_handle='@HANDLE-NAME'
 ````
 
 If you don't want to use twitter, save or pinescript functions you can comment `save`, `for_tweet` or `pinescript_code` these functions.
-Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot.
+
+Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot. 
+
+Binance rate limits are:
+
+    1200 requests per minute
+    10 orders per second
+    100,000 orders per 24hrs
 
 >You can get more precise lines by changing sensitivity of the data in the code. 
 
