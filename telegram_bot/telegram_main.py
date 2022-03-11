@@ -6,6 +6,7 @@ from binance.client import Client
 from telegram.ext import *
 import cmc
 import fearindex
+import datetime
 
 telegram_api = "your-api"  # Replace this with your telegram bot api
 client = Client("", "")
@@ -35,7 +36,10 @@ def responses(input_text):
         return "supres 'pair' 'timeframe', major coins, fear index, info, news, test"
 
     if user_message == "test":
-        return "Bot is working."
+        timestamp = client.get_server_time().get('serverTime')/1000
+        return f"Bot is working.\nAPI System status: {client.get_system_status().get('msg')}\n" \
+               f"Server time: " \
+               f"{datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}"
 
     if user_message == "major coins":
         widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
@@ -71,8 +75,10 @@ def responses(input_text):
                 os.unlink("../telegram_bot/output.txt")
 
     if user_message.startswith("supres"):
-        # Which python path you are using, if it is not working, change "python3" command -> "py, python"
-        subprocess.run(f"python3 ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot",
+        has_pair = any(tck.upper() == i.get('symbol') for i in client.get_all_tickers())
+        print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
+        # Which python path you are using, if it is not working, change "python" command -> "py, python3"
+        subprocess.run(f"python ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot",
                        shell=True)
         with open("../telegram_bot/output.txt", "r+") as f:
             content_list = f.readlines()
