@@ -366,7 +366,7 @@ def main():
     fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
                       hovermode='x', dragmode="zoom",
                       paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-                      xaxis_title="Date", yaxis_title="Price", legend=dict(bgcolor=legend_color))
+                      legend=dict(bgcolor=legend_color), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 

@@ -404,7 +404,7 @@ def main():
         title=str(f"{ticker} {time_frame.upper()} Chart"),
         hovermode='x', dragmode="zoom",
         paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-        xaxis_title="Date", yaxis_title="Price", legend=dict(bgcolor=legend_color))
+        legend=dict(bgcolor=legend_color), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     text_image = f"{ticker} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} " \
