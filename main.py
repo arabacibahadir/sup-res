@@ -393,23 +393,29 @@ def main():
                 break
         # for_tweet()
 
-    def pinescript_code():
-
-        print("------- Pinescript codes -------\n\n"
-              "//@version=5\nindicator('My Script', overlay=true)")
-        for line_res in res_above[:10]:
-            print(
-                f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)")
-        for line_sup in sup_below[:10]:
-            print(
-                f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)")
-        print("plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n"
-              "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n"
-              "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n")
-        print("\n------- Pinescript codes -------\n")
-
-    # pinescript_code()
     # save()
+    def pinescript_code():
+        temp = []
+        lines_sma = "//@version=5\nindicator('Sup-Res', overlay=true)\n" \
+                    "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
+                    "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
+                    "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
+
+        for line_res in res_above[:10]:
+            lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
+            temp.append(lr)
+
+        for line_sup in sup_below[:10]:
+            ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
+            temp.append(ls)
+        lines = '\n'.join(map(str, temp))
+
+        print(lines_sma + lines)
+        f = open("pinescript.txt", "w")
+        f.write(lines_sma + lines)
+        f.close()
+
+    pinescript_code()
     fig.show(id='the_graph', config={'displaylogo': False})
     print(f"Completed execution in {time.perf_counter() - perf} seconds")
 
