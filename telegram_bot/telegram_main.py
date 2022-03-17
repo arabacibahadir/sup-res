@@ -87,6 +87,9 @@ def responses(input_text):
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
 
+    if user_message.startswith("pinescript"):
+        pass
+
     if user_message.startswith("set alarm"):
         pass
 
