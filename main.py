@@ -306,9 +306,6 @@ def main():
         y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:8]))}", mode="lines",
         marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" --------------------------------- ", mode="markers",
-        marker=dict(color=legend_color, size=0)))
-    fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" ----------  twitter.com/sup_res  ----------- ", mode="markers",
         marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
@@ -366,7 +363,7 @@ def main():
     fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
                       hovermode='x', dragmode="zoom",
                       paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-                      legend=dict(bgcolor=legend_color), margin=dict(t=30, l=0, b=0, r=0))
+                      legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
