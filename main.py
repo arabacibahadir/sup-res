@@ -184,7 +184,21 @@ def main():
 
     ss = []  # ss : Support list
     rr = []  # rr : Resistance list
-
+    # Adding a watermark to the plot.
+    fig.layout.annotations = [
+        dict(
+            name="draft watermark",
+            text="twitter.com/sup_res",
+            textangle=-30,
+            opacity=0.2,
+            font=dict(color="black", size=100),
+            xref="paper",
+            yref="paper",
+            x=0.5,
+            y=0.5,
+            showarrow=False,
+        )
+    ]
     def sensitivity(sens):
         """
         Find the support and resistance levels for a given asset
@@ -291,6 +305,9 @@ def main():
         marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f" --------------------------------- ", mode="markers",
+        marker=dict(color=legend_color, size=0)))
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f" ----------  twitter.com/sup_res  ----------- ", mode="markers",
         marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
