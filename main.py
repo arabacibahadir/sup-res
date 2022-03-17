@@ -4,6 +4,7 @@ import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 import historical_data
+import delete_file
 
 
 def main():
@@ -199,6 +200,7 @@ def main():
             showarrow=False,
         )
     ]
+
     def sensitivity(sens):
         """
         Find the support and resistance levels for a given asset
@@ -212,7 +214,7 @@ def main():
                 rr.append((row, df.high[row]))
 
     sensitivity(2)
-    
+
     sup_below = []
     res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
@@ -426,8 +428,6 @@ if __name__ == "__main__":
                 "One or more issues caused the download to fail. "
                 "Make sure you typed the filename correctly in the settings.")
         main()
-        import delete_file
-
         delete_file.remove()
     except KeyError:
         delete_file.remove()
