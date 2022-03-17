@@ -38,8 +38,8 @@ def historical_data_write():
     df = pd.read_csv(data)
     date = pd.to_datetime(df['unix'], unit='ms')
     df.insert(1, 'date', date)
-    del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], df[
-        'tradecount']
+    del df['Volume USDT'],df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], \
+        df['ignore'], df['tradecount']
 
     def drop_null():
         """
@@ -65,7 +65,6 @@ def main():
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
     df = df.append(df.tail(1), ignore_index=True)
-    volume = list(reversed((df['Volume USDT'])))
     dfsma = df[:-1]
     sma10 = tuple((dfsma.ta.sma(10)))
     sma50 = tuple((dfsma.ta.sma(50)))
@@ -351,9 +350,6 @@ def main():
         y=[ss[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines", marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
-        marker=dict(color=legend_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Volume    : {int(volume[2]):,.1f} $ ", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
     # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
