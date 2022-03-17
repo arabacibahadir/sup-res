@@ -409,8 +409,6 @@ def main():
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
             temp.append(ls)
         lines = '\n'.join(map(str, temp))
-
-        print(lines_sma + lines)
         f = open("pinescript.txt", "w")
         f.write(lines_sma + lines)
         f.close()
