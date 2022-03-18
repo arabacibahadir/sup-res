@@ -396,7 +396,8 @@ def main():
     # save()
     def pinescript_code():
         temp = []
-        lines_sma = "//@version=5\nindicator('Sup-Res', overlay=true)\n" \
+        lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {historical_data.time_frame}'," \
+                    f" overlay=true)\n" \
                     "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
                     "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
                     "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
