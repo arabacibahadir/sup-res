@@ -38,7 +38,7 @@ def historical_data_write():
     df = pd.read_csv(data)
     date = pd.to_datetime(df['unix'], unit='ms')
     df.insert(1, 'date', date)
-    del df['Volume USDT'],df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], \
+    del df['Volume USDT'], df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], \
         df['ignore'], df['tradecount']
 
     def drop_null():
@@ -404,7 +404,7 @@ def main():
         title=str(f"{ticker} {time_frame.upper()} Chart"),
         hovermode='x', dragmode="zoom",
         paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-        legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
+        legend=dict(bgcolor=legend_color, font=dict(size=12)), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
     text_image = f"{ticker} {df['date'].dt.strftime('%b-%d-%Y')[candle_count]} " \
@@ -423,6 +423,27 @@ def main():
             f.write(f"{image}\n{text_image}")
 
     save()
+
+    def pinescript_code():
+        temp = []
+        lines_sma = f"//@version=5\nindicator('Sup-Res {ticker} {frame_s}', overlay=true)\n" \
+                    "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
+                    "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
+                    "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
+
+        for line_res in res_above[:10]:
+            lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
+            temp.append(lr)
+
+        for line_sup in sup_below[:10]:
+            ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
+            temp.append(ls)
+        lines = '\n'.join(map(str, temp))
+        f = open("../telegram_bot/pinescript.txt", "w")
+        f.write(lines_sma + lines)
+        f.close()
+
+    pinescript_code()
     print(f"\nCompleted execution in {time.perf_counter() - perf} seconds")
 
 

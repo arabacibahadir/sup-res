@@ -36,7 +36,7 @@ def responses(input_text):
         return "supres 'pair' 'timeframe', major coins, fear index, info, news, test"
 
     if user_message == "test":
-        timestamp = client.get_server_time().get('serverTime')/1000
+        timestamp = client.get_server_time().get('serverTime') / 1000
         return f"Bot is working.\nAPI System status: {client.get_system_status().get('msg')}\n" \
                f"Server time: " \
                f"{datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}"
@@ -60,6 +60,19 @@ def responses(input_text):
 
     if user_message.startswith("news"):
         return bot.send_message(chat_id=chat_id, text=cmc.news())
+
+    if user_message == "pinescript":
+        textfile = '../telegram_bot/pinescript.txt'
+        bot.send_document(chat_id=chat_id, document=open(textfile, 'rb'))
+
+    if user_message.startswith("set alarm"):
+        pass
+
+    if user_message.startswith("update alarm"):
+        pass
+
+    if user_message.startswith("delete alarm"):
+        pass
 
     msg = user_message.split(" ")
     tck = msg[1]
@@ -86,18 +99,6 @@ def responses(input_text):
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3] + "\n" + content_list[4]
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
-
-    if user_message.startswith("pinescript"):
-        pass
-
-    if user_message.startswith("set alarm"):
-        pass
-
-    if user_message.startswith("update alarm"):
-        pass
-
-    if user_message.startswith("delete alarm"):
-        pass
 
     return "Error"
 
