@@ -50,12 +50,6 @@ Pine Script file will be created after run successfully main function.
 
 Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot. 
 
-Binance rate limits are:
-
-    1200 requests per minute
-    10 orders per second
-    100,000 orders per 24hrs
-
 >You can get more precise lines by changing sensitivity of the data in the code. 
 
 
