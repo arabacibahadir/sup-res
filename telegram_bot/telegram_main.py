@@ -33,11 +33,11 @@ def responses(input_text):
     chat_id = bot.get_updates()[-1].message.chat_id
 
     if user_message == "commands":
-        return "supres 'pair' 'timeframe', major coins, fear index, info, news, test"
+        return "supres 'pair' 'timeframe', pinescript, major coins, fear index, info, news, test"
 
     if user_message == "test":
         timestamp = client.get_server_time().get('serverTime') / 1000
-        return f"Bot is working.\nAPI System status: {client.get_system_status().get('msg')}\n" \
+        return f"Bot is working.\nAPI System status: {client.get_system_status().get('msg').capitalize()}\n" \
                f"Server time: " \
                f"{datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}"
 
@@ -63,7 +63,10 @@ def responses(input_text):
 
     if user_message == "pinescript":
         textfile = '../telegram_bot/pinescript.txt'
-        bot.send_document(chat_id=chat_id, document=open(textfile, 'rb'))
+        if os.path.exists(textfile):
+            bot.send_document(chat_id=chat_id, document=open(textfile, 'rb'))
+        else:
+            bot.send_message(chat_id=chat_id, text='There is no pinescript.txt file, first run the supres command.')
 
     if user_message.startswith("set alarm"):
         pass
