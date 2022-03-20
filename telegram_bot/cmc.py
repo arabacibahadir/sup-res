@@ -28,12 +28,11 @@ def news():
     soup = BeautifulSoup(page.content, "html.parser")
     t = []
     n = []
-    append_str = "-"
     for a_href in soup.find_all("a", href=True):
         t.append(a_href.text)
     index = t.index("Headlines")
     for _ in t[index:index + 15:2]:
         n.append(_)
-    n = [append_str + sub for sub in n]
+    n = ["-" + sub for sub in n]
     n.append(URL)
     return "\n".join(n)
