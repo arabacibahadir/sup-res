@@ -14,6 +14,5 @@ def fear():
     t = []
     for i in info:
         t.append(i.text)
-
     return f"Fear&Greed Index:\nNow: {t[0]}\nYesterday: {t[1]}\nLast Week: {t[2]}\nLast Month: {t[3]}\n"
 
