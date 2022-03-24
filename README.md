@@ -128,9 +128,9 @@ Pull requests are welcome, any contributions you make are greatly appreciated. B
 Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
 
 - Fork the Project
-- Create your Feature Branch (`git checkout -b feature/NewFeature`)
-- Commit your Changes (`git commit -m 'Add some NewFeature`')
-- Push to the Branch (`git push origin feature/NewFeature`)
+- Create your Feature Branch `git checkout -b feature/NewFeature`
+- Commit your Changes `git commit -m 'Add some NewFeature`
+- Push to the Branch `git push origin feature/NewFeature`
 - Open a Pull Request
 
 
