@@ -113,6 +113,7 @@ _BTCUSDT_ chart
 ## Pine Script
 
 Sup-Res supports Pine Script scripting language. Just **run** *main.py* file, then **copy** "./pinescript.txt" and **paste** *Tradingview Pine Script* section.
+Also telegram bot works with Pine Script.
 
 ![pinecodes](https://user-images.githubusercontent.com/32988819/136625978-355c9591-6865-441a-871a-dd3526b4308f.png)
 
@@ -122,9 +123,16 @@ Sup-Res supports Pine Script scripting language. Just **run** *main.py* file, th
 
 
 ## Contributing
-Pull requests are welcome. Before PR please open an issue what you would like to change.
+Pull requests are welcome, any contributions you make are greatly appreciated. Before PR please open an issue what you would like to change.
 
 Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
+
+- Fork the Project
+- Create your Feature Branch (`git checkout -b feature/NewFeature`)
+- Commit your Changes (`git commit -m 'Add some NewFeature`')
+- Push to the Branch (`git push origin feature/NewFeature`)
+- Open a Pull Request
+
 
 ## License
 Sup-Res is licensed under the GNU General Public License v3.0
