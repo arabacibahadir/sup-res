@@ -351,7 +351,7 @@ def main():
             marker=dict(color=legend_color, size=0)))
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, 24, 2):  # candlestick patterns
+        for pat1 in range(1, 24, 2):  # Candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
@@ -410,6 +410,8 @@ def main():
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
             temp.append(ls)
         lines = '\n'.join(map(str, temp))
+        # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to
+        # the file.
         f = open("../main_supres/pinescript.txt", "w")
         f.write(lines_sma + lines)
         f.close()
@@ -420,11 +422,11 @@ def main():
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres")
+    os.chdir("../main_supres") # Changing the directory to the main_supres folder.
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
-        if os.path.isfile(historical_data.file_name):  # <- Check .csv file is there or not
+        if os.path.isfile(historical_data.file_name):  # Check .csv file is there or not
             print(f"{historical_data.file_name} downloaded and created.")
         else:
             print(
