@@ -6,6 +6,8 @@ import warnings
 import pandas as pd
 from binance.client import Client
 import frameselect
+
+# Ignore FutureWarning from Pandas.
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
@@ -14,6 +16,9 @@ def hist_data():
                   'taker buy vol', 'taker buy quote vol', 'ignore']
 
     def historical_Data_Write(self):
+        """
+        The function writes the data to a csv file
+        """
         data = self + ".csv"
         csvFileW = open(data, "w", newline='')
         klines_writer = csv.writer(csvFileW, delimiter=",")
