@@ -89,7 +89,7 @@ _28 September 2021 BTCUSDT Binance_
 [Fibonacci Retracement Levels](https://www.investopedia.com/terms/f/fibonacciretracement.asp),
 [Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/)
 
-Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_. **Be careful** not to miss the _news_ and _fundamental analysis_. 
+Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_.
 
 ![legend](https://user-images.githubusercontent.com/32988819/134764245-18551144-ec9c-4489-9a0a-495e49de9a9d.png)
 
