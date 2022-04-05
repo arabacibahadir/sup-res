@@ -20,6 +20,7 @@ def main():
     df.reset_index(drop=True, inplace=True)
     df = df.append(df.tail(1), ignore_index=True)
     dfsma = df[:-1]
+    # Sma, Rsi, Macd, Fibonacci variables
     sma10 = tuple((dfsma.ta.sma(10)))
     sma50 = tuple((dfsma.ta.sma(50)))
     sma100 = tuple((dfsma.ta.sma(100)))
@@ -30,6 +31,7 @@ def main():
     new_sup = []
     new_res = []
     pattern_list = []
+    # Chart settings
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
@@ -165,7 +167,7 @@ def main():
     df = df[:len(df)]  # Candle range
 
     # The below code is creating a candlestick chart.
-    if historical_data.time_frame in hist_htf:
+    if historical_data.time_frame in hist_htf:  # For HTF chart
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
                                         name="Candlestick",
                                         text=df['date'].dt.strftime('%b-%d-%y'),
@@ -174,7 +176,7 @@ def main():
                                         low=df['low'],
                                         close=df['close'])])
 
-    elif historical_data.time_frame in hist_ltf:
+    elif historical_data.time_frame in hist_ltf:  # For LTF chart
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
                                         name="Candlestick",
                                         text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
@@ -215,6 +217,7 @@ def main():
 
     sensitivity(2)
 
+    # Finding support and resistance levels
     sup_below = []
     res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
@@ -286,7 +289,7 @@ def main():
                            font=dict(size=15, color=res_color))
         c += 1
 
-    # Legend
+    # Legend texts
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
         marker=dict(color=res_color, size=10)))
@@ -355,7 +358,7 @@ def main():
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
-
+    # Candle patterns for HTF
     if historical_data.time_frame in hist_htf:
         candle_patterns()
 
@@ -372,8 +375,9 @@ def main():
             os.mkdir("images")
         image = f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
         fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
-                       full_html=False, include_plotlyjs='cdn')
+        fig.write_html(
+            f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
+            full_html=False, include_plotlyjs='cdn')
         text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
                      f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
@@ -422,7 +426,7 @@ def main():
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres") # Changing the directory to the main_supres folder.
+    os.chdir("../main_supres")  # Changing the directory to the main_supres folder.
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
