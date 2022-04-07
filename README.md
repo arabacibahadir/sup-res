@@ -48,7 +48,7 @@ user_handle='@HANDLE-NAME'
 
 Pine Script file will be created after run successfully main function. 
 
-Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot. 
+Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot if your python alias is different. 
 
 >You can get more precise lines by changing sensitivity of the data in the code. 
 
@@ -60,12 +60,11 @@ Your python alias could be different like "py, python3", you should change your 
 ## Main Motivation
 A lot of new investors are investing without having any technical knowledge. Also those with a little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
 
-I worked on a code that could provide help for users who don't have much experience about _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**. This is not a game and every day people lose all their money. Get your priorities straight.
+I worked on a code that could provide help for users who don't have much experience about _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**. Get your priorities straight.
 
-Support and resistance are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop. Watch out for high volume breakouts, sudden price changes and trend reversals. If you are investing low volume coin, it is very dangerous to trade on new coin charts without support and resistance levels. 
+Supports and resistances are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop your position. Watch out for high volume breakouts, sudden price changes and trend reversals. If you are investing low volume coin, it is very dangerous to trade on new coin charts without support and resistance levels. 
 
 - Every investor's wallet and strategy is different.
-- Stay away from **high leverage** if you don't trust your experience.
 - Your priority should **not** be to make money, you should be try to save your money. 
 - Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. 
 
