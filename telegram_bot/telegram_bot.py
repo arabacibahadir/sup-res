@@ -71,16 +71,21 @@ def main():
     sma100 = tuple((dfsma.ta.sma(100)))
     rsi = tuple((ta.rsi(df['close'][:-1])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    fib_up, fib_down = [], []
-    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618)
-    new_sup = []
-    new_res = []
-    pattern_list = []
+    fib_up, fib_down, pattern_list = [], [], []
+    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
+    new_sup, new_res, sup_below, res_above = [], [], [], []
+    ss, rr = [], []  # ss : Support list, rr : Resistance list
+    # Chart settings
+    fig = []  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
+    # Adding a watermark to the plot.
+    watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.2,
+                             font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
+                             showarrow=False))
 
     def support(price1, l, n1, n2):
         """
@@ -219,9 +224,7 @@ def main():
                                         high=df['high'],
                                         low=df['low'],
                                         close=df['close'])])
-
-    ss = []  # Support list
-    rr = []  # Resistance list
+    fig.update_layout(annotations=[watermark_layout])
 
     def sensitivity(sens):
         """
@@ -237,8 +240,6 @@ def main():
 
     sensitivity(2)
 
-    sup_below = []
-    res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
     res = tuple(map(lambda res1: res1[1], rr))
     latest_close = tuple(df['close'])[-1]
@@ -279,22 +280,6 @@ def main():
     fib_pl(res_above[-1], sup_below[-1])
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
-
-    # Adding a watermark to the plot.
-    fig.layout.annotations = [
-        dict(
-            name="draft watermark",
-            text="twitter.com/sup_res",
-            textangle=-30,
-            opacity=0.2,
-            font=dict(color="black", size=100),
-            xref="paper",
-            yref="paper",
-            x=0.5,
-            y=0.5,
-            showarrow=False,
-        )
-    ]
 
     c = 0
     # Adding the support lines and annotations to the chart.
@@ -396,7 +381,7 @@ def main():
             marker=dict(color=legend_color, size=0)))
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, 24, 2):  # candlestick patterns
+        for pat1 in range(1, len(pattern_list), 2):  # candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
