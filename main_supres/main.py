@@ -53,11 +53,11 @@ def main():
         :param n2: The number of bars in the second trend
         :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
         """
-        for i in range(l - n1 + 1, l + 1):
-            if price1.low[i] > price1.low[i - 1]:
+        for last_s in range(l - n1 + 1, l + 1):
+            if price1.low[last_s] > price1.low[last_s - 1]:
                 return 0
-        for i in range(l + 1, l + n2 + 1):
-            if price1.low[i] < price1.low[i - 1]:
+        for last_s in range(l + 1, l + n2 + 1):
+            if price1.low[last_s] < price1.low[last_s - 1]:
                 return 0
         return 1
 
@@ -74,11 +74,11 @@ def main():
         :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
         n2 periods.
         """
-        for i in range(l - n1 + 1, l + 1):
-            if price1.high[i] < price1.high[i - 1]:
+        for last_r in range(l - n1 + 1, l + 1):
+            if price1.high[last_r] < price1.high[last_r - 1]:
                 return 0
-        for i in range(l + 1, l + n2 + 1):
-            if price1.high[i] > price1.high[i - 1]:
+        for last_r in range(l + 1, l + n2 + 1):
+            if price1.high[last_r] > price1.high[last_r - 1]:
                 return 0
         return 1
 
@@ -131,8 +131,8 @@ def main():
             for col in df.columns:
                 pattern_find.append(col)
             t = 0
-            for i in self:
-                if i == True:
+            for pattern in self:
+                if pattern == True:
                     # even pattern, odd date
                     pattern_list.append(pattern_find[t])
                     pattern_list.append(self['date'].strftime('%b-%d-%y'))
@@ -281,21 +281,23 @@ def main():
         marker=dict(color=res_color, size=10)))
 
     differ = len(res_above) - len(sup_below)
-    if differ < 0:
-        for i in range(differ):
-            res_above.extend([0])
-    elif differ > 0:
-        for i in range(differ):
-            sup_below.extend([0])
-    temp = 0
-    for _ in range(max(len(res_above), len(sup_below))):
-        fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
-            marker=dict(color=legend_color, size=10)))
-        temp += 1
-        if temp == 14:
-            break
-
+    try:
+        if differ < 0:
+            for i in range(abs(differ)):
+                res_above.extend([0])
+        if differ > 0:
+            for i in range(abs(differ)):
+                sup_below.extend([0])
+        temp = 0
+        for _ in range(max(len(res_above), len(sup_below))):
+            fig.add_trace(go.Scatter(
+                y=[ss[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
+                marker=dict(color=legend_color, size=10)))
+            temp += 1
+            if temp == 14:
+                break
+    except IndexError:
+        pass
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
         marker=dict(color=legend_color, size=0)))
@@ -393,7 +395,7 @@ def main():
 
     # save()
     def pinescript_code():
-        temp = []
+        templines = []
         lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {historical_data.time_frame}'," \
                     f" overlay=true)\n" \
                     "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
@@ -402,12 +404,12 @@ def main():
 
         for line_res in res_above[:10]:
             lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
-            temp.append(lr)
+            templines.append(lr)
 
         for line_sup in sup_below[:10]:
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
-            temp.append(ls)
-        lines = '\n'.join(map(str, temp))
+            templines.append(ls)
+        lines = '\n'.join(map(str, templines))
         # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to
         # the file.
         f = open("../main_supres/pinescript.txt", "w")
