@@ -38,7 +38,7 @@ def main():
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
     # Adding a watermark to the plot.
-    watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.2,
+    watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
                              showarrow=False))
 
@@ -277,25 +277,30 @@ def main():
 
     # Legend texts
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Resistance : {float(res_above[0])}", mode="markers+lines",
+        y=[ss[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
         marker=dict(color=res_color, size=10)))
+
+    differ = len(res_above) - len(sup_below)
+    if differ < 0:
+        for i in range(differ):
+            res_above.extend([0])
+    elif differ > 0:
+        for i in range(differ):
+            sup_below.extend([0])
+    temp = 0
+    for _ in range(max(len(res_above), len(sup_below))):
+        fig.add_trace(go.Scatter(
+            y=[ss[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
+            marker=dict(color=legend_color, size=10)))
+        temp += 1
+        if temp == 14:
+            break
+
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Resistances: {', '.join(map(str, res_above[1:4]))}", mode="lines",
-        marker=dict(color=res_color, size=10)))
+        y=[ss[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
+        marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"|-> : {', '.join(map(str, res_above[4:8]))}", mode="lines",
-        marker=dict(color=legend_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Current Support : {float(sup_below[0])}", mode="markers+lines",
-        marker=dict(color=support_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Next Supports: {', '.join(map(str, sup_below[1:4]))}", mode="lines",
-        marker=dict(color=support_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"|-> : {', '.join(map(str, sup_below[4:8]))}", mode="lines",
-        marker=dict(color=legend_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f" ----------  twitter.com/sup_res  ----------- ", mode="markers",
+        y=[ss[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
         marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
         y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
@@ -326,7 +331,7 @@ def main():
     else:
         print("Time frame error.")
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"--- Fibonacci Uptrend | Downtrend ---", mode="markers",
+        y=[ss[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
         marker=dict(color=legend_color, size=0)))
     mtp = 7
     # Adding a line to the plot for each Fibonacci level.
@@ -339,10 +344,10 @@ def main():
 
     def candle_patterns():
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f" --------------------------------- ", mode="markers",
-            marker=dict(color=legend_color, size=0)))
+            y=[ss[0]], name="----------------------------------------", mode="markers",
+            marker=dict(color=legend_color, size=14)))
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
+            y=[ss[0]], name="Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
         for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
