@@ -136,7 +136,6 @@ def main():
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
-
     hist_htf = (historical_data.Client.KLINE_INTERVAL_1DAY,
                 historical_data.Client.KLINE_INTERVAL_3DAY)
     hist_ltf = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
@@ -354,7 +353,7 @@ def main():
             marker=dict(color=legend_color, size=0)))
         fig.add_trace(go.Scatter(
             y=[ss[0]], name=f"Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, 24, 2):  # Candlestick patterns
+        for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
