@@ -64,7 +64,7 @@ def main():
     for_macd = df['close'][:-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
-    df = df.append(df.tail(1), ignore_index=True)
+    df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
     dfsma = df[:-1]
     sma10 = tuple((dfsma.ta.sma(10)))
     sma50 = tuple((dfsma.ta.sma(50)))

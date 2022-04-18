@@ -18,7 +18,7 @@ def main():
     for_macd = df['close'][:-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
     df.reset_index(drop=True, inplace=True)
-    df = df.append(df.tail(1), ignore_index=True)
+    df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
     dfsma = df[:-1]
     # Sma, Rsi, Macd, Fibonacci variables
     sma10 = tuple((dfsma.ta.sma(10)))
@@ -136,6 +136,7 @@ def main():
         for item in range(-3, -30, -1):
             last_row = df.iloc[item]
             pattern_find_func(last_row)
+
     hist_htf = (historical_data.Client.KLINE_INTERVAL_1DAY,
                 historical_data.Client.KLINE_INTERVAL_3DAY)
     hist_ltf = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
