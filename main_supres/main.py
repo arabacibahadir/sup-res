@@ -26,17 +26,21 @@ def main():
     sma100 = tuple((dfsma.ta.sma(100)))
     rsi = tuple((ta.rsi(df['close'][:-1])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    fib_up, fib_down = [], []
+    fib_up, fib_down, pattern_list = [], [], []
     fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
-    new_sup = []
-    new_res = []
-    pattern_list = []
+    new_sup, new_res, sup_below, res_above = [], [], [], []
+    ss, rr = [], []  # ss : Support list, rr : Resistance list
     # Chart settings
+    fig = []  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
+    # Adding a watermark to the plot.
+    watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.2,
+                             font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
+                             showarrow=False))
 
     def support(price1, l, n1, n2):
         """
@@ -177,7 +181,6 @@ def main():
                                         high=df['high'],
                                         low=df['low'],
                                         close=df['close'])])
-
     elif historical_data.time_frame in hist_ltf:  # For LTF chart
         fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
                                         name="Candlestick",
@@ -186,24 +189,7 @@ def main():
                                         high=df['high'],
                                         low=df['low'],
                                         close=df['close'])])
-
-    ss = []  # ss : Support list
-    rr = []  # rr : Resistance list
-    # Adding a watermark to the plot.
-    fig.layout.annotations = [
-        dict(
-            name="draft watermark",
-            text="twitter.com/sup_res",
-            textangle=-30,
-            opacity=0.2,
-            font=dict(color="black", size=100),
-            xref="paper",
-            yref="paper",
-            x=0.5,
-            y=0.5,
-            showarrow=False,
-        )
-    ]
+    fig.update_layout(annotations=[watermark_layout])
 
     def sensitivity(sens):
         """
@@ -220,8 +206,6 @@ def main():
     sensitivity(2)
 
     # Finding support and resistance levels
-    sup_below = []
-    res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
     res = tuple(map(lambda res1: res1[1], rr))
     latest_close = tuple(df['close'])[-1]
@@ -348,7 +332,8 @@ def main():
     # Adding a line to the plot for each Fibonacci level.
     for _ in fib_up:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ", mode="lines",
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
+            mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
@@ -362,6 +347,7 @@ def main():
             fig.add_trace(go.Scatter(
                 y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
+
     # Candle patterns for HTF
     if historical_data.time_frame in hist_htf:
         candle_patterns()
@@ -392,11 +378,10 @@ def main():
             while tweet.is_image_tweet().text != text_image:
                 time.sleep(1)
                 if tweet.is_image_tweet().text != text_image:
-                    tweet.api.update_status(status=
-                                            f"#{historical_data.ticker}  "
-                                            f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                            f"{historical_data.time_frame.upper()} Support and resistance levels"
-                                            f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                    tweet.api.update_status(status=f"#{historical_data.ticker}  "
+                                                   f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                                   f"{historical_data.time_frame.upper()} Support and resistance levels"
+                                                   f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
