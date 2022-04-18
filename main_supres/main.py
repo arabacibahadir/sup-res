@@ -26,8 +26,8 @@ def main():
     sma100 = tuple((dfsma.ta.sma(100)))
     rsi = tuple((ta.rsi(df['close'][:-1])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    fib = []
-    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.786, 1.382, 1.618)
+    fib_up, fib_down = [], []
+    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
     new_sup = []
     new_res = []
     pattern_list = []
@@ -88,8 +88,10 @@ def main():
         :param low_price: Low price for the period
         """
         for multi in fib_multipliers:
-            retracement_levels = low_price + (high_price - low_price) * multi
-            fib.append(retracement_levels)
+            retracement_levels_uptrend = low_price + (high_price - low_price) * multi
+            fib_up.append(retracement_levels_uptrend)
+            retracement_levels_downtrend = high_price - (high_price - low_price) * multi
+            fib_down.append(retracement_levels_downtrend)
 
     def candlestick_patterns():
         """
@@ -339,12 +341,14 @@ def main():
                        line=dict(color='#a69b05', width=3)))
     else:
         print("Time frame error.")
-
-    mtp = 6
+    fig.add_trace(go.Scatter(
+        y=[ss[0]], name=f"--- Fibonacci Uptrend | Downtrend ---", mode="markers",
+        marker=dict(color=legend_color, size=0)))
+    mtp = 7
     # Adding a line to the plot for each Fibonacci level.
-    for _ in fib:
+    for _ in fib_up:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib[mtp]):.2f}", mode="lines",
+            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ", mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
