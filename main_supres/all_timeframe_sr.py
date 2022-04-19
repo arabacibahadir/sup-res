@@ -2,13 +2,10 @@ import csv
 import datetime
 import os
 import time
-import warnings
 import pandas as pd
 from binance.client import Client
 import frameselect
 
-# Ignore FutureWarning from Pandas.
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def hist_data():
@@ -37,9 +34,8 @@ def main():
     df = pd.read_csv(file_name, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, keep_default_na=False)
     df = df.iloc[::-1]
     df.reset_index(drop=True, inplace=True)
-    df = df.append(df.tail(1), ignore_index=True)
-    new_sup = []
-    new_res = []
+    df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
+    ss, rr, new_res, new_sup = [], [], [], []
 
     def support(price1, l, n1, n2):
         for s in range(l - n1 + 1, l + 1):
@@ -67,9 +63,6 @@ def main():
 
     drop_null()
     df = df[:len(df)]
-
-    ss = []
-    rr = []
 
     def sensitivity(sens):
 
