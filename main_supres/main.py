@@ -26,10 +26,9 @@ def main():
     sma100 = tuple((dfsma.ta.sma(100)))
     rsi = tuple((ta.rsi(df['close'][:-1])))
     macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    fib_up, fib_down, pattern_list = [], [], []
+    support_list, resistance_list, fib_up, fib_down, pattern_list = [], [], [], [], []
     fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
     new_sup, new_res, sup_below, res_above = [], [], [], []
-    ss, rr = [], []  # ss : Support list, rr : Resistance list
     # Chart settings
     fig = []  # Chart
     legend_color = "#D8D8D8"
@@ -199,15 +198,15 @@ def main():
         """
         for row in range(3, len(df) - 1):
             if support(df, row, 3, sens):
-                ss.append((row, df.low[row]))
+                support_list.append((row, df.low[row]))
             if resistance(df, row, 3, sens):
-                rr.append((row, df.high[row]))
+                resistance_list.append((row, df.high[row]))
 
     sensitivity(2)
 
     # Finding support and resistance levels
-    sup = tuple(map(lambda sup1: sup1[1], ss))
-    res = tuple(map(lambda res1: res1[1], rr))
+    sup = tuple(map(lambda sup1: sup1[1], support_list))
+    res = tuple(map(lambda res1: res1[1], resistance_list))
     latest_close = tuple(df['close'])[-1]
 
     def supres():
@@ -250,34 +249,34 @@ def main():
     c = 0
     # Adding the support lines and annotations to the chart.
     while 1:
-        if c > len(ss) - 1:
+        if c > len(support_list) - 1:
             break
         # Support Lines
-        fig.add_shape(type='line', x0=ss[c][0] - 1, y0=ss[c][1],
+        fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
                       x1=len(df) + 25,
-                      y1=ss[c][1], line=dict(color=support_color, width=2))
+                      y1=support_list[c][1], line=dict(color=support_color, width=2))
         # Support annotations
-        fig.add_annotation(x=len(df) + 7, y=ss[c][1], text=str(ss[c][1]),
+        fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
                            font=dict(size=15, color=support_color))
         c += 1
 
     c = 0
     # Adding the resistance lines and annotations to the chart.
     while 1:
-        if c > len(rr) - 1:
+        if c > len(resistance_list) - 1:
             break
         # Resistance Lines
-        fig.add_shape(type='line', x0=rr[c][0] - 1, y0=rr[c][1],
+        fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
                       x1=len(df) + 25,
-                      y1=rr[c][1], line=dict(color=res_color, width=1))
+                      y1=resistance_list[c][1], line=dict(color=res_color, width=1))
         # Resistance annotations
-        fig.add_annotation(x=len(df) + 20, y=rr[c][1], text=str(rr[c][1]),
+        fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
                            font=dict(size=15, color=res_color))
         c += 1
 
     # Legend texts
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
+        y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
         marker=dict(color=res_color, size=10)))
 
     differ = len(res_above) - len(sup_below)
@@ -291,7 +290,7 @@ def main():
         temp = 0
         for _ in range(max(len(res_above), len(sup_below))):
             fig.add_trace(go.Scatter(
-                y=[ss[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
+                y=[support_list[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
             temp += 1
             if temp == 14:
@@ -299,17 +298,17 @@ def main():
     except IndexError:
         pass
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
+        y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
         marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
+        y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
         marker=dict(color=legend_color, size=0)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
+        y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines", marker=dict(color=legend_color, size=10)))
+        y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines", marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
+        y=[support_list[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
     # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
@@ -333,26 +332,26 @@ def main():
     else:
         print("Time frame error.")
     fig.add_trace(go.Scatter(
-        y=[ss[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
+        y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
         marker=dict(color=legend_color, size=0)))
     mtp = 7
     # Adding a line to the plot for each Fibonacci level.
     for _ in fib_up:
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
+            y=[support_list[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
             mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
     def candle_patterns():
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name="----------------------------------------", mode="markers",
+            y=[support_list[0]], name="----------------------------------------", mode="markers",
             marker=dict(color=legend_color, size=14)))
         fig.add_trace(go.Scatter(
-            y=[ss[0]], name="Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
+            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
         for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
             fig.add_trace(go.Scatter(
-                y=[ss[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
+                y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
 
     # Candle patterns for HTF
