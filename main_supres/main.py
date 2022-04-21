@@ -231,7 +231,7 @@ def main():
     # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
     # column to the list.
     if len(res_above) == 0:
-        res_above.append(min(df['high']))
+        res_above.append(max(df['high']))
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # res_above list and the last element of the sup_below list.
