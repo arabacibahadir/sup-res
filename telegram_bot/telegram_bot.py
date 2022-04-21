@@ -76,7 +76,7 @@ def main():
     new_sup, new_res, sup_below, res_above = [], [], [], []
     ss, rr = [], []  # ss : Support list, rr : Resistance list
     # Chart settings
-    fig = []  # Chart
+    fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
@@ -203,27 +203,17 @@ def main():
 
     if time_frame in hist_htf:
         candlestick_patterns()
-
-    df = df[:len(df)]
-
+        x_date = '%b-%d-%y'
+    elif time_frame in hist_ltf:  # For LTF chart
+        x_date = '%b-%d-%y %H:%M'
     # The below code is creating a candlestick chart.
-    if time_frame in hist_htf:
-        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
-                                        name="Candlestick",
-                                        text=df['date'].dt.strftime('%b-%d-%y'),
-                                        open=df['open'],
-                                        high=df['high'],
-                                        low=df['low'],
-                                        close=df['close'])])
-
-    elif time_frame in hist_ltf:
-        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
-                                        name="Candlestick",
-                                        text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
-                                        open=df['open'],
-                                        high=df['high'],
-                                        low=df['low'],
-                                        close=df['close'])])
+    fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
+                                    name="Candlestick",
+                                    text=df['date'].dt.strftime(x_date),
+                                    open=df['open'],
+                                    high=df['high'],
+                                    low=df['low'],
+                                    close=df['close'])])
     fig.update_layout(annotations=[watermark_layout])
 
     def sensitivity(sens):
@@ -273,7 +263,7 @@ def main():
     # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
     # column to the list.
     if len(res_above) == 0:
-        res_above.append(min(df['high']))
+        res_above.append(max(df['high']))
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # res_above list and the last element of the sup_below list.
