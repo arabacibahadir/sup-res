@@ -30,7 +30,7 @@ def main():
     fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
     new_sup, new_res, sup_below, res_above = [], [], [], []
     # Chart settings
-    fig = []  # Chart
+    fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
@@ -96,6 +96,18 @@ def main():
             retracement_levels_downtrend = high_price - (high_price - low_price) * multi
             fib_down.append(retracement_levels_downtrend)
 
+    def drop_null():
+        """
+        Drop all rows with NULL values in the dataframe
+        """
+        for col in df.columns:
+            index_null = df[df[col] == "NULL"].index
+            df.drop(index_null, inplace=True)
+            df.isna().sum()
+
+    drop_null()
+    df = df[:len(df)]  # Candle range
+
     def candlestick_patterns():
         """
         The function takes in a dataframe and returns a list of candlestick patterns found in the
@@ -158,36 +170,17 @@ def main():
 
     if historical_data.time_frame in hist_htf:
         candlestick_patterns()
-
-    def drop_null():
-        """
-        Drop all rows with NULL values in the dataframe
-        """
-        for col in df.columns:
-            index_null = df[df[col] == "NULL"].index
-            df.drop(index_null, inplace=True)
-            df.isna().sum()
-
-    drop_null()
-    df = df[:len(df)]  # Candle range
-
-    # The below code is creating a candlestick chart.
-    if historical_data.time_frame in hist_htf:  # For HTF chart
-        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y'),
-                                        name="Candlestick",
-                                        text=df['date'].dt.strftime('%b-%d-%y'),
-                                        open=df['open'],
-                                        high=df['high'],
-                                        low=df['low'],
-                                        close=df['close'])])
+        x_date = '%b-%d-%y'
     elif historical_data.time_frame in hist_ltf:  # For LTF chart
-        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime('%b-%d-%y %H:%M'),
-                                        name="Candlestick",
-                                        text=df['date'].dt.strftime('%b-%d-%y %H:%M'),
-                                        open=df['open'],
-                                        high=df['high'],
-                                        low=df['low'],
-                                        close=df['close'])])
+        x_date = '%b-%d-%y %H:%M'
+    # The below code is creating a candlestick chart.
+    fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
+                                    name="Candlestick",
+                                    text=df['date'].dt.strftime(x_date),
+                                    open=df['open'],
+                                    high=df['high'],
+                                    low=df['low'],
+                                    close=df['close'])])
     fig.update_layout(annotations=[watermark_layout])
 
     def sensitivity(sens):
@@ -290,7 +283,8 @@ def main():
         temp = 0
         for _ in range(max(len(res_above), len(sup_below))):
             fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}", mode="lines",
+                y=[support_list[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}",
+                mode="lines",
                 marker=dict(color=legend_color, size=10)))
             temp += 1
             if temp == 14:
@@ -306,7 +300,8 @@ def main():
     fig.add_trace(go.Scatter(
         y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
     fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines", marker=dict(color=legend_color, size=10)))
+        y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
+        marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
         y=[support_list[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
         marker=dict(color=legend_color, size=10)))
@@ -338,7 +333,8 @@ def main():
     # Adding a line to the plot for each Fibonacci level.
     for _ in fib_up:
         fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
+            y=[support_list[0]],
+            name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
             mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
@@ -348,7 +344,8 @@ def main():
             y=[support_list[0]], name="----------------------------------------", mode="markers",
             marker=dict(color=legend_color, size=14)))
         fig.add_trace(go.Scatter(
-            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers", marker=dict(color=legend_color, size=14)))
+            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
+            marker=dict(color=legend_color, size=14)))
         for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
