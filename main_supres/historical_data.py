@@ -24,8 +24,8 @@ def hist_data():
     """
     The function is used to get historical data from the Binance API and write it to a csv file
     """
-    headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                  'taker buy vol', 'taker buy quote vol', 'ignore']
+    header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
+                   'taker buy vol', 'taker buy quote vol', 'ignore')
 
     def historical_Data_Write(self):
         """
@@ -40,13 +40,13 @@ def hist_data():
         df = pd.read_csv(data)
         # Reversing the order of the dataframe.
         df = df.iloc[::-1]
-        df.to_csv(data, header=headerList, index=False)
+        df.to_csv(data, header=header_list, index=False)
         df = pd.read_csv(data)
         # Converting the unix time to a readable date format.
         date = pd.to_datetime(df['unix'], unit='ms')
         df.insert(1, 'date', date)
-        del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], df[
-            'tradecount']
+        del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], \
+            df['tradecount']
         df.to_csv(data, index=False)
 
     print("Data writing:", file_name)
