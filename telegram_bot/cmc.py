@@ -12,10 +12,10 @@ def market():
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
     info = soup.find("div", class_="cmc-global-stats__inner-content")
-    t = []
+    text = []
     for i in info:
-        t.append(i.text.replace('\xa0', ' '))
-    return "\n".join(t)
+        text.append(i.text.replace('\xa0', ' '))
+    return "\n".join(text)
 
 
 def news():
@@ -26,13 +26,13 @@ def news():
     URL = "https://coinmarketcap.com/headlines/news/"
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
-    t = []
-    n = []
+    text = []
+    news = []
     for a_href in soup.find_all("a", href=True):
-        t.append(a_href.text)
-    index = t.index("Headlines")
-    for _ in t[index:index + 15:2]:
-        n.append(_)
-    n = ["-" + sub for sub in n]
-    n.append(URL)
-    return "\n".join(n)
+        text.append(a_href.text)
+    index = text.index("Headlines")
+    for _ in text[index:index + 15:2]:
+        news.append(_)
+    news = ["-" + sub for sub in news]
+    news.append(URL)
+    return "\n".join(news)
