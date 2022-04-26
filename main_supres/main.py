@@ -52,13 +52,16 @@ def main():
         :param n2: The number of bars in the second trend
         :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
         """
-        for last_s in range(l - n1 + 1, l + 1):
-            if price1.low[last_s] > price1.low[last_s - 1]:
-                return 0
-        for last_s in range(l + 1, l + n2 + 1):
-            if price1.low[last_s] < price1.low[last_s - 1]:
-                return 0
-        return 1
+        try:
+            for last_s in range(l - n1 + 1, l + 1):
+                if price1.low[last_s] > price1.low[last_s - 1]:
+                    return 0
+            for last_s in range(l + 1, l + n2 + 1):
+                if price1.low[last_s] < price1.low[last_s - 1]:
+                    return 0
+            return 1
+        except KeyError:
+            pass
 
     def resistance(price1, l, n1, n2):
         """
@@ -73,13 +76,16 @@ def main():
         :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
         n2 periods.
         """
-        for last_r in range(l - n1 + 1, l + 1):
-            if price1.high[last_r] < price1.high[last_r - 1]:
-                return 0
-        for last_r in range(l + 1, l + n2 + 1):
-            if price1.high[last_r] > price1.high[last_r - 1]:
-                return 0
-        return 1
+        try:
+            for last_r in range(l - n1 + 1, l + 1):
+                if price1.high[last_r] < price1.high[last_r - 1]:
+                    return 0
+            for last_r in range(l + 1, l + n2 + 1):
+                if price1.high[last_r] > price1.high[last_r - 1]:
+                    return 0
+            return 1
+        except KeyError:
+            pass
 
     def fib_pl(high_price, low_price):
         """
