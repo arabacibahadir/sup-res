@@ -1,4 +1,4 @@
-# Twitter api keys
+# Twitter api keys -> https://developer.twitter.com/en/docs/twitter-api
 tw_api = 'YOUR-API'
 tw_key_secret = 'API-SECRET'
 tw_token = 'TOKEN'
