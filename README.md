@@ -12,7 +12,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 - Export documents as `HTML, PDF, .jpeg, .png` 
 - Automatically share to your twitter followers with an image and text of support-resistance levels
 - Supports [Tradingview Pine Script](https://www.tradingview.com/pine-script-docs/en/v4/Introduction.html) 
-- Manageable via Telegram: Manage the bot with [Telegram](https://python-telegram-bot.org)
+- Manageable via [Telegram](https://python-telegram-bot.org)
 - WebUI
 
 ![git](https://user-images.githubusercontent.com/32988819/148457547-45d47bc2-52a0-426a-8d4c-861fe6fd013d.png)
