@@ -278,6 +278,11 @@ def main():
         y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
         marker=dict(color=res_color, size=10)))
 
+    str_price_len = 2
+    sample_price = df['close'][0]
+    if sample_price < 1:
+        str_price_len = len(str(sample_price))
+
     differ = len(res_above) - len(sup_below)
     try:
         if differ < 0:
@@ -289,7 +294,7 @@ def main():
         temp = 0
         for _ in range(max(len(res_above), len(sup_below))):
             fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"{float(res_above[temp]):.2f}       ||   {float(sup_below[temp]):.2f}",
+                y=[support_list[0]], name=f"{float(res_above[temp]):.{str_price_len-1}f}       ||   {float(sup_below[temp]):.{str_price_len-1}f}",
                 mode="lines",
                 marker=dict(color=legend_color, size=10)))
             temp += 1
@@ -309,26 +314,26 @@ def main():
         y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
         marker=dict(color=legend_color, size=10)))
     fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"MACD      : {int(macd['MACDh_12_26_9'][1])}", mode="lines",
+        y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
     # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
     if historical_data.time_frame in hist_htf:
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10, name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
                                  line=dict(color='#5c6cff', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50, name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
                                  line=dict(color='#950fba', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
+        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100, name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
                                  line=dict(color='#a69b05', width=3)))
     elif historical_data.time_frame in hist_ltf:
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {int(sma10[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10, name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
                        line=dict(color='#5c6cff', width=3)))
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {int(sma50[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50, name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
                        line=dict(color='#950fba', width=3)))
         fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {int(sma100[-1])}",
+            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100, name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
                        line=dict(color='#a69b05', width=3)))
     else:
         print("Time frame error.")
@@ -340,7 +345,7 @@ def main():
     for _ in fib_up:
         fig.add_trace(go.Scatter(
             y=[support_list[0]],
-            name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.2f} | {float(fib_down[mtp]):.2f} ",
+            name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.{str_price_len}f} | {float(fib_down[mtp]):.{str_price_len}f} ",
             mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
