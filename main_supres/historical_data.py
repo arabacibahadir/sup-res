@@ -11,7 +11,7 @@ frame_s = str(input().upper())
 time_frame = frameselect.frame_select(frame_s)[0]
 # Creating a client object that is used to interact with the Binance API.
 client = Client("", "")
-has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())
+has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # Check pair is in Binance
 print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
 current = datetime.now()
 current_time = current.strftime("%b-%d-%y %H:%M")
