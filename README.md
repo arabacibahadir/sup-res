@@ -54,7 +54,7 @@ Your python alias could be different like "py, python3", you should change your 
 >You can get more precise lines by changing sensitivity of the data in the code. 
 
 
-![btcusdt](https://user-images.githubusercontent.com/32988819/134763427-a4578891-a430-40cd-9b4c-dbf45bff6cc3.png)
+![chart](https://user-images.githubusercontent.com/32988819/166165460-b1e2be3e-014c-4aea-83e6-c118075f68df.png)
 
 
  
@@ -65,11 +65,8 @@ I worked on a code that could provide help for users who don't have much experie
 
 Supports and resistances are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop your position. Watch out for high volume breakouts, sudden price changes and trend reversals. If you are investing low volume coin, it is very dangerous to trade on new coin charts without support and resistance levels. 
 
-- Every investor's wallet and strategy is different.
-- Your priority should **not** be to make money, you should be try to save your money. 
-- Supports and resistances formed in short time frames (5m, 15m, 1h) may be easier to break. 
 
-![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
+![image](https://user-images.githubusercontent.com/32988819/166165539-5a4eea0a-456e-482d-aa56-96b5eaffc37a.png)
 
 
 ## Support-Resistance Lines
@@ -94,6 +91,7 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 ![legend](https://user-images.githubusercontent.com/32988819/134764245-18551144-ec9c-4489-9a0a-495e49de9a9d.png)
 
 
+![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
 ## Some screenshots
 _ETHUSDT_ chart
