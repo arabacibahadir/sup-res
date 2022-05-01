@@ -3,7 +3,8 @@ _For online demonstration_ -> https://arabacibahadir.github.io/sup-res/
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for finding support and resistance lines with a scalable chart.
 
-![cropedgif](https://user-images.githubusercontent.com/32988819/134764951-b52bb659-f0d6-455d-a995-05c716564a12.gif)
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/32988819/166165397-af4c7f29-1746-49b6-be3a-9a12d838f7e6.gif)
+
 
 ## Features
 
