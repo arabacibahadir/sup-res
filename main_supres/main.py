@@ -15,20 +15,19 @@ def main():
     df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                      keep_default_na=False)
     df = df.iloc[::-1]
-    for_macd = df['close'][:-1]
+    last_candle_close = df['close'][:-1]
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
-    df.reset_index(drop=True, inplace=True)
     df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
     dfsma = df[:-1]
     # Sma, Rsi, Macd, Fibonacci variables
     sma10 = tuple((dfsma.ta.sma(10)))
     sma50 = tuple((dfsma.ta.sma(50)))
     sma100 = tuple((dfsma.ta.sma(100)))
-    rsi = tuple((ta.rsi(df['close'][:-1])))
-    macd = ta.macd(close=for_macd, fast=12, slow=26, signal=9)
-    support_list, resistance_list, fib_up, fib_down, pattern_list = [], [], [], [], []
-    fib_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
-    new_sup, new_res, sup_below, res_above = [], [], [], []
+    rsi = tuple((ta.rsi(last_candle_close)))
+    macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
+    support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
+    fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
+    support_above, support_below, resistance_below, resistance_above = [], [], [], []
     # Chart settings
     fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
@@ -96,11 +95,11 @@ def main():
         :param high_price: The high price for the current price level
         :param low_price: Low price for the period
         """
-        for multi in fib_multipliers:
+        for multi in fibonacci_multipliers:
             retracement_levels_uptrend = low_price + (high_price - low_price) * multi
-            fib_up.append(retracement_levels_uptrend)
+            fibonacci_uptrend.append(retracement_levels_uptrend)
             retracement_levels_downtrend = high_price - (high_price - low_price) * multi
-            fib_down.append(retracement_levels_downtrend)
+            fibonacci_downtrend.append(retracement_levels_downtrend)
 
     def drop_null():
         """
@@ -204,46 +203,46 @@ def main():
     sensitivity(2)
 
     # Finding support and resistance levels
-    sup = tuple(map(lambda sup1: sup1[1], support_list))
-    res = tuple(map(lambda res1: res1[1], resistance_list))
+    all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+    all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
     latest_close = tuple(df['close'])[-1]
 
     def supres():
         # Checking if the support is below the latest close. If it is, it is appending it to the list
-        # sup_below. If it isn't, it is appending it to the list new_res.
-        for s in sup:  # Find closes
+        # support_below. If it isn't, it is appending it to the list resistance_below.
+        for s in all_support_list:  # Find closes
             if s < latest_close:
-                sup_below.append(s)
+                support_below.append(s)
             else:
-                new_res.append(s)
+                resistance_below.append(s)
         # Checking if the price is above the latest close price. If it is, it is appending it to the
-        # res_above list. If it is not, it is appending it to the new_sup list.
-        for r in res:
+        # resistance_above list. If it is not, it is appending it to the support_above list.
+        for r in all_resistance_list:
             if r > latest_close:
-                res_above.append(r)
+                resistance_above.append(r)
             else:
-                new_sup.append(r)
+                support_above.append(r)
 
     supres()
 
-    sup_below.extend(new_sup)
-    res_above.extend(new_res)
-    sup_below = sorted(sup_below, reverse=True)
-    res_above = sorted(res_above)
+    support_below.extend(support_above)
+    resistance_above.extend(resistance_below)
+    support_below = sorted(support_below, reverse=True)
+    resistance_above = sorted(resistance_above)
     # Checking if the support level is empty. If it is, it appends the minimum value of the low
     # column to the list.
-    if len(sup_below) == 0:
-        sup_below.append(min(df['low']))
+    if len(support_below) == 0:
+        support_below.append(min(df['low']))
     # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
     # column to the list.
-    if len(res_above) == 0:
-        res_above.append(max(df['high']))
+    if len(resistance_above) == 0:
+        resistance_above.append(max(df['high']))
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
-    # res_above list and the last element of the sup_below list.
-    fib_pl(res_above[-1], sup_below[-1])  # Fibonacci func
-    res_above = [float(a) for a in res_above]
-    sup_below = [float(a) for a in sup_below]
+    # resistance_above list and the last element of the support_below list.
+    fib_pl(resistance_above[-1], support_below[-1])  # Fibonacci func
+    resistance_above = [float(a) for a in resistance_above]
+    support_below = [float(a) for a in support_below]
 
     c = 0
     # Adding the support lines and annotations to the chart.
@@ -283,22 +282,22 @@ def main():
     if sample_price < 1:
         str_price_len = len(str(sample_price))
     blank = " " * (len(str(sample_price)) + 1)
-    differ = len(res_above) - len(sup_below)
+    differ = len(resistance_above) - len(support_below)
     try:
         if differ < 0:
             for i in range(abs(differ)):
-                res_above.extend([0])
+                resistance_above.extend([0])
         if differ > 0:
             for i in range(abs(differ)):
-                sup_below.extend([0])
+                support_below.extend([0])
         temp = 0
-        for _ in range(max(len(res_above), len(sup_below))):
-            if res_above[temp] == 0:  # This is for legend allignment
-                legend_supres = f"{float(res_above[temp]):.{str_price_len - 1}f}{blank}     " \
-                                f"||   {float(sup_below[temp]):.{str_price_len - 1}f}"
+        for _ in range(max(len(resistance_above), len(support_below))):
+            if resistance_above[temp] == 0:  # This is for legend allignment
+                legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
+                                f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
             else:
-                legend_supres = f"{float(res_above[temp]):.{str_price_len - 1}f}       " \
-                                f"||   {float(sup_below[temp]):.{str_price_len - 1}f}"
+                legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}       " \
+                                f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
             fig.add_trace(go.Scatter(
                 y=[support_list[0]],
                 name=legend_supres,
@@ -355,11 +354,11 @@ def main():
         marker=dict(color=legend_color, size=0)))
     mtp = 7
     # Adding a line to the plot for each Fibonacci level.
-    for _ in fib_up:
+    for _ in fibonacci_uptrend:
         fig.add_trace(go.Scatter(
             y=[support_list[0]],
-            name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fib_up[mtp]):.{str_price_len}f} "
-                 f"| {float(fib_down[mtp]):.{str_price_len}f} ",
+            name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                 f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
             mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
@@ -409,7 +408,7 @@ def main():
                     tweet.api.update_status(status=f"#{historical_data.ticker}  "
                                                    f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
                                                    f"{historical_data.time_frame.upper()} Support and resistance levels"
-                                                   f"\nRes={res_above[:7]} \nSup={sup_below[:7]}",
+                                                   f"\nRes={resistance_above[:7]} \nSup={support_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
@@ -423,11 +422,11 @@ def main():
                     "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
                     "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
 
-        for line_res in res_above[:10]:
+        for line_res in resistance_above[:10]:
             lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
             templines.append(lr)
 
-        for line_sup in sup_below[:10]:
+        for line_sup in support_below[:10]:
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
             templines.append(ls)
         lines = '\n'.join(map(str, templines))
