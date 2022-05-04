@@ -325,16 +325,16 @@ def main():
                 support_below.extend([0])
         temp = 0
         for _ in range(max(len(resistance_above), len(support_below))):
-            if resistance_above[temp] == 0:  # This is for legend allignment
+            if resistance_above[temp] == 0:  # This is for legend alignment
                 legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
                                 f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
             else:
                 legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}       " \
                                 f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
             fig.add_trace(go.Scatter(y=[support_list[0]],
-                name=legend_supres,
-                mode="lines",
-                marker=dict(color=legend_color, size=10)))
+                                     name=legend_supres,
+                                     mode="lines",
+                                     marker=dict(color=legend_color, size=10)))
             temp += 1
             if temp == 14:
                 break
@@ -392,8 +392,9 @@ def main():
     # Adding a line to the plot for each Fibonacci level.
     for _ in fibonacci_uptrend:
         fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
-                                      f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ", mode="lines",
+            y=[support_list[0]],
+            name=f"Fib {fib_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                 f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ", mode="lines",
             marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
