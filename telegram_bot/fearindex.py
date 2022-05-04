@@ -11,8 +11,9 @@ def fear():
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
     info = soup.find_all("div", class_="fng-circle")
-    t = []
+    text_fear = []
     for i in info:
-        t.append(i.text)
-    return f"Fear&Greed Index:\nNow: {t[0]}\nYesterday: {t[1]}\nLast Week: {t[2]}\nLast Month: {t[3]}\n"
+        text_fear.append(i.text)
+    return f"Fear&Greed Index:\nNow: {text_fear[0]}\nYesterday: {text_fear[1]}\n" \
+           f"Last Week: {text_fear[2]}\nLast Month: {text_fear[3]}\n"
 
