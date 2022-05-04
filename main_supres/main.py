@@ -44,7 +44,7 @@ def main():
         """
         If the price of the asset is increasing for the last n1 days and decreasing for the last n2
         days, then return 1. Otherwise return 0
-        
+
         :param price1: The price data for the asset
         :param l: The index of the first bar in the support
         :param n1: The number of bars back you want to look
@@ -66,7 +66,7 @@ def main():
         """
         If the price of the stock is increasing for the last n1 days and decreasing for the last n2
         days, then return 1. Otherwise return 0
-        
+
         :param price1: The price data for the asset
         :param l: The index of the first bar in the resistance
         :param n1: The number of bars back you want to look
@@ -191,7 +191,7 @@ def main():
     def sensitivity(sens):
         """
         Find the support and resistance levels for a given asset
-        sensitivity:1 is recommended for daily charts or high frequency trade scalping 
+        sensitivity:1 is recommended for daily charts or high frequency trade scalping
         :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
         """
         for row in range(3, len(df) - 1):
@@ -292,7 +292,7 @@ def main():
                 support_below.extend([0])
         temp = 0
         for _ in range(max(len(resistance_above), len(support_below))):
-            if resistance_above[temp] == 0:  # This is for legend allignment
+            if resistance_above[temp] == 0:  # This is for legend alignment
                 legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
                                 f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
             else:
