@@ -40,47 +40,47 @@ def main():
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
                              showarrow=False))
 
-    def support(price1, l, n1, n2):
+    def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
         If the price of the asset is increasing for the last n1 days and decreasing for the last n2
         days, then return 1. Otherwise return 0
 
-        :param price1: The price data for the asset
-        :param l: The index of the first bar in the support
-        :param n1: The number of bars back you want to look
-        :param n2: The number of bars in the second trend
+        :param candle_value: The price data for the asset
+        :param candle_index: The index of the first bar in the support
+        :param before_candle_count: The number of bars back you want to look
+        :param after_candle_count: The number of bars in the second trend
         :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
         """
         try:
-            for last_s in range(l - n1 + 1, l + 1):
-                if price1.low[last_s] > price1.low[last_s - 1]:
+            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                if candle_value.low[current_value] > candle_value.low[current_value - 1]:
                     return 0
-            for last_s in range(l + 1, l + n2 + 1):
-                if price1.low[last_s] < price1.low[last_s - 1]:
+            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                if candle_value.low[current_value] < candle_value.low[current_value - 1]:
                     return 0
             return 1
         except KeyError:
             pass
 
-    def resistance(price1, l, n1, n2):
+    def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
         """
         If the price of the stock is increasing for the last n1 days and decreasing for the last n2
         days, then return 1. Otherwise return 0
 
-        :param price1: The price data for the asset
-        :param l: The index of the first bar in the resistance
-        :param n1: The number of bars back you want to look
-        :param n2: The number of days after the first resistance line where the price will be considered
+        :param candle_value: The price data for the asset
+        :param candle_index: The index of the first bar in the resistance
+        :param before_candle_count: The number of bars back you want to look
+        :param after_candle_count: The number of days after the first resistance line where the price will be considered
         to be broken
         :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
         n2 periods.
         """
         try:
-            for last_r in range(l - n1 + 1, l + 1):
-                if price1.high[last_r] < price1.high[last_r - 1]:
+            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                if candle_value.high[current_value] < candle_value.high[current_value - 1]:
                     return 0
-            for last_r in range(l + 1, l + n2 + 1):
-                if price1.high[last_r] > price1.high[last_r - 1]:
+            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                if candle_value.high[current_value] > candle_value.high[current_value - 1]:
                     return 0
             return 1
         except KeyError:
@@ -95,10 +95,10 @@ def main():
         :param high_price: The high price for the current price level
         :param low_price: Low price for the period
         """
-        for multi in fibonacci_multipliers:
-            retracement_levels_uptrend = low_price + (high_price - low_price) * multi
+        for multiplier in fibonacci_multipliers:
+            retracement_levels_uptrend = low_price + (high_price - low_price) * multiplier
             fibonacci_uptrend.append(retracement_levels_uptrend)
-            retracement_levels_downtrend = high_price - (high_price - low_price) * multi
+            retracement_levels_downtrend = high_price - (high_price - low_price) * multiplier
             fibonacci_downtrend.append(retracement_levels_downtrend)
 
     def drop_null():
