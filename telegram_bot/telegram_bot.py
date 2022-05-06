@@ -89,8 +89,8 @@ def main():
 
     def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
-        If the price of the asset is increasing for the last n1 days and decreasing for the last n2
-        days, then return 1. Otherwise return 0
+        If the price of the asset is increasing for the last before_candle_count and decreasing for
+        the last after_candle_count, then return 1. Otherwise return 0
 
         :param candle_value: The price data for the asset
         :param candle_index: The index of the first bar in the support
@@ -111,8 +111,8 @@ def main():
 
     def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
         """
-        If the price of the stock is increasing for the last n1 days and decreasing for the last n2
-        days, then return 1. Otherwise return 0
+        If the price of the stock is increasing for the last before_candle_count and decreasing for
+        the last after_candle_count, then return 1. Otherwise return 0
 
         :param candle_value: The price data for the asset
         :param candle_index: The index of the first bar in the resistance
