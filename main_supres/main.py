@@ -388,6 +388,9 @@ def main():
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
     def save():
+        """
+        The function saves the image and html file of the plotly chart, then it tweets the image and text
+        """
         if not os.path.exists("../main_supres/images"):
             os.mkdir("images")
         image = f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
@@ -415,7 +418,10 @@ def main():
 
     # save()
     def pinescript_code():
-        templines = []
+        """
+        It takes resistance and support lines, and writes them to a file called pinescript.txt.
+        """
+        pinescript_lines = []
         lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {historical_data.time_frame}'," \
                     f" overlay=true)\n" \
                     "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
@@ -424,12 +430,12 @@ def main():
 
         for line_res in resistance_above[:10]:
             lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
-            templines.append(lr)
+            pinescript_lines.append(lr)
 
         for line_sup in support_below[:10]:
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
-            templines.append(ls)
-        lines = '\n'.join(map(str, templines))
+            pinescript_lines.append(ls)
+        lines = '\n'.join(map(str, pinescript_lines))
         # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to
         # the file.
         f = open("../main_supres/pinescript.txt", "w")
