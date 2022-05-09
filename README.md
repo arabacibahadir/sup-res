@@ -59,11 +59,11 @@ Your python alias could be different like "py, python3", you should change your 
 
  
 ## Main Motivation
-New investors are investing without having any technical knowledge. Also those with a little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work. 
+New investors are investing without having any technical knowledge. Also, those with little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work.
 
-I worked on a code that could provide help for users who don't have much experience about _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**. Get your priorities straight.
+I worked on a code that could provide help for users who don't have much experience with _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**. Get your priorities straight.
 
-Supports and resistances are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards the points where you can stop your position. Watch out for high volume breakouts, sudden price changes and trend reversals. If you are investing low volume coin, it is very dangerous to trade on new coin charts without support and resistance levels. 
+Supports and resistances are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards points where you can stop your position. Watch out for high volume breakouts, sudden price changes, and trend reversals. If you are investing in low volume coins, it is very dangerous to trade on new coin charts without support and resistance levels.
 
 
 ![image](https://user-images.githubusercontent.com/32988819/166165539-5a4eea0a-456e-482d-aa56-96b5eaffc37a.png)
@@ -71,8 +71,7 @@ Supports and resistances are generally zones, not just lines. Especially in cryp
 
 ## Support-Resistance Lines
 
-If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this price is touched at least 2 times, if possible 3 times. If there are more touches, the reliability increases. 
-If the current price is above the old resistance, this resistance will act as support. Vice versa is also true. 
+If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this price should be touched at least 2 times, if possible, 3 times. If there are more touches, reliability increases. If the current price is above the old resistance, this resistance will act as support. Vice versa is also true.
 
 ![28sep](https://user-images.githubusercontent.com/32988819/135044659-579b26c8-8141-41c2-9b4e-d3c99b41b571.png)
 
