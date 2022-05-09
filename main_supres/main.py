@@ -159,24 +159,24 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
 
-    hist_htf = (historical_data.Client.KLINE_INTERVAL_1DAY,
-                historical_data.Client.KLINE_INTERVAL_3DAY)
-    hist_ltf = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
-                historical_data.Client.KLINE_INTERVAL_3MINUTE,
-                historical_data.Client.KLINE_INTERVAL_5MINUTE,
-                historical_data.Client.KLINE_INTERVAL_15MINUTE,
-                historical_data.Client.KLINE_INTERVAL_30MINUTE,
-                historical_data.Client.KLINE_INTERVAL_1HOUR,
-                historical_data.Client.KLINE_INTERVAL_2HOUR,
-                historical_data.Client.KLINE_INTERVAL_4HOUR,
-                historical_data.Client.KLINE_INTERVAL_6HOUR,
-                historical_data.Client.KLINE_INTERVAL_8HOUR,
-                historical_data.Client.KLINE_INTERVAL_12HOUR)
+    historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
+                                historical_data.Client.KLINE_INTERVAL_3DAY)
+    historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_3MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_5MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_15MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_30MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_1HOUR,
+                               historical_data.Client.KLINE_INTERVAL_2HOUR,
+                               historical_data.Client.KLINE_INTERVAL_4HOUR,
+                               historical_data.Client.KLINE_INTERVAL_6HOUR,
+                               historical_data.Client.KLINE_INTERVAL_8HOUR,
+                               historical_data.Client.KLINE_INTERVAL_12HOUR)
 
-    if historical_data.time_frame in hist_htf:
+    if historical_data.time_frame in historical_hightimeframe:
         candlestick_patterns()
         x_date = '%b-%d-%y'
-    elif historical_data.time_frame in hist_ltf:  # For LTF chart
+    elif historical_data.time_frame in historical_lowtimeframe:  # For LTF chart
         x_date = '%b-%d-%y %H:%M'
     # The below code is creating a candlestick chart.
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
@@ -241,8 +241,8 @@ def main():
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # resistance_above list and the last element of the support_below list.
     fib_pl(resistance_above[-1], support_below[-1])  # Fibonacci func
-    resistance_above = [float(a) for a in resistance_above]
-    support_below = [float(a) for a in support_below]
+    resistance_above = [float(above) for above in resistance_above]
+    support_below = [float(below) for below in support_below]
 
     c = 0
     # Adding the support lines and annotations to the chart.
@@ -324,7 +324,7 @@ def main():
         marker=dict(color=legend_color, size=10)))
 
     # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
-    if historical_data.time_frame in hist_htf:
+    if historical_data.time_frame in historical_hightimeframe:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10,
                                  name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
                                  line=dict(color='#5c6cff', width=3)))
@@ -334,7 +334,7 @@ def main():
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100,
                                  name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
                                  line=dict(color='#a69b05', width=3)))
-    elif historical_data.time_frame in hist_ltf:
+    elif historical_data.time_frame in historical_lowtimeframe:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10,
                        name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
@@ -376,7 +376,7 @@ def main():
                 marker=dict(color=legend_color, size=10)))
 
     # Candle patterns for HTF
-    if historical_data.time_frame in hist_htf:
+    if historical_data.time_frame in historical_hightimeframe:
         candle_patterns()
 
     # Chart updates
