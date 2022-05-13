@@ -193,24 +193,24 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
 
-    historical_hightimeframe = (Client.KLINE_INTERVAL_1MINUTE,
-                                Client.KLINE_INTERVAL_3MINUTE,
-                                Client.KLINE_INTERVAL_5MINUTE,
-                                Client.KLINE_INTERVAL_15MINUTE,
-                                Client.KLINE_INTERVAL_30MINUTE,
-                                Client.KLINE_INTERVAL_1HOUR,
-                                Client.KLINE_INTERVAL_2HOUR,
-                                Client.KLINE_INTERVAL_4HOUR,
-                                Client.KLINE_INTERVAL_6HOUR,
-                                Client.KLINE_INTERVAL_8HOUR,
-                                Client.KLINE_INTERVAL_12HOUR)
-    historical_lowtimeframe = (Client.KLINE_INTERVAL_1DAY,
-                               Client.KLINE_INTERVAL_3DAY)
+    historical_lowtimeframe = (Client.KLINE_INTERVAL_1MINUTE,
+                               Client.KLINE_INTERVAL_3MINUTE,
+                               Client.KLINE_INTERVAL_5MINUTE,
+                               Client.KLINE_INTERVAL_15MINUTE,
+                               Client.KLINE_INTERVAL_30MINUTE,
+                               Client.KLINE_INTERVAL_1HOUR,
+                               Client.KLINE_INTERVAL_2HOUR,
+                               Client.KLINE_INTERVAL_4HOUR,
+                               Client.KLINE_INTERVAL_6HOUR,
+                               Client.KLINE_INTERVAL_8HOUR,
+                               Client.KLINE_INTERVAL_12HOUR)
+    historical_hightimeframe = (Client.KLINE_INTERVAL_1DAY,
+                                Client.KLINE_INTERVAL_3DAY)
 
-    if time_frame in historical_lowtimeframe:
+    if time_frame in historical_hightimeframe:
         candlestick_patterns()
         x_date = '%b-%d-%y'
-    elif time_frame in historical_hightimeframe:  # For LTF chart
+    elif time_frame in historical_lowtimeframe:  # For LTF chart
         x_date = '%b-%d-%y %H:%M'
     # The below code is creating a candlestick chart.
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
@@ -356,7 +356,7 @@ def main():
         marker=dict(color=legend_color, size=10)))
 
     # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
-    if time_frame in historical_lowtimeframe:
+    if time_frame in historical_hightimeframe:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10,
                        name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
@@ -369,7 +369,7 @@ def main():
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100,
                        name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
                        line=dict(color='#a69b05', width=3)))
-    elif time_frame in historical_hightimeframe:
+    elif time_frame in historical_lowtimeframe:
         fig.add_trace(
             go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10,
                        name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
@@ -410,7 +410,7 @@ def main():
                 y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
 
-    if time_frame in historical_lowtimeframe:
+    if time_frame in historical_hightimeframe:
         candle_patterns()
 
     # Chart updates
