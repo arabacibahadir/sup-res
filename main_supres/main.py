@@ -3,8 +3,8 @@ import time
 import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
-import historical_data
 import delete_file
+import historical_data
 
 
 def main():
@@ -26,10 +26,9 @@ def main():
     rsi = tuple((ta.rsi(last_candle_close)))
     macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
     support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
+    support_above, support_below, resistance_below, resistance_above, fig, x_date = [], [], [], [], [], ''
     fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
-    support_above, support_below, resistance_below, resistance_above = [], [], [], []
     # Chart settings
-    fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     bg_color = "#E7E7E7"
@@ -43,8 +42,7 @@ def main():
     def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
         If the price of the asset is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise return 0
-
+        the last after_candle_count, then return 1. Otherwise, return 0
         :param candle_value: The price data for the asset
         :param candle_index: The index of the first bar in the support
         :param before_candle_count: The number of bars back you want to look
@@ -65,8 +63,7 @@ def main():
     def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
         """
         If the price of the stock is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise return 0
-
+        the last after_candle_count, then return 1. Otherwise, return 0
         :param candle_value: The price data for the asset
         :param candle_index: The index of the first bar in the resistance
         :param before_candle_count: The number of bars back you want to look
@@ -109,9 +106,6 @@ def main():
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
             df.isna().sum()
-
-    drop_null()
-    df = df[:len(df)]  # Candle range
 
     def candlestick_patterns():
         """
@@ -159,6 +153,21 @@ def main():
             last_row = df.iloc[item]
             pattern_find_func(last_row)
 
+    def sensitivity(sens):
+        """
+        Find the support and resistance levels for a given asset
+        sensitivity:1 is recommended for daily charts or high frequency trade scalping
+        :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
+        """
+        for row in range(3, len(df) - 1):
+            if support(df, row, 3, sens):
+                support_list.append((row, df.low[row]))
+            if resistance(df, row, 3, sens):
+                resistance_list.append((row, df.high[row]))
+
+    drop_null()
+    df = df[:len(df)]  # Candle range
+    sensitivity(2)
     historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
                                 historical_data.Client.KLINE_INTERVAL_3DAY)
     historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
@@ -187,21 +196,6 @@ def main():
                                     low=df['low'],
                                     close=df['close'])])
     fig.update_layout(annotations=[watermark_layout])
-
-    def sensitivity(sens):
-        """
-        Find the support and resistance levels for a given asset
-        sensitivity:1 is recommended for daily charts or high frequency trade scalping
-        :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
-        """
-        for row in range(3, len(df) - 1):
-            if support(df, row, 3, sens):
-                support_list.append((row, df.low[row]))
-            if resistance(df, row, 3, sens):
-                resistance_list.append((row, df.high[row]))
-
-    sensitivity(2)
-
     # Finding support and resistance levels
     all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
     all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
