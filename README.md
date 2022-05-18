@@ -86,18 +86,14 @@ _28 September 2021 BTCUSDT Binance_
 [Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/)
 
 Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_.
-
-![legend](https://user-images.githubusercontent.com/32988819/134764245-18551144-ec9c-4489-9a0a-495e49de9a9d.png)
+![legend](https://user-images.githubusercontent.com/32988819/168901021-81d885d4-19de-4ba6-a3d0-c69faf2ccbf5.png)
 
 
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
 ## Some screenshots
-_ETHUSDT_ chart
-
-![ethusdt](https://user-images.githubusercontent.com/32988819/134763471-d5abe6ac-bb80-4dcb-94db-5d491802a8d7.png)
-
 _BTCUSDT_ chart
+![btc](https://user-images.githubusercontent.com/32988819/168900316-c8259e0c-6ceb-4d6d-ab54-1d3d5f63531d.png)
 
 ![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
 
