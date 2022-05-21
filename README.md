@@ -86,6 +86,7 @@ _28 September 2021 BTCUSDT Binance_
 [Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/)
 
 Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_.
+
 ![legend](https://user-images.githubusercontent.com/32988819/168901021-81d885d4-19de-4ba6-a3d0-c69faf2ccbf5.png)
 
 
