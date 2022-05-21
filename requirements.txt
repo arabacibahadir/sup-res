@@ -2,7 +2,7 @@ beautifulsoup4==4.10.0
 binance==0.3
 candlestick==0.0.8
 candlestick_patterns_subodh101==1.1.0
-kaleido==0.2.1
+kaleido==0.1.0post1
 pandas==1.4.2
 pandas_ta==0.3.14b0
 plotly==5.3.1
