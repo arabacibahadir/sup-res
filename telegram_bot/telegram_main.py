@@ -5,7 +5,6 @@ import telegram
 from binance.client import Client
 from telegram.ext import *
 import cmc
-import fearindex
 import datetime
 
 telegram_api = "your-api"  # Replace this with your telegram bot api
@@ -57,12 +56,12 @@ def responses(input_text):
                f"{majors[6]}:{majors[7]}, {majors[8]}:{majors[9]}, {majors[10]}:{majors[11]}"
 
     if user_message == "fear index":
-        return bot.send_message(chat_id=chat_id, text=fearindex.fear())
+        return bot.send_message(chat_id=chat_id, text=cmc.fear())
 
     if user_message == "info":
         return bot.send_message(chat_id=chat_id, text=cmc.market())
 
-    if user_message.startswith("news"):
+    if user_message == "news":
         return bot.send_message(chat_id=chat_id, text=cmc.news())
 
     if user_message == "pinescript":
