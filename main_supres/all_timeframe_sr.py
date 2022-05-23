@@ -7,27 +7,26 @@ from binance.client import Client
 import frameselect
 
 
-
 def hist_data():
-    headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                  'taker buy vol', 'taker buy quote vol', 'ignore']
+    header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
+                   'taker buy vol', 'taker buy quote vol', 'ignore']
 
-    def historical_Data_Write(self):
+    def historical_data_write(self):
         """
         The function writes the data to a csv file
         """
         data = self + ".csv"
-        csvFileW = open(data, "w", newline='')
-        klines_writer = csv.writer(csvFileW, delimiter=",")
+        csv_file_write = open(data, "w", newline='')
+        klines_writer = csv.writer(csv_file_write, delimiter=",")
         for candlestick in candlesticks:
             klines_writer.writerow(candlestick)
-        csvFileW.close()
+        csv_file_write.close()
         df = pd.read_csv(data)
         df = df.iloc[::-1]
-        df.to_csv(data, header=headerList, index=False)
+        df.to_csv(data, header=header_list, index=False)
 
     candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
-    historical_Data_Write(ticker)
+    historical_data_write(ticker)
 
 
 def main():
@@ -37,25 +36,54 @@ def main():
     df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
     ss, rr, new_res, new_sup = [], [], [], []
 
-    def support(price1, l, n1, n2):
-        for s in range(l - n1 + 1, l + 1):
-            if price1.low[s] > price1.low[s - 1]:
-                return 0
-        for s in range(l + 1, l + n2 + 1):
-            if price1.low[s] < price1.low[s - 1]:
-                return 0
-        return 1
+    def support(candle_value, candle_index, before_candle_count, after_candle_count):
+        """
+                If the price of the asset is increasing for the last before_candle_count and decreasing for
+                the last after_candle_count, then return 1. Otherwise, return 0
+                :param candle_value: The price data for the asset
+                :param candle_index: The index of the first bar in the support
+                :param before_candle_count: The number of bars back you want to look
+                :param after_candle_count: The number of bars in the second trend
+                :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
+                """
+        try:
+            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                if candle_value.low[current_value] > candle_value.low[current_value - 1]:
+                    return 0
+            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                if candle_value.low[current_value] < candle_value.low[current_value - 1]:
+                    return 0
+            return 1
+        except KeyError:
+            pass
 
-    def resistance(price1, l, n1, n2):
-        for r in range(l - n1 + 1, l + 1):
-            if price1.high[r] < price1.high[r - 1]:
-                return 0
-        for r in range(l + 1, l + n2 + 1):
-            if price1.high[r] > price1.high[r - 1]:
-                return 0
-        return 1
+    def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
+        """
+        If the price of the stock is increasing for the last before_candle_count and decreasing for
+        the last after_candle_count, then return 1. Otherwise, return 0
+        :param candle_value: The price data for the asset
+        :param candle_index: The index of the first bar in the resistance
+        :param before_candle_count: The number of bars back you want to look
+        :param after_candle_count: The number of days after the first resistance line where the price will be considered
+        to be broken
+        :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
+        n2 periods.
+        """
+        try:
+            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                if candle_value.high[current_value] < candle_value.high[current_value - 1]:
+                    return 0
+            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                if candle_value.high[current_value] > candle_value.high[current_value - 1]:
+                    return 0
+            return 1
+        except KeyError:
+            pass
 
     def drop_null():
+        """
+        Drop all rows with NULL values in the dataframe
+        """
         for col in df.columns:
             index_null = df[df[col] == "NULL"].index
             df.drop(index_null, inplace=True)
@@ -65,7 +93,6 @@ def main():
     df = df[:len(df)]
 
     def sensitivity(sens):
-
         for row in range(3, len(df) - 1):
             if support(df, row, 3, sens):
                 ss.append((row, df.low[row]))
