@@ -6,10 +6,10 @@ import frameselect
 
 print("Ticker:")  # Pair
 ticker = input().upper()
-print("Time frame:")  # 15M, 1H, 1D etc.
+print("Time frame:")  # 15M, 1H, 1D etc
 frame_s = str(input().upper())
 time_frame = frameselect.frame_select(frame_s)[0]
-# Creating a client object that is used to interact with the Binance API.
+# Creating a client object that is used to interact with the Binance API
 client = Client("", "")
 has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # Check pair is in Binance API
 print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
@@ -42,7 +42,7 @@ def hist_data():
         df = df.iloc[::-1]
         df.to_csv(data, header=header_list, index=False)
         df = pd.read_csv(data)
-        # Converting the unix time to a readable date format
+        # Converting the unix time to a readable date format for today
         date = pd.to_datetime(df['unix'], unit='ms')
         df.insert(1, 'date', date)
         del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], \
