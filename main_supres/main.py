@@ -34,7 +34,7 @@ def main():
     bg_color = "#E7E7E7"
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
-    # Adding a watermark to the plot.
+    # Adding a watermark to the plot
     watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
                              showarrow=False))
@@ -47,7 +47,7 @@ def main():
         :param candle_index: The index of the first bar in the support
         :param before_candle_count: The number of bars back you want to look
         :param after_candle_count: The number of bars in the second trend
-        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
+        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not
         """
         try:
             for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -70,7 +70,7 @@ def main():
         :param after_candle_count: The number of days after the first resistance line where the price will be considered
         to be broken
         :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
-        n2 periods.
+        n2 periods
         """
         try:
             for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -187,7 +187,7 @@ def main():
         x_date = '%b-%d-%y'
     elif historical_data.time_frame in historical_lowtimeframe:  # For LTF chart
         x_date = '%b-%d-%y %H:%M'
-    # The below code is creating a candlestick chart.
+    # The below code is creating a candlestick chart
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime(x_date),
@@ -239,7 +239,7 @@ def main():
     support_below = [float(below) for below in support_below]
 
     c = 0
-    # Adding the support lines and annotations to the chart.
+    # Adding the support lines and annotations to the chart
     while 1:
         if c > len(support_list) - 1:
             break
@@ -317,7 +317,7 @@ def main():
         y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
-    # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend.
+    # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend
     if historical_data.time_frame in historical_hightimeframe:
         fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10,
                                  name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
@@ -347,7 +347,7 @@ def main():
         y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
         marker=dict(color=legend_color, size=0)))
     mtp = 7
-    # Adding a line to the plot for each Fibonacci level.
+    # Adding a line to the plot for each Fibonacci level
     for _ in fibonacci_uptrend:
         fig.add_trace(go.Scatter(
             y=[support_list[0]],
@@ -431,7 +431,7 @@ def main():
             pinescript_lines.append(ls)
         lines = '\n'.join(map(str, pinescript_lines))
         # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to
-        # the file.
+        # the file
         f = open("../main_supres/pinescript.txt", "w")
         f.write(lines_sma + lines)
         f.close()
@@ -442,7 +442,7 @@ def main():
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres")  # Changing the directory to the main_supres folder.
+    os.chdir("../main_supres")  # Changing the directory to the main_supres folder
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
