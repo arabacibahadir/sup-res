@@ -423,15 +423,18 @@ def main():
                     "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
 
         for line_res in resistance_above[:10]:
+            if line_res == 0:
+                continue
             lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
             pinescript_lines.append(lr)
 
         for line_sup in support_below[:10]:
+            if line_sup == 0:
+                continue
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
             pinescript_lines.append(ls)
         lines = '\n'.join(map(str, pinescript_lines))
-        # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to
-        # the file
+        # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to the file
         f = open("../main_supres/pinescript.txt", "w")
         f.write(lines_sma + lines)
         f.close()
