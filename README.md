@@ -39,12 +39,12 @@ Time frame: # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d (m:minute, h
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file, and change your user handle name. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api). Then uncomment `save` and `twitter` functions in `main.py`.
 
 ````python
-# Twitter api keys
-tw_api = 'YOUR-API'
-tw_key_secret = 'API-SECRET'
-tw_token = 'TOKEN'
-tw_token_secret = 'TOKEN-SECRET'
-user_handle='@HANDLE-NAME'
+# Twitter api keys -> https://developer.twitter.com/en/docs/twitter-api
+twitter_api = 'YOUR-API'
+twitter_key_secret = 'API-SECRET'
+twitter_token = 'TOKEN'
+twitter_token_secret = 'TOKEN-SECRET'
+user_handle = '@HANDLE-NAME'
 ````
 
 Pine Script file will be created after run successfully main function. 
