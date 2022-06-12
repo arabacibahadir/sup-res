@@ -317,32 +317,17 @@ def main():
         y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
         marker=dict(color=legend_color, size=10)))
 
-    # The below code is adding the SMA10, SMA50, and SMA100 to the chart and legend
-    if historical_data.time_frame in historical_hightimeframe:
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma10,
-                                 name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
-                                 line=dict(color='#5c6cff', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma50,
-                                 name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
-                                 line=dict(color='#950fba', width=3)))
-        fig.add_trace(go.Scatter(x=df['date'].dt.strftime('%b-%d-%y'), y=sma100,
-                                 name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
-                                 line=dict(color='#a69b05', width=3)))
-    elif historical_data.time_frame in historical_lowtimeframe:
-        fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma10,
-                       name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
-                       line=dict(color='#5c6cff', width=3)))
-        fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma50,
-                       name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
-                       line=dict(color='#950fba', width=3)))
-        fig.add_trace(
-            go.Scatter(x=df['date'].dt.strftime('%b-%d-%y %H:%M'), y=sma100,
-                       name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
-                       line=dict(color='#a69b05', width=3)))
-    else:
-        print("Time frame error.")
+    # Adding the SMA10, SMA50, and SMA100 to the chart and legend
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
+                             name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
+                             line=dict(color='#5c6cff', width=3)))
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma50,
+                             name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
+                             line=dict(color='#950fba', width=3)))
+    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma100,
+                             name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
+                             line=dict(color='#a69b05', width=3)))
+
     fig.add_trace(go.Scatter(
         y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
         marker=dict(color=legend_color, size=0)))
