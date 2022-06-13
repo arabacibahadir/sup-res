@@ -31,9 +31,9 @@ def main():
     # Chart settings
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
-    bg_color = "#E7E7E7"
-    support_color = "LightSeaGreen"
-    res_color = "MediumPurple"
+    background_color = "#E7E7E7"
+    support_line_color = "LightSeaGreen"
+    resistance_line_color = "MediumPurple"
     # Adding a watermark to the plot
     watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
@@ -83,7 +83,7 @@ def main():
         except KeyError:
             pass
 
-    def fib_pl(high_price, low_price):
+    def fibonacci_pricelevels(high_price, low_price):
         """
         The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
         retracement levels
@@ -201,23 +201,23 @@ def main():
     all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
     latest_close = tuple(df['close'])[-1]
 
-    def supres():
+    def check_lines():
         # Checking if the support is below the latest close. If it is, it is appending it to the list
         # support_below. If it isn't, it is appending it to the list resistance_below.
-        for s in all_support_list:  # Find closes
-            if s < latest_close:
-                support_below.append(s)
+        for support_line in all_support_list:  # Find closes
+            if support_line < latest_close:
+                support_below.append(support_line)
             else:
-                resistance_below.append(s)
+                resistance_below.append(support_line)
         # Checking if the price is above the latest close price. If it is, it is appending it to the
         # resistance_above list. If it is not, it is appending it to the support_above list.
-        for r in all_resistance_list:
-            if r > latest_close:
-                resistance_above.append(r)
+        for resistance_line in all_resistance_list:
+            if resistance_line > latest_close:
+                resistance_above.append(resistance_line)
             else:
-                support_above.append(r)
+                support_above.append(resistance_line)
 
-    supres()
+    check_lines()
 
     support_below.extend(support_above)
     resistance_above.extend(resistance_below)
@@ -234,7 +234,7 @@ def main():
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # resistance_above list and the last element of the support_below list.
-    fib_pl(resistance_above[-1], support_below[-1])  # Fibonacci func
+    fibonacci_pricelevels(resistance_above[-1], support_below[-1])  # Fibonacci func
     resistance_above = [float(above) for above in resistance_above]
     support_below = [float(below) for below in support_below]
 
@@ -246,10 +246,10 @@ def main():
         # Support Lines
         fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
                       x1=len(df) + 25,
-                      y1=support_list[c][1], line=dict(color=support_color, width=2))
+                      y1=support_list[c][1], line=dict(color=support_line_color, width=2))
         # Support annotations
         fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
-                           font=dict(size=15, color=support_color))
+                           font=dict(size=15, color=support_line_color))
         c += 1
 
     c = 0
@@ -260,16 +260,16 @@ def main():
         # Resistance Lines
         fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
                       x1=len(df) + 25,
-                      y1=resistance_list[c][1], line=dict(color=res_color, width=1))
+                      y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
         # Resistance annotations
         fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
-                           font=dict(size=15, color=res_color))
+                           font=dict(size=15, color=resistance_line_color))
         c += 1
 
     # Legend texts
     fig.add_trace(go.Scatter(
         y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
-        marker=dict(color=res_color, size=10)))
+        marker=dict(color=resistance_line_color, size=10)))
 
     str_price_len = 3
     sample_price = df['close'][0]
@@ -361,7 +361,7 @@ def main():
     # Chart updates
     fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
                       hovermode='x', dragmode="zoom",
-                      paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
+                      paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
                       legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)

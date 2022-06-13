@@ -24,17 +24,17 @@ def historical_data_write():
     """
     data = ticker + ".csv"
     candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=270)
-    headerList = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                  'taker buy vol', 'taker buy quote vol', 'ignore']
-    csvFileW = open(f"../telegram_bot/{data}", "w", newline='')
-    klines_writer = csv.writer(csvFileW, delimiter=",")
+    header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
+                   'taker buy vol', 'taker buy quote vol', 'ignore']
+    csv_file_write = open(f"../telegram_bot/{data}", "w", newline='')
+    klines_writer = csv.writer(csv_file_write, delimiter=",")
     # Writing the data to a CSV file.
-    for c in candlesticks:
-        klines_writer.writerow(c)
-    csvFileW.close()
+    for candles in candlesticks:
+        klines_writer.writerow(candles)
+    csv_file_write.close()
     df = pd.read_csv(data)
     df = df.iloc[::-1]
-    df.to_csv(data, header=headerList, index=False)
+    df.to_csv(data, header=header_list, index=False)
     df = pd.read_csv(data)
     date = pd.to_datetime(df['unix'], unit='ms')
     df.insert(1, 'date', date)
@@ -79,7 +79,7 @@ def main():
     fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
-    bg_color = "#E7E7E7"
+    background_color = "#E7E7E7"
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
     # Adding a watermark to the plot.
@@ -133,7 +133,7 @@ def main():
         except KeyError:
             pass
 
-    def fib_pl(high_price, low_price):
+    def fibonacci_pricelevels(high_price, low_price):
         """
         The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
         retracement levels
@@ -212,7 +212,7 @@ def main():
         x_date = '%b-%d-%y'
     elif time_frame in historical_lowtimeframe:  # For LTF chart
         x_date = '%b-%d-%y %H:%M'
-    # The below code is creating a candlestick chart.
+    # The below code is creating a candlestick chart
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime(x_date),
@@ -236,27 +236,27 @@ def main():
 
     sensitivity(2)
 
-    sup = tuple(map(lambda sup1: sup1[1], support_list))
-    res = tuple(map(lambda res1: res1[1], resistance_list))
+    all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+    all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
     latest_close = tuple(df['close'])[-1]
 
-    def supres():
+    def check_lines():
         # Checking if the support is below the latest close. If it is, it is appending it to the list
         # support_below. If it isn't, it is appending it to the list resistance_below.
-        for s in sup:
-            if s < latest_close:
-                support_below.append(s)
+        for support_line in all_support_list:  # Find closes
+            if support_line < latest_close:
+                support_below.append(support_line)
             else:
-                resistance_below.append(s)
+                resistance_below.append(support_line)
         # Checking if the price is above the latest close price. If it is, it is appending it to the
         # resistance_above list. If it is not, it is appending it to the support_above list.
-        for r in res:
-            if r > latest_close:
-                resistance_above.append(r)
+        for resistance_line in all_resistance_list:
+            if resistance_line > latest_close:
+                resistance_above.append(resistance_line)
             else:
-                support_above.append(r)
+                support_above.append(resistance_line)
 
-    supres()
+    check_lines()
 
     support_below.extend(support_above)
     resistance_above.extend(resistance_below)
@@ -273,7 +273,7 @@ def main():
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # resistance_above list and the last element of the support_below list.
-    fib_pl(resistance_above[-1], support_below[-1])
+    fibonacci_pricelevels(resistance_above[-1], support_below[-1])
     resistance_above = [float(above) for above in resistance_above]
     support_below = [float(below) for below in support_below]
 
@@ -401,7 +401,7 @@ def main():
     fig.update_layout(
         title=str(f"{ticker} {time_frame.upper()} Chart"),
         hovermode='x', dragmode="zoom",
-        paper_bgcolor=bg_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
+        paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
         legend=dict(bgcolor=legend_color, font=dict(size=12)), margin=dict(t=30, l=0, b=0, r=0))
     fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
     fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
