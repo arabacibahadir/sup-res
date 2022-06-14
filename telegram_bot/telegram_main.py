@@ -34,7 +34,6 @@ def get_alarm_data():
 def responses(input_text):
     user_message = str(input_text).lower()
     chat_id = bot.get_updates()[-1].message.chat_id
-
     if user_message == "commands":
         return "supres 'pair' 'timeframe', pinescript, major coins, fear index, info, news, test"
 
@@ -81,23 +80,24 @@ def responses(input_text):
         pass
 
     msg = user_message.split(" ")
-    tck = msg[1]
-    tfr = msg[2]
+    telegram_user_ticker_input = msg[1]
+    telegram_user_timeframe_input = msg[2]
 
     def remove_files():
         for x in os.listdir("../telegram_bot/"):
-            if x == f"{tck.upper()}.jpeg":
-                os.unlink(f"../telegram_bot/{tck.upper()}.jpeg")
-            if x == f"{tck.upper()}.csv":
-                os.unlink(f"../telegram_bot/{tck.upper()}.csv")
+            if x == f"{telegram_user_ticker_input.upper()}.jpeg":
+                os.unlink(f"../telegram_bot/{telegram_user_ticker_input.upper()}.jpeg")
+            if x == f"{telegram_user_ticker_input.upper()}.csv":
+                os.unlink(f"../telegram_bot/{telegram_user_ticker_input.upper()}.csv")
             if x == "output.txt":
                 os.unlink("../telegram_bot/output.txt")
 
     if user_message.startswith("supres"):
-        has_pair = any(tck.upper() == i.get('symbol') for i in client.get_all_tickers())
+        has_pair = any(telegram_user_ticker_input.upper() == i.get('symbol') for i in client.get_all_tickers())
         print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
-        # Which python path you are using, if it is not working, change "python" command -> "py, python3"
-        subprocess.run(f"python ../telegram_bot/telegram_bot.py {tck.upper()} {tfr.upper()}", cwd="../telegram_bot",
+        # Which python path you are using, if it is not working, change "python" command -> "py" or "python3"
+        subprocess.run(f"python ../telegram_bot/telegram_bot.py {telegram_user_ticker_input.upper()} "
+                       f"{telegram_user_timeframe_input.upper()}", cwd="../telegram_bot",
                        shell=True)
         with open("../telegram_bot/output.txt", "r+") as f:
             content_list = f.readlines()
@@ -105,7 +105,6 @@ def responses(input_text):
         text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3] + "\n" + content_list[4]
         bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
         return remove_files()
-
     return "Error"
 
 
