@@ -1,5 +1,4 @@
 import csv
-from datetime import datetime
 import pandas as pd
 from binance.client import Client
 import frameselect
@@ -13,8 +12,6 @@ time_frame = frameselect.frame_select(frame_s)[0]
 client = Client("", "")
 has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # Check pair is in Binance API
 print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
-current = datetime.now()
-current_time = current.strftime("%b-%d-%y %H:%M")
 start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
 symbol_info = client.get_symbol_info(ticker)
@@ -27,16 +24,16 @@ def hist_data():
     header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                    'taker buy vol', 'taker buy quote vol', 'ignore')
 
-    def historical_Data_Write(self):
+    def historical_data_write(self):
         """
-        The function is used to write the historical data to a csv file
+        Write the historical data to a csv file
         """
         data = self + ".csv"
-        csvFileW = open(data, "w", newline='')
-        klines_writer = csv.writer(csvFileW, delimiter=",")
+        csv_file_w = open(data, "w", newline='')
+        klines_writer = csv.writer(csv_file_w, delimiter=",")
         for candlestick in candlesticks:
             klines_writer.writerow(candlestick)
-        csvFileW.close()
+        csv_file_w.close()
         df = pd.read_csv(data)
         # Reversing the order of the dataframe
         df = df.iloc[::-1]
@@ -51,4 +48,4 @@ def hist_data():
 
     print("Data writing:", file_name)
     candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
-    historical_Data_Write(ticker)
+    historical_data_write(ticker)
