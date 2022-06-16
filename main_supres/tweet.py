@@ -1,4 +1,3 @@
-# This is for tweeting through api.
 import tweepy
 import git_twitter_access
 
@@ -25,5 +24,5 @@ def is_image_tweet():
     """
     This is getting the latest tweet from the user.
     """
-    stat = api.user_timeline(screen_name=git_twitter_access.user_handle, count=1) # Change with your twitter handle name
-    return stat[0]
+    get_last_status = api.user_timeline(screen_name=git_twitter_access.user_handle, count=1)
+    return get_last_status[0]
