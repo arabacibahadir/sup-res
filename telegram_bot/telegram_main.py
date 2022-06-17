@@ -27,10 +27,6 @@ def handle_message(update, context):
     update.message.reply_text(r_text)
 
 
-def get_alarm_data():
-    pass
-
-
 def responses(input_text):
     user_message = str(input_text).lower()
     chat_id = bot.get_updates()[-1].message.chat_id
@@ -69,15 +65,6 @@ def responses(input_text):
             bot.send_document(chat_id=chat_id, document=open(textfile, 'rb'))
         else:
             bot.send_message(chat_id=chat_id, text='There is no pinescript.txt file, first run the supres command.')
-
-    if user_message.startswith("set alarm"):
-        pass
-
-    if user_message.startswith("update alarm"):
-        pass
-
-    if user_message.startswith("delete alarm"):
-        pass
 
     msg = user_message.split(" ")
     telegram_user_ticker_input = msg[1]
