@@ -38,6 +38,19 @@ def main():
     watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
                              showarrow=False))
+    historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
+                                historical_data.Client.KLINE_INTERVAL_3DAY)
+    historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_3MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_5MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_15MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_30MINUTE,
+                               historical_data.Client.KLINE_INTERVAL_1HOUR,
+                               historical_data.Client.KLINE_INTERVAL_2HOUR,
+                               historical_data.Client.KLINE_INTERVAL_4HOUR,
+                               historical_data.Client.KLINE_INTERVAL_6HOUR,
+                               historical_data.Client.KLINE_INTERVAL_8HOUR,
+                               historical_data.Client.KLINE_INTERVAL_12HOUR)
 
     def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
@@ -165,23 +178,41 @@ def main():
             if resistance(df, row, 3, sens):
                 resistance_list.append((row, df.high[row]))
 
-    drop_null()
-    df = df[:len(df)]  # Candle range
-    sensitivity(2)
-    historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
-                                historical_data.Client.KLINE_INTERVAL_3DAY)
-    historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_3MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_5MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_15MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_30MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_1HOUR,
-                               historical_data.Client.KLINE_INTERVAL_2HOUR,
-                               historical_data.Client.KLINE_INTERVAL_4HOUR,
-                               historical_data.Client.KLINE_INTERVAL_6HOUR,
-                               historical_data.Client.KLINE_INTERVAL_8HOUR,
-                               historical_data.Client.KLINE_INTERVAL_12HOUR)
+    def check_lines():
+        # Finding support and resistance levels
+        # Checking if the support is below the latest close. If it is, it is appending it to the list
+        # support_below. If it isn't, it is appending it to the list resistance_below.
+        all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+        all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
+        latest_close = tuple(df['close'])[-1]
+        for support_line in all_support_list:  # Find closes
+            if support_line < latest_close:
+                support_below.append(support_line)
+            else:
+                resistance_below.append(support_line)
+        # Checking if the price is above the latest close price. If it is, it is appending it to the
+        # resistance_above list. If it is not, it is appending it to the support_above list.
+        for resistance_line in all_resistance_list:
+            if resistance_line > latest_close:
+                resistance_above.append(resistance_line)
+            else:
+                support_above.append(resistance_line)
 
+    def legend_candle_patterns():
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name="----------------------------------------", mode="markers",
+            marker=dict(color=legend_color, size=14)))
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
+            marker=dict(color=legend_color, size=14)))
+        for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
+                marker=dict(color=legend_color, size=10)))
+
+    drop_null()
+    sensitivity(2)
+    check_lines()
     if historical_data.time_frame in historical_hightimeframe:
         candlestick_patterns()
         x_date = '%b-%d-%y'
@@ -196,29 +227,6 @@ def main():
                                     low=df['low'],
                                     close=df['close'])])
     fig.update_layout(annotations=[watermark_layout])
-    # Finding support and resistance levels
-    all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
-    all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
-    latest_close = tuple(df['close'])[-1]
-
-    def check_lines():
-        # Checking if the support is below the latest close. If it is, it is appending it to the list
-        # support_below. If it isn't, it is appending it to the list resistance_below.
-        for support_line in all_support_list:  # Find closes
-            if support_line < latest_close:
-                support_below.append(support_line)
-            else:
-                resistance_below.append(support_line)
-        # Checking if the price is above the latest close price. If it is, it is appending it to the
-        # resistance_above list. If it is not, it is appending it to the support_above list.
-        for resistance_line in all_resistance_list:
-            if resistance_line > latest_close:
-                resistance_above.append(resistance_line)
-            else:
-                support_above.append(resistance_line)
-
-    check_lines()
-
     support_below.extend(support_above)
     resistance_above.extend(resistance_below)
     support_below = sorted(support_below, reverse=True)
@@ -234,137 +242,136 @@ def main():
 
     # Computing the Fibonacci sequence for the numbers in the range of the last element of the
     # resistance_above list and the last element of the support_below list.
-    fibonacci_pricelevels(resistance_above[-1], support_below[-1])  # Fibonacci func
+    fibonacci_pricelevels(resistance_above[-1], support_below[-1])
     resistance_above = [float(above) for above in resistance_above]
     support_below = [float(below) for below in support_below]
 
-    c = 0
-    # Adding the support lines and annotations to the chart
-    while 1:
-        if c > len(support_list) - 1:
-            break
-        # Support Lines
-        fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
-                      x1=len(df) + 25,
-                      y1=support_list[c][1], line=dict(color=support_line_color, width=2))
-        # Support annotations
-        fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
-                           font=dict(size=15, color=support_line_color))
-        c += 1
-
-    c = 0
-    # Adding the resistance lines and annotations to the chart.
-    while 1:
-        if c > len(resistance_list) - 1:
-            break
-        # Resistance Lines
-        fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
-                      x1=len(df) + 25,
-                      y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
-        # Resistance annotations
-        fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
-                           font=dict(size=15, color=resistance_line_color))
-        c += 1
-
-    # Legend texts
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
-        marker=dict(color=resistance_line_color, size=10)))
-
-    str_price_len = 3
-    sample_price = df['close'][0]
-    if sample_price < 1:
-        str_price_len = len(str(sample_price))
-    blank = " " * (len(str(sample_price)) + 1)
-    differ = len(resistance_above) - len(support_below)
-    try:
-        if differ < 0:
-            for i in range(abs(differ)):
-                resistance_above.extend([0])
-        if differ > 0:
-            for i in range(abs(differ)):
-                support_below.extend([0])
-        temp = 0
-        for _ in range(max(len(resistance_above), len(support_below))):
-            if resistance_above[temp] == 0:  # This is for legend alignment
-                legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
-                                f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
-            else:
-                legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}       " \
-                                f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]],
-                name=legend_supres,
-                mode="lines",
-                marker=dict(color=legend_color, size=10)))
-            temp += 1
-            if temp == 14:
+    def draw_support():
+        c = 0
+        # Adding the support lines and annotations to the chart
+        while 1:
+            if c > len(support_list) - 1:
                 break
-    except IndexError:
-        pass
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
-        marker=dict(color=legend_color, size=0)))
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
-        marker=dict(color=legend_color, size=0)))
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
-        marker=dict(color=legend_color, size=10)))
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
-        marker=dict(color=legend_color, size=10)))
+            # Support Lines
+            fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
+                          x1=len(df) + 25,
+                          y1=support_list[c][1], line=dict(color=support_line_color, width=2))
+            # Support annotations
+            fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
+                               font=dict(size=15, color=support_line_color))
+            c += 1
 
-    # Adding the SMA10, SMA50, and SMA100 to the chart and legend
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
-                             name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
-                             line=dict(color='#5c6cff', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma50,
-                             name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
-                             line=dict(color='#950fba', width=3)))
-    fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma100,
-                             name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
-                             line=dict(color='#a69b05', width=3)))
+    def draw_resistance():
+        c = 0
+        # Adding the resistance lines and annotations to the chart.
+        while 1:
+            if c > len(resistance_list) - 1:
+                break
+            # Resistance Lines
+            fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
+                          x1=len(df) + 25,
+                          y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
+            # Resistance annotations
+            fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
+                               font=dict(size=15, color=resistance_line_color))
+            c += 1
 
-    fig.add_trace(go.Scatter(
-        y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
-        marker=dict(color=legend_color, size=0)))
-    mtp = 7
-    # Adding a line to the plot for each Fibonacci level
-    for _ in fibonacci_uptrend:
+    def legend_texts():
+        # Legend texts
         fig.add_trace(go.Scatter(
-            y=[support_list[0]],
-            name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
-                 f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
-            mode="lines",
+            y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
+            marker=dict(color=resistance_line_color, size=10)))
+        str_price_len = 3
+        sample_price = df['close'][0]
+        if sample_price < 1:
+            str_price_len = len(str(sample_price))
+        blank = " " * (len(str(sample_price)) + 1)
+        differ = len(resistance_above) - len(support_below)
+
+        def legend_support_resistance_values():
+            try:
+                if differ < 0:
+                    for i in range(abs(differ)):
+                        resistance_above.extend([0])
+                if differ > 0:
+                    for i in range(abs(differ)):
+                        support_below.extend([0])
+                temp = 0
+                for _ in range(max(len(resistance_above), len(support_below))):
+                    if resistance_above[temp] == 0:  # This is for legend alignment
+                        legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
+                                        f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
+                    else:
+                        legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}       " \
+                                        f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
+                    fig.add_trace(go.Scatter(
+                        y=[support_list[0]],
+                        name=legend_supres,
+                        mode="lines",
+                        marker=dict(color=legend_color, size=10)))
+                    temp += 1
+                    if temp == 14:
+                        break
+            except IndexError:
+                pass
+
+        legend_support_resistance_values()
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
+            marker=dict(color=legend_color, size=0)))
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
+            marker=dict(color=legend_color, size=0)))
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
             marker=dict(color=legend_color, size=10)))
-        mtp -= 1
+        fig.add_trace(go.Scatter(
+            y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
+            marker=dict(color=legend_color, size=10)))
 
-    def candle_patterns():
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name="----------------------------------------", mode="markers",
-            marker=dict(color=legend_color, size=14)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
-            marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
+        def legend_sma():
+            # Adding the SMA10, SMA50, and SMA100 to the chart and legend
+            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
+                                     name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
+                                     line=dict(color='#5c6cff', width=3)))
+            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma50,
+                                     name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
+                                     line=dict(color='#950fba', width=3)))
+            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma100,
+                                     name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
+                                     line=dict(color='#a69b05', width=3)))
             fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
-                marker=dict(color=legend_color, size=10)))
+                y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
+                marker=dict(color=legend_color, size=0)))
 
-    # Candle patterns for HTF
-    if historical_data.time_frame in historical_hightimeframe:
-        candle_patterns()
+        def legend_fibonacci():
+            # Adding a line to the plot for each Fibonacci level
+            mtp = len(fibonacci_multipliers) - 1
+            for _ in fibonacci_uptrend:
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]],
+                    name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                         f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
+                    mode="lines",
+                    marker=dict(color=legend_color, size=10)))
+                mtp -= 1
 
-    # Chart updates
-    fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
-                      hovermode='x', dragmode="zoom",
-                      paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-                      legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
-    fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
-    fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
+        legend_sma()
+        legend_fibonacci()
+        # Candle patterns for HTF
+        if historical_data.time_frame in historical_hightimeframe:
+            legend_candle_patterns()
+
+    def chart_updates():
+        # Chart updates
+        fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
+                          hovermode='x', dragmode="zoom",
+                          paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
+                          legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
+        fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
+        fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
 
     def save():
         """
@@ -395,7 +402,6 @@ def main():
                 break
         # for_tweet()
 
-    # save()
     def pinescript_code():
         """
         It takes resistance and support lines, and writes them to a file called pinescript.txt.
@@ -424,6 +430,11 @@ def main():
         f.write(lines_sma + lines)
         f.close()
 
+    draw_support()
+    draw_resistance()
+    legend_texts()
+    chart_updates()
+    # save()
     pinescript_code()
     fig.show(id='the_graph', config={'displaylogo': False})
     print(f"Completed execution in {time.perf_counter() - perf} seconds")
