@@ -179,6 +179,9 @@ def main():
                 resistance_list.append((row, df.high[row]))
 
     def check_lines():
+        """
+        Check if the support and resistance lines are above or below the latest close price.
+        """
         # Finding support and resistance levels
         # Checking if the support is below the latest close. If it is, it is appending it to the list
         # support_below. If it isn't, it is appending it to the list resistance_below.
@@ -247,12 +250,14 @@ def main():
     support_below = [float(below) for below in support_below]
 
     def draw_support():
+        """
+        Draws the support lines and adds annotations to the chart.
+        """
         c = 0
-        # Adding the support lines and annotations to the chart
         while 1:
             if c > len(support_list) - 1:
                 break
-            # Support Lines
+            # Support lines
             fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
                           x1=len(df) + 25,
                           y1=support_list[c][1], line=dict(color=support_line_color, width=2))
@@ -262,12 +267,14 @@ def main():
             c += 1
 
     def draw_resistance():
+        """
+        Draws the resistance lines and adds annotations to the chart. 
+        """
         c = 0
-        # Adding the resistance lines and annotations to the chart.
         while 1:
             if c > len(resistance_list) - 1:
                 break
-            # Resistance Lines
+            # Resistance lines
             fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
                           x1=len(df) + 25,
                           y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
@@ -365,7 +372,6 @@ def main():
             legend_candle_patterns()
 
     def chart_updates():
-        # Chart updates
         fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
                           hovermode='x', dragmode="zoom",
                           paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
@@ -375,7 +381,7 @@ def main():
 
     def save():
         """
-        The function saves the image and html file of the plotly chart, then it tweets the image and text
+        Saves the image and html file of the plotly chart, then it tweets the image and text
         """
         if not os.path.exists("../main_supres/images"):
             os.mkdir("images")
@@ -389,6 +395,9 @@ def main():
                      f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
         def for_tweet():
+            """
+            Takes a screenshot of a chart, then tweets it with a caption. 
+            """
             import tweet
             tweet.send_tweet(image, text_image)
             while tweet.is_image_tweet().text != text_image:
