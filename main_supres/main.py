@@ -213,15 +213,30 @@ def main():
                 y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
 
+    def levels():
+        # Checking if the support level is empty. If it is, it appends the minimum value of the low
+        # column to the list.
+        if len(support_below) == 0:
+            support_below.append(min(df['low']))
+        # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
+        # column to the list.
+        if len(resistance_above) == 0:
+            resistance_above.append(max(df['high']))
+
+        # Computing the Fibonacci sequence for the numbers in the range of the last element of the
+        # resistance_above list and the last element of the support_below list.
+        fibonacci_pricelevels(resistance_above[-1], support_below[-1])
+
     drop_null()
     sensitivity(2)
     check_lines()
+
     if historical_data.time_frame in historical_hightimeframe:
         candlestick_patterns()
         x_date = '%b-%d-%y'
     elif historical_data.time_frame in historical_lowtimeframe:  # For LTF chart
         x_date = '%b-%d-%y %H:%M'
-    # The below code is creating a candlestick chart
+    # Create candlestick chart
     fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
                                     name="Candlestick",
                                     text=df['date'].dt.strftime(x_date),
@@ -234,20 +249,9 @@ def main():
     resistance_above.extend(resistance_below)
     support_below = sorted(support_below, reverse=True)
     resistance_above = sorted(resistance_above)
-    # Checking if the support level is empty. If it is, it appends the minimum value of the low
-    # column to the list.
-    if len(support_below) == 0:
-        support_below.append(min(df['low']))
-    # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
-    # column to the list.
-    if len(resistance_above) == 0:
-        resistance_above.append(max(df['high']))
-
-    # Computing the Fibonacci sequence for the numbers in the range of the last element of the
-    # resistance_above list and the last element of the support_below list.
-    fibonacci_pricelevels(resistance_above[-1], support_below[-1])
-    resistance_above = [float(above) for above in resistance_above]
-    support_below = [float(below) for below in support_below]
+    levels()
+    float_resistance_above = list(map(float, resistance_above))
+    float_support_below = list(map(float, support_below))
 
     def draw_support():
         """
@@ -284,7 +288,6 @@ def main():
             c += 1
 
     def legend_texts():
-        # Legend texts
         fig.add_trace(go.Scatter(
             y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
             marker=dict(color=resistance_line_color, size=10)))
@@ -293,24 +296,24 @@ def main():
         if sample_price < 1:
             str_price_len = len(str(sample_price))
         blank = " " * (len(str(sample_price)) + 1)
-        differ = len(resistance_above) - len(support_below)
+        differ = len(float_resistance_above) - len(float_support_below)
 
         def legend_support_resistance_values():
             try:
                 if differ < 0:
                     for i in range(abs(differ)):
-                        resistance_above.extend([0])
+                        float_resistance_above.extend([0])
                 if differ > 0:
                     for i in range(abs(differ)):
-                        support_below.extend([0])
+                        float_support_below.extend([0])
                 temp = 0
-                for _ in range(max(len(resistance_above), len(support_below))):
-                    if resistance_above[temp] == 0:  # This is for legend alignment
-                        legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
-                                        f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
+                for _ in range(max(len(float_resistance_above), len(float_support_below))):
+                    if float_resistance_above[temp] == 0:  # This is for legend alignment
+                        legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
+                                        f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                     else:
-                        legend_supres = f"{float(resistance_above[temp]):.{str_price_len - 1}f}       " \
-                                        f"||   {float(support_below[temp]):.{str_price_len - 1}f}"
+                        legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
+                                        f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                     fig.add_trace(go.Scatter(
                         y=[support_list[0]],
                         name=legend_supres,
@@ -322,21 +325,22 @@ def main():
             except IndexError:
                 pass
 
-        legend_support_resistance_values()
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
-            marker=dict(color=legend_color, size=0)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
-            marker=dict(color=legend_color, size=0)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
-            marker=dict(color=legend_color, size=10)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}", mode="lines",
-            marker=dict(color=legend_color, size=10)))
+        def text_and_indicators():
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
+                marker=dict(color=legend_color, size=0)))
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
+                marker=dict(color=legend_color, size=0)))
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
+                marker=dict(color=legend_color, size=10)))
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}",
+                mode="lines",
+                marker=dict(color=legend_color, size=10)))
 
         def legend_sma():
             # Adding the SMA10, SMA50, and SMA100 to the chart and legend
@@ -365,6 +369,8 @@ def main():
                     marker=dict(color=legend_color, size=10)))
                 mtp -= 1
 
+        legend_support_resistance_values()
+        text_and_indicators()
         legend_sma()
         legend_fibonacci()
         # Candle patterns for HTF
@@ -406,7 +412,7 @@ def main():
                     tweet.api.update_status(status=f"#{historical_data.ticker}  "
                                                    f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
                                                    f"{historical_data.time_frame.upper()} Support and resistance levels"
-                                                   f"\nRes={resistance_above[:7]} \nSup={support_below[:7]}",
+                                                   f"\nRes={float_resistance_above[:7]} \nSup={float_support_below[:7]}",
                                             in_reply_to_status_id=tweet.is_image_tweet().id)
                 break
         # for_tweet()
@@ -422,13 +428,13 @@ def main():
                     "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
                     "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
 
-        for line_res in resistance_above[:10]:
+        for line_res in float_resistance_above[:10]:
             if line_res == 0:
                 continue
             lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
             pinescript_lines.append(lr)
 
-        for line_sup in support_below[:10]:
+        for line_sup in float_support_below[:10]:
             if line_sup == 0:
                 continue
             ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
