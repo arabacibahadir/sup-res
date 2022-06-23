@@ -24,11 +24,11 @@ def hist_data():
     header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                    'taker buy vol', 'taker buy quote vol', 'ignore')
 
-    def historical_data_write(self):
+    def historical_data_write(asset):
         """
         Write the historical data to a csv file
         """
-        data = self + ".csv"
+        data = asset + ".csv"
         csv_file_w = open(data, "w", newline='')
         klines_writer = csv.writer(csv_file_w, delimiter=",")
         for candlestick in candlesticks:
