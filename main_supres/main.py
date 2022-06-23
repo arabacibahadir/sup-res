@@ -19,11 +19,12 @@ class Values:
 
 
 class Supres(Values):
-    def main(self, selected_timeframe):
+    @staticmethod
+    def main(ticker_csv, selected_timeframe):
         print(f"Start main function in {time.perf_counter() - perf} seconds")
-        print(f"{self} data analysis in progress.")
+        print(f"{ticker_csv} data analysis in progress.")
         candle_count = 254  # Number of candlesticks
-        df = pd.read_csv(str(self), delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
+        df = pd.read_csv(ticker_csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                          keep_default_na=False)
         df = df.iloc[::-1]
         last_candle_close = df['close'][:-1]
