@@ -1,4 +1,5 @@
-# Sup-Res
+# Sup-Res :chart_with_upwards_trend:
+
 _For online demonstration_ -> https://arabacibahadir.github.io/sup-res/ 
 
 Sup-Res is  mobile-ready, offline-storage compatible and a great companion for finding support and resistance lines with a scalable chart.
@@ -6,7 +7,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/32988819/166165397-af4c7f29-1746-49b6-be3a-9a12d838f7e6.gif)
 
 
-## Features
+## Features :star2:
 
 - Easily find support and resistance levels on the chart
 - Using it in almost any time series with sensitivity adjustment 
@@ -18,7 +19,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 
 ![git](https://user-images.githubusercontent.com/32988819/148457547-45d47bc2-52a0-426a-8d4c-861fe6fd013d.png)
 
-## Installation
+## Installation :hammer_and_wrench:
 Sup-Res requires Python 3.6+ to run.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries.
 
@@ -26,7 +27,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install librari
 pip install -r requirements.txt
 ```
 
-## Usage
+## Usage :computer:
 
 When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. 
 ````
@@ -58,7 +59,7 @@ Your python alias could be different like "py, python3", you should change your 
 
 
  
-## Main Motivation
+## Main Motivation :books:
 New investors are investing without having any technical knowledge. Also, those with little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work.
 
 I worked on a code that could provide help for users who don't have much experience with _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**.
@@ -69,7 +70,7 @@ Supports and resistances are generally zones, not just lines. Especially in cryp
 ![image](https://user-images.githubusercontent.com/32988819/166165539-5a4eea0a-456e-482d-aa56-96b5eaffc37a.png)
 
 
-## Support-Resistance Lines
+## Support-Resistance Lines :chart_with_downwards_trend:
 
 If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this price should be touched at least 2 times, if possible, 3 times. If there are more touches, reliability increases. If the current price is above the old resistance, this resistance will act as support. Vice versa is also true.
 
@@ -78,7 +79,7 @@ If a pair has failed to break a point multiple times or has risen by repeatedly 
 
 _28 September 2021 BTCUSDT Binance_
 
-## Indicators
+## Indicators :bar_chart:
 [MA](https://www.investopedia.com/terms/m/movingaverage.asp), 
 [RSI](https://www.investopedia.com/terms/r/rsi.asp), 
 [MACD](https://www.investopedia.com/terms/m/macd.asp),
@@ -92,7 +93,7 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 
 ![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
 
-## Some screenshots
+## Some screenshots :camera_flash:
 _BTCUSDT_ chart
 ![btc](https://user-images.githubusercontent.com/32988819/168900316-c8259e0c-6ceb-4d6d-ab54-1d3d5f63531d.png)
 
@@ -104,7 +105,7 @@ _BTCUSDT_ chart
 
 ![works](https://user-images.githubusercontent.com/32988819/133649195-6645e31b-1736-4076-ba26-385063d4915e.png)
 
-## Pine Script
+## Pine Script :bookmark_tabs:
 
 Sup-Res supports Pine Script scripting language. Just **run** *main.py* file, then **copy** "./pinescript.txt" and **paste** *Tradingview Pine Script* section.
 Also telegram bot works with Pine Script.
@@ -116,7 +117,7 @@ Also telegram bot works with Pine Script.
 ![lines](https://user-images.githubusercontent.com/32988819/136626000-85bb5d7d-73d3-4568-bd0d-61d17dbc67b6.png)
 
 
-## Contributing
+## Contributing :handshake:
 Pull requests are welcome, any contributions you make are greatly appreciated. Before PR please open an issue what you would like to change.
 
 Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
@@ -128,6 +129,6 @@ Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/
 - Open a Pull Request
 
 
-## License
+## License :page_with_curl:
 Sup-Res is licensed under the GNU General Public License v3.0
 
