@@ -5,454 +5,469 @@ import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 import delete_file
 import historical_data
+from dataclasses import dataclass
 
 
-def main():
-    print(f"Start main function in {time.perf_counter() - perf} seconds")
-    csv = historical_data.file_name
-    print(f"{csv} data analysis in progress.")
-    candle_count = 254  # Number of candlesticks
-    df = pd.read_csv(csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
-                     keep_default_na=False)
-    df = df.iloc[::-1]
-    last_candle_close = df['close'][:-1]
-    df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
-    df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
-    dfsma = df[:-1]
-    # Sma, Rsi, Macd, Fibonacci variables
-    sma10 = tuple((dfsma.ta.sma(10)))
-    sma50 = tuple((dfsma.ta.sma(50)))
-    sma100 = tuple((dfsma.ta.sma(100)))
-    rsi = tuple((ta.rsi(last_candle_close)))
-    macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
-    support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
-    support_above, support_below, resistance_below, resistance_above, fig, x_date = [], [], [], [], [], ''
-    fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
-    # Chart settings
-    legend_color = "#D8D8D8"
-    plot_color = "#E7E7E7"
-    background_color = "#E7E7E7"
-    support_line_color = "LightSeaGreen"
-    resistance_line_color = "MediumPurple"
-    # Adding a watermark to the plot
-    watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
-                             font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
-                             showarrow=False))
-    historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
-                                historical_data.Client.KLINE_INTERVAL_3DAY)
-    historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_3MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_5MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_15MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_30MINUTE,
-                               historical_data.Client.KLINE_INTERVAL_1HOUR,
-                               historical_data.Client.KLINE_INTERVAL_2HOUR,
-                               historical_data.Client.KLINE_INTERVAL_4HOUR,
-                               historical_data.Client.KLINE_INTERVAL_6HOUR,
-                               historical_data.Client.KLINE_INTERVAL_8HOUR,
-                               historical_data.Client.KLINE_INTERVAL_12HOUR)
+@dataclass
+class Values:
+    ticker_csv: str
+    selected_timeframe: str
 
-    def support(candle_value, candle_index, before_candle_count, after_candle_count):
-        """
-        If the price of the asset is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise, return 0
-        :param candle_value: The price data for the asset
-        :param candle_index: The index of the first bar in the support
-        :param before_candle_count: The number of bars back you want to look
-        :param after_candle_count: The number of bars in the second trend
-        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not
-        """
-        try:
-            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
-                if candle_value.low[current_value] > candle_value.low[current_value - 1]:
-                    return 0
-            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
-                if candle_value.low[current_value] < candle_value.low[current_value - 1]:
-                    return 0
-            return 1
-        except KeyError:
-            pass
+    def __post_init__(self):
+        self.ticker_csv.upper()
+        self.selected_timeframe.upper()
 
-    def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
-        """
-        If the price of the stock is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise, return 0
-        :param candle_value: The price data for the asset
-        :param candle_index: The index of the first bar in the resistance
-        :param before_candle_count: The number of bars back you want to look
-        :param after_candle_count: The number of days after the first resistance line where the price will be considered
-        to be broken
-        :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
-        n2 periods
-        """
-        try:
-            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
-                if candle_value.high[current_value] < candle_value.high[current_value - 1]:
-                    return 0
-            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
-                if candle_value.high[current_value] > candle_value.high[current_value - 1]:
-                    return 0
-            return 1
-        except KeyError:
-            pass
 
-    def fibonacci_pricelevels(high_price, low_price):
-        """
-        The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
-        retracement levels
-        Uptrend Fibonacci Retracement Formula =>
-        Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-        :param high_price: The high price for the current price level
-        :param low_price: Low price for the period
-        """
-        for multiplier in fibonacci_multipliers:
-            retracement_levels_uptrend = low_price + (high_price - low_price) * multiplier
-            fibonacci_uptrend.append(retracement_levels_uptrend)
-            retracement_levels_downtrend = high_price - (high_price - low_price) * multiplier
-            fibonacci_downtrend.append(retracement_levels_downtrend)
+class Supres(Values):
+    def main(self, selected_timeframe):
+        print(f"Start main function in {time.perf_counter() - perf} seconds")
+        print(f"{self} data analysis in progress.")
+        candle_count = 254  # Number of candlesticks
+        df = pd.read_csv(str(self), delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
+                         keep_default_na=False)
+        df = df.iloc[::-1]
+        last_candle_close = df['close'][:-1]
+        df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
+        df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
+        dfsma = df[:-1]
+        historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
+                                    historical_data.Client.KLINE_INTERVAL_3DAY)
+        historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
+                                   historical_data.Client.KLINE_INTERVAL_3MINUTE,
+                                   historical_data.Client.KLINE_INTERVAL_5MINUTE,
+                                   historical_data.Client.KLINE_INTERVAL_15MINUTE,
+                                   historical_data.Client.KLINE_INTERVAL_30MINUTE,
+                                   historical_data.Client.KLINE_INTERVAL_1HOUR,
+                                   historical_data.Client.KLINE_INTERVAL_2HOUR,
+                                   historical_data.Client.KLINE_INTERVAL_4HOUR,
+                                   historical_data.Client.KLINE_INTERVAL_6HOUR,
+                                   historical_data.Client.KLINE_INTERVAL_8HOUR,
+                                   historical_data.Client.KLINE_INTERVAL_12HOUR)
+        # Sma, Rsi, Macd, Fibonacci variables
+        sma10 = tuple((dfsma.ta.sma(10)))
+        sma50 = tuple((dfsma.ta.sma(50)))
+        sma100 = tuple((dfsma.ta.sma(100)))
+        rsi = tuple((ta.rsi(last_candle_close)))
+        macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
+        support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
+        support_above, support_below, resistance_below, resistance_above, fig, x_date = [], [], [], [], [], ''
+        fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
+        # Chart settings
+        legend_color = "#D8D8D8"
+        plot_color = "#E7E7E7"
+        background_color = "#E7E7E7"
+        support_line_color = "LightSeaGreen"
+        resistance_line_color = "MediumPurple"
+        # Adding a watermark to the plot
+        watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
+                                 font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
+                                 showarrow=False))
 
-    def drop_null():
-        """
-        Drop all rows with NULL values in the dataframe
-        """
-        for col in df.columns:
-            index_null = df[df[col] == "NULL"].index
-            df.drop(index_null, inplace=True)
-            df.isna().sum()
-
-    def candlestick_patterns():
-        """
-        The function takes in a dataframe and returns a list of candlestick patterns found in the
-        dataframe
-        """
-        from candlestick import candlestick
-        nonlocal df
-        df = candlestick.inverted_hammer(df, target='inverted_hammer')
-        df = candlestick.hammer(df, target='hammer')
-        df = candlestick.doji(df, target='doji')
-        df = candlestick.bearish_harami(df, target='bearish_harami')
-        df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
-        df = candlestick.bullish_harami(df, target='bullish_harami')
-        df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
-        df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
-        df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
-        df = candlestick.hanging_man(df, target='hanging_man')
-        df = candlestick.gravestone_doji(df, target='gravestone_doji')
-        df = candlestick.morning_star(df, target='morning_star')
-        df = candlestick.morning_star_doji(df, target='morning_star_doji')
-        df = candlestick.piercing_pattern(df, target='piercing_pattern')
-        df = candlestick.star(df, target='star')
-        df = candlestick.shooting_star(df, target='shooting_star')
-        pattern_find = []
-
-        def pattern_find_func(self):
+        def support(candle_value, candle_index, before_candle_count, after_candle_count):
             """
-            The function takes in a dataframe and a list of column names. It then iterates through the
-            list of column names and checks if the column name is in the dataframe. If it is, it adds
-            the column name to a list and adds the date of the match to another list
+            If the price of the asset is increasing for the last before_candle_count and decreasing for
+            the last after_candle_count, then return True. Otherwise, return False
+            :param candle_value: The price data for the asset
+            :param candle_index: The index of the first bar in the support
+            :param before_candle_count: The number of bars back you want to look
+            :param after_candle_count: The number of bars in the second trend
+            :return: True if the price of the price is supported by the previous low price, False if it is not
             """
-            for col in df.columns:
-                pattern_find.append(col)
-            t = 0
-            for pattern in self:
-                if pattern == True:
-                    # even pattern, odd date
-                    pattern_list.append(pattern_find[t])
-                    pattern_list.append(self['date'].strftime('%b-%d-%y'))
-                t += 1
-
-        # Looping through the dataframe and finding the pattern in the dataframe.
-        for item in range(-3, -30, -1):
-            last_row = df.iloc[item]
-            pattern_find_func(last_row)
-
-    def sensitivity(sens):
-        """
-        Find the support and resistance levels for a given asset
-        sensitivity:1 is recommended for daily charts or high frequency trade scalping
-        :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
-        """
-        for row in range(3, len(df) - 1):
-            if support(df, row, 3, sens):
-                support_list.append((row, df.low[row]))
-            if resistance(df, row, 3, sens):
-                resistance_list.append((row, df.high[row]))
-
-    def check_lines():
-        """
-        Check if the support and resistance lines are above or below the latest close price.
-        """
-        # Finding support and resistance levels
-        # Checking if the support is below the latest close. If it is, it is appending it to the list
-        # support_below. If it isn't, it is appending it to the list resistance_below.
-        all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
-        all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
-        latest_close = tuple(df['close'])[-1]
-        for support_line in all_support_list:  # Find closes
-            if support_line < latest_close:
-                support_below.append(support_line)
-            else:
-                resistance_below.append(support_line)
-        # Checking if the price is above the latest close price. If it is, it is appending it to the
-        # resistance_above list. If it is not, it is appending it to the support_above list.
-        for resistance_line in all_resistance_list:
-            if resistance_line > latest_close:
-                resistance_above.append(resistance_line)
-            else:
-                support_above.append(resistance_line)
-
-    def legend_candle_patterns():
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name="----------------------------------------", mode="markers",
-            marker=dict(color=legend_color, size=14)))
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
-            marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
-                marker=dict(color=legend_color, size=10)))
-
-    def levels():
-        # Checking if the support level is empty. If it is, it appends the minimum value of the low
-        # column to the list.
-        if len(support_below) == 0:
-            support_below.append(min(df['low']))
-        # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
-        # column to the list.
-        if len(resistance_above) == 0:
-            resistance_above.append(max(df['high']))
-
-        # Computing the Fibonacci sequence for the numbers in the range of the last element of the
-        # resistance_above list and the last element of the support_below list.
-        fibonacci_pricelevels(resistance_above[-1], support_below[-1])
-
-    drop_null()
-    sensitivity(2)
-    check_lines()
-
-    if historical_data.time_frame in historical_hightimeframe:
-        candlestick_patterns()
-        x_date = '%b-%d-%y'
-    elif historical_data.time_frame in historical_lowtimeframe:  # For LTF chart
-        x_date = '%b-%d-%y %H:%M'
-    # Create candlestick chart
-    fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
-                                    name="Candlestick",
-                                    text=df['date'].dt.strftime(x_date),
-                                    open=df['open'],
-                                    high=df['high'],
-                                    low=df['low'],
-                                    close=df['close'])])
-    fig.update_layout(annotations=[watermark_layout])
-    support_below.extend(support_above)
-    resistance_above.extend(resistance_below)
-    support_below = sorted(support_below, reverse=True)
-    resistance_above = sorted(resistance_above)
-    levels()
-    float_resistance_above = list(map(float, resistance_above))
-    float_support_below = list(map(float, support_below))
-
-    def draw_support():
-        """
-        Draws the support lines and adds annotations to the chart.
-        """
-        c = 0
-        while 1:
-            if c > len(support_list) - 1:
-                break
-            # Support lines
-            fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
-                          x1=len(df) + 25,
-                          y1=support_list[c][1], line=dict(color=support_line_color, width=2))
-            # Support annotations
-            fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
-                               font=dict(size=15, color=support_line_color))
-            c += 1
-
-    def draw_resistance():
-        """
-        Draws the resistance lines and adds annotations to the chart. 
-        """
-        c = 0
-        while 1:
-            if c > len(resistance_list) - 1:
-                break
-            # Resistance lines
-            fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
-                          x1=len(df) + 25,
-                          y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
-            # Resistance annotations
-            fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
-                               font=dict(size=15, color=resistance_line_color))
-            c += 1
-
-    def legend_texts():
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
-            marker=dict(color=resistance_line_color, size=10)))
-        str_price_len = 3
-        sample_price = df['close'][0]
-        if sample_price < 1:
-            str_price_len = len(str(sample_price))
-        blank = " " * (len(str(sample_price)) + 1)
-        differ = len(float_resistance_above) - len(float_support_below)
-
-        def legend_support_resistance_values():
             try:
-                if differ < 0:
-                    for i in range(abs(differ)):
-                        float_resistance_above.extend([0])
-                if differ > 0:
-                    for i in range(abs(differ)):
-                        float_support_below.extend([0])
-                temp = 0
-                for _ in range(max(len(float_resistance_above), len(float_support_below))):
-                    if float_resistance_above[temp] == 0:  # This is for legend alignment
-                        legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
-                                        f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
-                    else:
-                        legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
-                                        f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
-                    fig.add_trace(go.Scatter(
-                        y=[support_list[0]],
-                        name=legend_supres,
-                        mode="lines",
-                        marker=dict(color=legend_color, size=10)))
-                    temp += 1
-                    if temp == 14:
-                        break
-            except IndexError:
+                for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                    if candle_value.low[current_value] > candle_value.low[current_value - 1]:
+                        return False
+                for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                    if candle_value.low[current_value] < candle_value.low[current_value - 1]:
+                        return False
+                return True
+            except KeyError:
                 pass
 
-        def text_and_indicators():
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
-                marker=dict(color=legend_color, size=0)))
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
-                marker=dict(color=legend_color, size=0)))
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
-                marker=dict(color=legend_color, size=10)))
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}",
-                mode="lines",
-                marker=dict(color=legend_color, size=10)))
+        def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
+            """
+            If the price of the stock is increasing for the last before_candle_count and decreasing for the last
+            after_candle_count, then return True. Otherwise, return False
+            :param candle_value: The price data for the asset
+            :param candle_index: The index of the first candlestick in the resistance
+            :param before_candle_count: The number of candlesticks back you want to analyze
+            :param after_candle_count: The number of candlesticks after the can
+            :return: True if the price has been increasing for the last n1 periods and decreasing for the n2 periods
+            """
+            try:
+                for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
+                    if candle_value.high[current_value] < candle_value.high[current_value - 1]:
+                        return False
+                for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
+                    if candle_value.high[current_value] > candle_value.high[current_value - 1]:
+                        return False
+                return True
+            except KeyError:
+                pass
 
-        def legend_sma():
-            # Adding the SMA10, SMA50, and SMA100 to the chart and legend
-            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
-                                     name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
-                                     line=dict(color='#5c6cff', width=3)))
-            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma50,
-                                     name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
-                                     line=dict(color='#950fba', width=3)))
-            fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma100,
-                                     name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
-                                     line=dict(color='#a69b05', width=3)))
-            fig.add_trace(go.Scatter(
-                y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
-                marker=dict(color=legend_color, size=0)))
+        def fibonacci_pricelevels(high_price, low_price):
+            """
+            The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
+            retracement levels
+            Uptrend Fibonacci Retracement Formula =>
+            Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
+            :param high_price: The high price for the current price level
+            :param low_price: Low price for the period
+            """
+            for multiplier in fibonacci_multipliers:
+                retracement_levels_uptrend = low_price + (high_price - low_price) * multiplier
+                fibonacci_uptrend.append(retracement_levels_uptrend)
+                retracement_levels_downtrend = high_price - (high_price - low_price) * multiplier
+                fibonacci_downtrend.append(retracement_levels_downtrend)
+            return fibonacci_uptrend, fibonacci_downtrend
 
-        def legend_fibonacci():
-            # Adding a line to the plot for each Fibonacci level
-            mtp = len(fibonacci_multipliers) - 1
-            for _ in fibonacci_uptrend:
+        def drop_null():
+            """
+            Drop all rows with NULL values in the dataframe
+            """
+            for col in df.columns:
+                index_null = df[df[col] == "NULL"].index
+                df.drop(index_null, inplace=True)
+                df.isna().sum()
+
+        def candlestick_patterns():
+            """
+            The function takes in a dataframe and returns a list of candlestick patterns found in the
+            dataframe
+            """
+            from candlestick import candlestick
+            nonlocal df
+            df = candlestick.inverted_hammer(df, target='inverted_hammer')
+            df = candlestick.hammer(df, target='hammer')
+            df = candlestick.doji(df, target='doji')
+            df = candlestick.bearish_harami(df, target='bearish_harami')
+            df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
+            df = candlestick.bullish_harami(df, target='bullish_harami')
+            df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
+            df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
+            df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
+            df = candlestick.hanging_man(df, target='hanging_man')
+            df = candlestick.gravestone_doji(df, target='gravestone_doji')
+            df = candlestick.morning_star(df, target='morning_star')
+            df = candlestick.morning_star_doji(df, target='morning_star_doji')
+            df = candlestick.piercing_pattern(df, target='piercing_pattern')
+            df = candlestick.star(df, target='star')
+            df = candlestick.shooting_star(df, target='shooting_star')
+            pattern_find = []
+
+            def pattern_find_func(row):
+                """
+                The function takes in a dataframe and a list of column names. It then iterates through the
+                list of column names and checks if the column name is in the dataframe. If it is, it adds
+                the column name to a list and adds the date of the match to another list
+                """
+                for col in df.columns:
+                    pattern_find.append(col)
+                t = 0
+                for pattern in row:
+                    if pattern == True:
+                        # even pattern, odd date
+                        pattern_list.append(pattern_find[t])
+                        pattern_list.append(row['date'].strftime('%b-%d-%y'))
+                    t += 1
+                return pattern_list
+
+            # Looping through the dataframe and finding the pattern in the dataframe.
+            for item in range(-3, -30, -1):
+                last_row = df.iloc[item]
+                pattern_find_func(last_row)
+            return pattern_list
+
+        def sensitivity(sens):
+            """
+            Find the support and resistance levels for a given asset
+            sensitivity:1 is recommended for daily charts or high frequency trade scalping
+            :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
+            """
+            for row in range(3, len(df) - 1):
+                if support(df, row, 3, sens):
+                    support_list.append((row, df.low[row]))
+                if resistance(df, row, 3, sens):
+                    resistance_list.append((row, df.high[row]))
+            return support_list, resistance_list
+
+        def check_lines():
+            """
+            Check if the support and resistance lines are above or below the latest close price.
+            """
+            # Finding support and resistance levels
+            # Checking if the support is below the latest close. If it is, it is appending it to the list
+            # support_below. If it isn't, it is appending it to the list resistance_below.
+            all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+            all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
+            latest_close = tuple(df['close'])[-1]
+            for support_line in all_support_list:  # Find closes
+                if support_line < latest_close:
+                    support_below.append(support_line)
+                else:
+                    resistance_below.append(support_line)
+            # Checking if the price is above the latest close price. If it is, it is appending it to the
+            # resistance_above list. If it is not, it is appending it to the support_above list.
+            for resistance_line in all_resistance_list:
+                if resistance_line > latest_close:
+                    resistance_above.append(resistance_line)
+                else:
+                    support_above.append(resistance_line)
+
+        def legend_candle_patterns():
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name="----------------------------------------", mode="markers",
+                marker=dict(color=legend_color, size=14)))
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
+                marker=dict(color=legend_color, size=14)))
+            for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]],
-                    name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
-                         f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
+                    y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
+                    marker=dict(color=legend_color, size=10)))
+
+        def levels():
+            # Checking if the support level is empty. If it is, it appends the minimum value of the low
+            # column to the list.
+            if len(support_below) == 0:
+                support_below.append(min(df['low']))
+            # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
+            # column to the list.
+            if len(resistance_above) == 0:
+                resistance_above.append(max(df['high']))
+
+            # Computing the Fibonacci sequence for the numbers in the range of the last element of the
+            # resistance_above list and the last element of the support_below list.
+            return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
+
+        drop_null()
+        sensitivity(2)
+        check_lines()
+
+        if selected_timeframe in historical_hightimeframe:
+            candlestick_patterns()
+            x_date = '%b-%d-%y'
+        elif selected_timeframe in historical_lowtimeframe:  # For LTF chart
+            x_date = '%b-%d-%y %H:%M'
+        # Create candlestick chart
+        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
+                                        name="Candlestick",
+                                        text=df['date'].dt.strftime(x_date),
+                                        open=df['open'],
+                                        high=df['high'],
+                                        low=df['low'],
+                                        close=df['close'])])
+        fig.update_layout(annotations=[watermark_layout])
+        support_below.extend(support_above)
+        resistance_above.extend(resistance_below)
+        support_below = sorted(support_below, reverse=True)
+        resistance_above = sorted(resistance_above)
+        levels()
+        float_resistance_above = list(map(float, resistance_above))
+        float_support_below = list(map(float, support_below))
+
+        def draw_support():
+            """
+            Draws the support lines and adds annotations to the chart.
+            """
+            c = 0
+            while 1:
+                if c > len(support_list) - 1:
+                    break
+                # Support lines
+                fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
+                              x1=len(df) + 25,
+                              y1=support_list[c][1], line=dict(color=support_line_color, width=2))
+                # Support annotations
+                fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
+                                   font=dict(size=15, color=support_line_color))
+                c += 1
+
+        def draw_resistance():
+            """
+            Draws the resistance lines and adds annotations to the chart.
+            """
+            c = 0
+            while 1:
+                if c > len(resistance_list) - 1:
+                    break
+                # Resistance lines
+                fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
+                              x1=len(df) + 25,
+                              y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
+                # Resistance annotations
+                fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
+                                   font=dict(size=15, color=resistance_line_color))
+                c += 1
+
+        def legend_texts():
+            fig.add_trace(go.Scatter(
+                y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
+                marker=dict(color=resistance_line_color, size=10)))
+            str_price_len = 3
+            sample_price = df['close'][0]
+            if sample_price < 1:
+                str_price_len = len(str(sample_price))
+            blank = " " * (len(str(sample_price)) + 1)
+            differ = len(float_resistance_above) - len(float_support_below)
+
+            def legend_support_resistance_values():
+                try:
+                    if differ < 0:
+                        for i in range(abs(differ)):
+                            float_resistance_above.extend([0])
+                    if differ > 0:
+                        for i in range(abs(differ)):
+                            float_support_below.extend([0])
+                    temp = 0
+                    for _ in range(max(len(float_resistance_above), len(float_support_below))):
+                        if float_resistance_above[temp] == 0:  # This is for legend alignment
+                            legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
+                                            f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
+                        else:
+                            legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
+                                            f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
+                        fig.add_trace(go.Scatter(
+                            y=[support_list[0]],
+                            name=legend_supres,
+                            mode="lines",
+                            marker=dict(color=legend_color, size=10)))
+                        temp += 1
+                        if temp == 14:
+                            break
+                except IndexError:
+                    pass
+
+            def text_and_indicators():
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
+                    marker=dict(color=legend_color, size=0)))
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
+                    marker=dict(color=legend_color, size=0)))
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
+                    marker=dict(color=legend_color, size=10)))
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}",
                     mode="lines",
                     marker=dict(color=legend_color, size=10)))
-                mtp -= 1
 
-        legend_support_resistance_values()
-        text_and_indicators()
-        legend_sma()
-        legend_fibonacci()
-        # Candle patterns for HTF
-        if historical_data.time_frame in historical_hightimeframe:
-            legend_candle_patterns()
+            def legend_sma():
+                # Adding the SMA10, SMA50, and SMA100 to the chart and legend
+                fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
+                                         name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
+                                         line=dict(color='#5c6cff', width=3)))
+                fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma50,
+                                         name=f"SMA50     : {float(sma50[-1]):.{str_price_len}f}",
+                                         line=dict(color='#950fba', width=3)))
+                fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma100,
+                                         name=f"SMA100   : {float(sma100[-1]):.{str_price_len}f}",
+                                         line=dict(color='#a69b05', width=3)))
+                fig.add_trace(go.Scatter(
+                    y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
+                    marker=dict(color=legend_color, size=0)))
 
-    def chart_updates():
-        fig.update_layout(title=str(f"{historical_data.ticker} {historical_data.time_frame.upper()} Chart"),
-                          hovermode='x', dragmode="zoom",
-                          paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
-                          legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
-        fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
-        fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
+            def legend_fibonacci():
+                # Adding a line to the plot for each Fibonacci level
+                mtp = len(fibonacci_multipliers) - 1
+                for _ in fibonacci_uptrend:
+                    fig.add_trace(go.Scatter(
+                        y=[support_list[0]],
+                        name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                             f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
+                        mode="lines",
+                        marker=dict(color=legend_color, size=10)))
+                    mtp -= 1
 
-    def save():
-        """
-        Saves the image and html file of the plotly chart, then it tweets the image and text
-        """
-        if not os.path.exists("../main_supres/images"):
-            os.mkdir("images")
-        image = f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
-        fig.write_image(image, width=1920, height=1080)  # Save image for tweet
-        fig.write_html(
-            f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
-            full_html=False, include_plotlyjs='cdn')
-        text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
-                     f"{historical_data.time_frame.upper()} Support and resistance levels \n " \
-                     f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
+            legend_support_resistance_values()
+            text_and_indicators()
+            legend_sma()
+            legend_fibonacci()
+            # Candle patterns for HTF
+            if selected_timeframe in historical_hightimeframe:
+                legend_candle_patterns()
 
-        def for_tweet():
+        def chart_updates():
+            fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe} Chart"),
+                              hovermode='x', dragmode="zoom",
+                              paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
+                              legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
+            fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
+            fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
+
+        def save():
             """
-            Takes a screenshot of a chart, then tweets it with a caption. 
+            Saves the image and html file of the plotly chart, then it tweets the image and text
             """
-            import tweet
-            tweet.send_tweet(image, text_image)
-            while tweet.is_image_tweet().text != text_image:
-                time.sleep(1)
-                if tweet.is_image_tweet().text != text_image:
-                    tweet.api.update_status(status=f"#{historical_data.ticker}  "
-                                                   f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
-                                                   f"{historical_data.time_frame.upper()} Support and resistance levels"
-                                                   f"\nRes={float_resistance_above[:7]} \nSup={float_support_below[:7]}",
-                                            in_reply_to_status_id=tweet.is_image_tweet().id)
-                break
-        # for_tweet()
+            if not os.path.exists("../main_supres/images"):
+                os.mkdir("images")
+            image = \
+                f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
+            fig.write_image(image, width=1920, height=1080)  # Save image for tweet
+            fig.write_html(
+                f"../main_supres/images/"
+                f"{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
+                full_html=False, include_plotlyjs='cdn')
+            text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
+                         f"{selected_timeframe} Support and resistance levels \n " \
+                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
-    def pinescript_code():
-        """
-        It takes resistance and support lines, and writes them to a file called pinescript.txt.
-        """
-        pinescript_lines = []
-        lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {historical_data.time_frame}'," \
-                    f" overlay=true)\n" \
-                    "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
-                    "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
-                    "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
+            def for_tweet():
+                """
+                Takes a screenshot of a chart, then tweets it with a caption.
+                """
+                import tweet
+                tweet.send_tweet(image, text_image)
+                while tweet.is_image_tweet().text != text_image:
+                    time.sleep(1)
+                    if tweet.is_image_tweet().text != text_image:
+                        tweet.api.update_status(status=f"#{historical_data.ticker}  "
+                                                       f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
+                                                       f"{selected_timeframe} Support and resistance levels"
+                                                       f"\nRes={float_resistance_above[:7]} \nSup={float_support_below[:7]}",
+                                                in_reply_to_status_id=tweet.is_image_tweet().id)
+                    break
+            # for_tweet()
 
-        for line_res in float_resistance_above[:10]:
-            if line_res == 0:
-                continue
-            lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
-            pinescript_lines.append(lr)
+        def pinescript_code():
+            """
+            It takes resistance and support lines, and writes them to a file called pinescript.txt.
+            """
+            pinescript_lines = []
+            lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {selected_timeframe}'," \
+                        f" overlay=true)\n" \
+                        "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n" \
+                        "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n" \
+                        "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
 
-        for line_sup in float_support_below[:10]:
-            if line_sup == 0:
-                continue
-            ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
-            pinescript_lines.append(ls)
-        lines = '\n'.join(map(str, pinescript_lines))
-        # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to the file
-        f = open("../main_supres/pinescript.txt", "w")
-        f.write(lines_sma + lines)
-        f.close()
+            for line_res in float_resistance_above[:10]:
+                if line_res == 0:
+                    continue
+                lr = f"hline({line_res}, title=\"Lines\", color=color.red, linestyle=hline.style_solid, linewidth=1)"
+                pinescript_lines.append(lr)
 
-    draw_support()
-    draw_resistance()
-    legend_texts()
-    chart_updates()
-    # save()
-    pinescript_code()
-    fig.show(id='the_graph', config={'displaylogo': False})
-    print(f"Completed execution in {time.perf_counter() - perf} seconds")
+            for line_sup in float_support_below[:10]:
+                if line_sup == 0:
+                    continue
+                ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
+                pinescript_lines.append(ls)
+            lines = '\n'.join(map(str, pinescript_lines))
+            # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to the file
+            file = open("../main_supres/pinescript.txt", "w")
+            file.write(lines_sma + lines)
+            file.close()
+
+        draw_support()
+        draw_resistance()
+        legend_texts()
+        chart_updates()
+        # save()
+        pinescript_code()
+        print(f"Completed execution in {time.perf_counter() - perf} seconds")
+        return fig.show(id='the_graph', config={'displaylogo': False})
 
 
 if __name__ == "__main__":
@@ -466,7 +481,8 @@ if __name__ == "__main__":
             print(
                 "One or more issues caused the download to fail. "
                 "Make sure you typed the filename correctly in the settings.")
-        main()
+        Supres.main(historical_data.file_name, historical_data.time_frame)
+
         delete_file.remove()
     except KeyError:
         delete_file.remove()
