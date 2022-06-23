@@ -129,6 +129,7 @@ class Supres(Values):
                 index_null = df[df[col] == "NULL"].index
                 df.drop(index_null, inplace=True)
                 df.isna().sum()
+            return df.columns
 
         def candlestick_patterns():
             """
@@ -213,6 +214,7 @@ class Supres(Values):
                     resistance_above.append(resistance_line)
                 else:
                     support_above.append(resistance_line)
+            return all_support_list, all_resistance_list
 
         def legend_candle_patterns():
             fig.add_trace(go.Scatter(
@@ -235,7 +237,6 @@ class Supres(Values):
             # column to the list.
             if len(resistance_above) == 0:
                 resistance_above.append(max(df['high']))
-
             # Computing the Fibonacci sequence for the numbers in the range of the last element of the
             # resistance_above list and the last element of the support_below list.
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
@@ -354,8 +355,6 @@ class Supres(Values):
                     y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}",
                     mode="lines",
                     marker=dict(color=legend_color, size=10)))
-
-            def legend_sma():
                 # Adding the SMA10, SMA50, and SMA100 to the chart and legend
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
                                          name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
@@ -376,7 +375,8 @@ class Supres(Values):
                 for _ in fibonacci_uptrend:
                     fig.add_trace(go.Scatter(
                         y=[support_list[0]],
-                        name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                        name=f"Fib {fibonacci_multipliers[mtp]:.3f} "
+                             f": {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
                              f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ",
                         mode="lines",
                         marker=dict(color=legend_color, size=10)))
@@ -384,7 +384,6 @@ class Supres(Values):
 
             legend_support_resistance_values()
             text_and_indicators()
-            legend_sma()
             legend_fibonacci()
             # Candle patterns for HTF
             if selected_timeframe in historical_hightimeframe:
@@ -427,7 +426,8 @@ class Supres(Values):
                         tweet.api.update_status(status=f"#{historical_data.ticker}  "
                                                        f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
                                                        f"{selected_timeframe} Support and resistance levels"
-                                                       f"\nRes={float_resistance_above[:7]} \nSup={float_support_below[:7]}",
+                                                       f"\nRes={float_resistance_above[:7]} \n"
+                                                       f"Sup={float_support_below[:7]}",
                                                 in_reply_to_status_id=tweet.is_image_tweet().id)
                     break
             # for_tweet()
@@ -459,7 +459,7 @@ class Supres(Values):
             file = open("../main_supres/pinescript.txt", "w")
             file.write(lines_sma + lines)
             file.close()
-
+            return lines
         draw_support()
         draw_resistance()
         legend_texts()
@@ -482,7 +482,6 @@ if __name__ == "__main__":
                 "One or more issues caused the download to fail. "
                 "Make sure you typed the filename correctly in the settings.")
         Supres.main(historical_data.file_name, historical_data.time_frame)
-
         delete_file.remove()
     except KeyError:
         delete_file.remove()
