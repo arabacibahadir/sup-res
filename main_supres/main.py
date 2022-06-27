@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import delete_file
 import historical_data
 from dataclasses import dataclass
+from plotly.subplots import make_subplots
 
 
 @dataclass
@@ -61,7 +62,7 @@ class Supres(Values):
         resistance_line_color = "MediumPurple"
         # Adding a watermark to the plot
         watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
-                                 font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
+                                 font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
                                  showarrow=False))
 
         def support(candle_value, candle_index, before_candle_count, after_candle_count):
@@ -108,11 +109,9 @@ class Supres(Values):
 
         def fibonacci_pricelevels(high_price, low_price):
             """
-            The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
-            retracement levels
             Uptrend Fibonacci Retracement Formula =>
             Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-            :param high_price: The high price for the current price level
+            :param high_price: High price for the current price level
             :param low_price: Low price for the period
             """
             for multiplier in fibonacci_multipliers:
@@ -134,8 +133,7 @@ class Supres(Values):
 
         def candlestick_patterns():
             """
-            The function takes in a dataframe and returns a list of candlestick patterns found in the
-            dataframe
+            The function takes in a dataframe and returns a list of candlestick patterns found in the dataframe
             """
             from candlestick import candlestick
             nonlocal df
@@ -157,7 +155,7 @@ class Supres(Values):
             df = candlestick.shooting_star(df, target='shooting_star')
             pattern_find = []
 
-            def pattern_find_func(row):
+            def pattern_find_func(pattern_row):
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
@@ -166,11 +164,11 @@ class Supres(Values):
                 for col in df.columns:
                     pattern_find.append(col)
                 t = 0
-                for pattern in row:
+                for pattern in pattern_row:
                     if pattern == True:
                         # even pattern, odd date
                         pattern_list.append(pattern_find[t])
-                        pattern_list.append(row['date'].strftime('%b-%d-%y'))
+                        pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
                     t += 1
                 return pattern_list
 
@@ -186,11 +184,11 @@ class Supres(Values):
             sensitivity:1 is recommended for daily charts or high frequency trade scalping
             :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
             """
-            for row in range(3, len(df) - 1):
-                if support(df, row, 3, sens):
-                    support_list.append((row, df.low[row]))
-                if resistance(df, row, 3, sens):
-                    resistance_list.append((row, df.high[row]))
+            for sens_row in range(3, len(df) - 1):
+                if support(df, sens_row, 3, sens):
+                    support_list.append((sens_row, df.low[sens_row]))
+                if resistance(df, sens_row, 3, sens):
+                    resistance_list.append((sens_row, df.high[sens_row]))
             return support_list, resistance_list
 
         def check_lines():
@@ -249,17 +247,34 @@ class Supres(Values):
         if selected_timeframe in historical_hightimeframe:
             candlestick_patterns()
             x_date = '%b-%d-%y'
-        elif selected_timeframe in historical_lowtimeframe:  # For LTF chart
-            x_date = '%b-%d-%y %H:%M'
-        # Create candlestick chart
-        fig = go.Figure([go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
-                                        name="Candlestick",
-                                        text=df['date'].dt.strftime(x_date),
-                                        open=df['open'],
-                                        high=df['high'],
-                                        low=df['low'],
-                                        close=df['close'])])
+        elif selected_timeframe in historical_lowtimeframe:
+            x_date = '%H:%M %d-%b'
+
+        fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
+                            vertical_spacing=0, subplot_titles=('OHLC', 'Volume', 'RSI'), row_width=[0.1, 0.1, 0.8])
+        fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
+                                     name="Candlestick",
+                                     text=df['date'].dt.strftime(x_date),
+                                     open=df['open'],
+                                     high=df['high'],
+                                     low=df['low'],
+                                     close=df['close']), row=1, col=1)
         fig.update_layout(annotations=[watermark_layout])
+
+        def add_volume():
+            fig.add_trace(go.Bar(x=df['date'][:-1].dt.strftime(x_date), y=df['Volume USDT'], name="Volume USDT",
+                                 showlegend=False), row=2, col=1)
+
+        def add_rsi():
+            fig.add_trace(go.Scatter(x=df['date'][:-1].dt.strftime(x_date), y=rsi, name="RSI",
+                                     showlegend=False), row=3, col=1)
+            fig.add_hline(y=30, name="RSI lower band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
+            fig.add_hline(y=70, name="RSI higher band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
+            fig.add_hrect(y0=30, y1=70, line_width=0, fillcolor="gray", opacity=0.2, row=3, col=1)
+
+        add_volume()
+        add_rsi()
+
         support_below.extend(support_above)
         resistance_above.extend(resistance_below)
         support_below = sorted(support_below, reverse=True)
@@ -461,6 +476,7 @@ class Supres(Values):
             file.write(lines_sma + lines)
             file.close()
             return lines
+
         draw_support()
         draw_resistance()
         legend_texts()
