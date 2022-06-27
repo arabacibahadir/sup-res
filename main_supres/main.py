@@ -1,12 +1,12 @@
 import os
 import time
+from dataclasses import dataclass
 import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import delete_file
 import historical_data
-from dataclasses import dataclass
-from plotly.subplots import make_subplots
 
 
 @dataclass
@@ -52,7 +52,7 @@ class Supres(Values):
         rsi = tuple((ta.rsi(last_candle_close)))
         macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
-        support_above, support_below, resistance_below, resistance_above, fig, x_date = [], [], [], [], [], ''
+        support_above, support_below, resistance_below, resistance_above, x_date = [], [], [], [], ''
         fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
         # Chart settings
         legend_color = "#D8D8D8"
@@ -64,6 +64,8 @@ class Supres(Values):
         watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                                  font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
                                  showarrow=False))
+        fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
+                            vertical_spacing=0, row_width=[0.1, 0.1, 0.8])
 
         def support(candle_value, candle_index, before_candle_count, after_candle_count):
             """
@@ -250,16 +252,15 @@ class Supres(Values):
         elif selected_timeframe in historical_lowtimeframe:
             x_date = '%H:%M %d-%b'
 
-        fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
-                            vertical_spacing=0, subplot_titles=('OHLC', 'Volume', 'RSI'), row_width=[0.1, 0.1, 0.8])
-        fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
-                                     name="Candlestick",
-                                     text=df['date'].dt.strftime(x_date),
-                                     open=df['open'],
-                                     high=df['high'],
-                                     low=df['low'],
-                                     close=df['close']), row=1, col=1)
-        fig.update_layout(annotations=[watermark_layout])
+        def create_candlestick_plot():
+            fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
+                                         name="Candlestick",
+                                         text=df['date'].dt.strftime(x_date),
+                                         open=df['open'],
+                                         high=df['high'],
+                                         low=df['low'],
+                                         close=df['close']), row=1, col=1)
+            fig.update_layout(annotations=[watermark_layout])
 
         def add_volume():
             fig.add_trace(go.Bar(x=df['date'][:-1].dt.strftime(x_date), y=df['Volume USDT'], name="Volume USDT",
@@ -271,17 +272,6 @@ class Supres(Values):
             fig.add_hline(y=30, name="RSI lower band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hline(y=70, name="RSI higher band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hrect(y0=30, y1=70, line_width=0, fillcolor="gray", opacity=0.2, row=3, col=1)
-
-        add_volume()
-        add_rsi()
-
-        support_below.extend(support_above)
-        resistance_above.extend(resistance_below)
-        support_below = sorted(support_below, reverse=True)
-        resistance_above = sorted(resistance_above)
-        levels()
-        float_resistance_above = list(map(float, resistance_above))
-        float_support_below = list(map(float, support_below))
 
         def draw_support():
             """
@@ -477,6 +467,12 @@ class Supres(Values):
             file.close()
             return lines
 
+        create_candlestick_plot()
+        add_volume()
+        add_rsi()
+        levels()
+        float_resistance_above = list(map(float, sorted(resistance_above + resistance_below)))
+        float_support_below = list(map(float, sorted(support_below + support_above, reverse=True)))
         draw_support()
         draw_resistance()
         legend_texts()
