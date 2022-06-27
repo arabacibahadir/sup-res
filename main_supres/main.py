@@ -1,3 +1,4 @@
+from ast import Index
 import os
 import time
 from dataclasses import dataclass
@@ -67,7 +68,7 @@ class Supres(Values):
         fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
                             vertical_spacing=0, row_width=[0.1, 0.1, 0.8])
 
-        def support(candle_value, candle_index, before_candle_count, after_candle_count):
+        def support(candle_value, candle_index, before_candle_count, after_candle_count) -> (bool | None):
             """
             If the price of the asset is increasing for the last before_candle_count and decreasing for
             the last after_candle_count, then return True. Otherwise, return False
@@ -88,7 +89,7 @@ class Supres(Values):
             except KeyError:
                 pass
 
-        def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
+        def resistance(candle_value, candle_index, before_candle_count, after_candle_count) -> (bool | None):
             """
             If the price of the stock is increasing for the last before_candle_count and decreasing for the last
             after_candle_count, then return True. Otherwise, return False
@@ -109,7 +110,7 @@ class Supres(Values):
             except KeyError:
                 pass
 
-        def fibonacci_pricelevels(high_price, low_price):
+        def fibonacci_pricelevels(high_price, low_price) -> tuple[list, list]:
             """
             Uptrend Fibonacci Retracement Formula =>
             Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
@@ -123,7 +124,7 @@ class Supres(Values):
                 fibonacci_downtrend.append(retracement_levels_downtrend)
             return fibonacci_uptrend, fibonacci_downtrend
 
-        def drop_null():
+        def drop_null() -> Index:
             """
             Drop all rows with NULL values in the dataframe
             """
@@ -133,7 +134,7 @@ class Supres(Values):
                 df.isna().sum()
             return df.columns
 
-        def candlestick_patterns():
+        def candlestick_patterns() -> list:
             """
             The function takes in a dataframe and returns a list of candlestick patterns found in the dataframe
             """
@@ -157,7 +158,7 @@ class Supres(Values):
             df = candlestick.shooting_star(df, target='shooting_star')
             pattern_find = []
 
-            def pattern_find_func(pattern_row):
+            def pattern_find_func(pattern_row) -> list:
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
@@ -180,7 +181,7 @@ class Supres(Values):
                 pattern_find_func(last_row)
             return pattern_list
 
-        def sensitivity(sens):
+        def sensitivity(sens) -> tuple[list, list]:
             """
             Find the support and resistance levels for a given asset
             sensitivity:1 is recommended for daily charts or high frequency trade scalping
@@ -193,7 +194,7 @@ class Supres(Values):
                     resistance_list.append((sens_row, df.high[sens_row]))
             return support_list, resistance_list
 
-        def check_lines():
+        def check_lines() -> tuple[list, list]:
             """
             Check if the support and resistance lines are above or below the latest close price.
             """
@@ -215,9 +216,9 @@ class Supres(Values):
                     resistance_above.append(resistance_line)
                 else:
                     support_above.append(resistance_line)
-            return all_support_list, all_resistance_list
+            return list(all_support_list), list(all_resistance_list)
 
-        def legend_candle_patterns():
+        def legend_candle_patterns() -> None:
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name="----------------------------------------", mode="markers",
                 marker=dict(color=legend_color, size=14)))
@@ -229,7 +230,7 @@ class Supres(Values):
                     y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                     marker=dict(color=legend_color, size=10)))
 
-        def levels():
+        def levels() -> tuple[list, list]:
             # Checking if the support level is empty. If it is, it appends the minimum value of the low
             # column to the list.
             if len(support_below) == 0:
@@ -242,17 +243,7 @@ class Supres(Values):
             # resistance_above list and the last element of the support_below list.
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
-        drop_null()
-        sensitivity(2)
-        check_lines()
-
-        if selected_timeframe in historical_hightimeframe:
-            candlestick_patterns()
-            x_date = '%b-%d-%y'
-        elif selected_timeframe in historical_lowtimeframe:
-            x_date = '%H:%M %d-%b'
-
-        def create_candlestick_plot():
+        def create_candlestick_plot() -> None:
             fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
                                          name="Candlestick",
                                          text=df['date'].dt.strftime(x_date),
@@ -262,18 +253,18 @@ class Supres(Values):
                                          close=df['close']), row=1, col=1)
             fig.update_layout(annotations=[watermark_layout])
 
-        def add_volume():
+        def add_volume_subplot() -> None:
             fig.add_trace(go.Bar(x=df['date'][:-1].dt.strftime(x_date), y=df['Volume USDT'], name="Volume USDT",
                                  showlegend=False), row=2, col=1)
 
-        def add_rsi():
+        def add_rsi_subplot() -> None:
             fig.add_trace(go.Scatter(x=df['date'][:-1].dt.strftime(x_date), y=rsi, name="RSI",
                                      showlegend=False), row=3, col=1)
             fig.add_hline(y=30, name="RSI lower band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hline(y=70, name="RSI higher band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hrect(y0=30, y1=70, line_width=0, fillcolor="gray", opacity=0.2, row=3, col=1)
 
-        def draw_support():
+        def draw_support() -> None:
             """
             Draws the support lines and adds annotations to the chart.
             """
@@ -290,7 +281,7 @@ class Supres(Values):
                                    font=dict(size=15, color=support_line_color))
                 c += 1
 
-        def draw_resistance():
+        def draw_resistance() -> None:
             """
             Draws the resistance lines and adds annotations to the chart.
             """
@@ -307,7 +298,7 @@ class Supres(Values):
                                    font=dict(size=15, color=resistance_line_color))
                 c += 1
 
-        def legend_texts():
+        def legend_texts() -> None:
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
                 marker=dict(color=resistance_line_color, size=10)))
@@ -318,7 +309,7 @@ class Supres(Values):
             blank = " " * (len(str(sample_price)) + 1)
             differ = len(float_resistance_above) - len(float_support_below)
 
-            def legend_support_resistance_values():
+            def legend_support_resistance_values() -> None:
                 try:
                     if differ < 0:
                         for i in range(abs(differ)):
@@ -345,7 +336,7 @@ class Supres(Values):
                 except IndexError:
                     pass
 
-            def text_and_indicators():
+            def text_and_indicators() -> None:
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
                     marker=dict(color=legend_color, size=0)))
@@ -375,7 +366,7 @@ class Supres(Values):
                     y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
                     marker=dict(color=legend_color, size=0)))
 
-            def legend_fibonacci():
+            def legend_fibonacci() -> None:
                 # Adding a line to the plot for each Fibonacci level
                 mtp = len(fibonacci_multipliers) - 1
                 for _ in fibonacci_uptrend:
@@ -395,7 +386,7 @@ class Supres(Values):
             if selected_timeframe in historical_hightimeframe:
                 legend_candle_patterns()
 
-        def chart_updates():
+        def chart_updates() -> None:
             fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe} Chart"),
                               hovermode='x', dragmode="zoom",
                               paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
@@ -420,7 +411,7 @@ class Supres(Values):
                          f"{selected_timeframe} Support and resistance levels \n " \
                          f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
-            def for_tweet():
+            def for_tweet() -> None:
                 """
                 Takes a screenshot of a chart, then tweets it with a caption.
                 """
@@ -438,7 +429,7 @@ class Supres(Values):
                     break
             # for_tweet()
 
-        def pinescript_code():
+        def pinescript_code() -> str:
             """
             It takes resistance and support lines, and writes them to a file called pinescript.txt.
             """
@@ -467,9 +458,17 @@ class Supres(Values):
             file.close()
             return lines
 
+        drop_null()
+        sensitivity(2)
+        check_lines()
+        if selected_timeframe in historical_hightimeframe:
+            candlestick_patterns()
+            x_date = '%b-%d-%y'
+        elif selected_timeframe in historical_lowtimeframe:
+            x_date = '%H:%M %d-%b'
         create_candlestick_plot()
-        add_volume()
-        add_rsi()
+        add_volume_subplot()
+        add_rsi_subplot()
         levels()
         float_resistance_above = list(map(float, sorted(resistance_above + resistance_below)))
         float_support_below = list(map(float, sorted(support_below + support_above, reverse=True)))
