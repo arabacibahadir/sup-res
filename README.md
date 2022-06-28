@@ -95,7 +95,8 @@ Never rely on just one piece of data and indicators, it can be misleading. Alway
 
 ## Some screenshots :camera_flash:
 _BTCUSDT_ chart
-![btc](https://user-images.githubusercontent.com/32988819/168900316-c8259e0c-6ceb-4d6d-ab54-1d3d5f63531d.png)
+![Jun-27-22BTCUSDT](https://user-images.githubusercontent.com/32988819/176189250-c4564312-cfd7-41d9-aaed-620ca4bcabc7.jpeg)
+
 
 ![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
 
