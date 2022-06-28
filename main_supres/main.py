@@ -156,6 +156,7 @@ class Supres(Values):
             df = candlestick.piercing_pattern(df, target='piercing_pattern')
             df = candlestick.star(df, target='star')
             df = candlestick.shooting_star(df, target='shooting_star')
+            df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
             pattern_find = []
 
             def pattern_find_func(pattern_row) -> list:
@@ -168,7 +169,7 @@ class Supres(Values):
                     pattern_find.append(col)
                 t = 0
                 for pattern in pattern_row:
-                    if pattern == True:
+                    if pattern == 'pattern_found':
                         # even pattern, odd date
                         pattern_list.append(pattern_find[t])
                         pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
@@ -387,7 +388,7 @@ class Supres(Values):
                 legend_candle_patterns()
 
         def chart_updates() -> None:
-            fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe} Chart"),
+            fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe.upper()} Chart"),
                               hovermode='x', dragmode="zoom",
                               paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
                               legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
