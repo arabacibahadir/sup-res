@@ -13,7 +13,7 @@ frame_select_dict = {"1M": [Client.KLINE_INTERVAL_1MINUTE, -260],
                      "8H": [Client.KLINE_INTERVAL_8HOUR, -2080],
                      "12H": [Client.KLINE_INTERVAL_12HOUR, -15],
                      "1D": [Client.KLINE_INTERVAL_1DAY, -260],
-                     "3D": [Client.KLINE_INTERVAL_3DAY, -780], }
+                     "3D": [Client.KLINE_INTERVAL_3DAY, -780]}
 
 
 def frame_select(kline: str):
