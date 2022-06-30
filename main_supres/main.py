@@ -1,4 +1,3 @@
-from ast import Index
 import os
 import time
 from dataclasses import dataclass
@@ -29,10 +28,8 @@ class Supres(Values):
         df = pd.read_csv(ticker_csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                          keep_default_na=False)
         df = df.iloc[::-1]
-        last_candle_close = df['close'][:-1]
         df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
         df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
-        dfsma = df[:-1]
         historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
                                     historical_data.Client.KLINE_INTERVAL_3DAY)
         historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
@@ -47,11 +44,11 @@ class Supres(Values):
                                    historical_data.Client.KLINE_INTERVAL_8HOUR,
                                    historical_data.Client.KLINE_INTERVAL_12HOUR)
         # Sma, Rsi, Macd, Fibonacci variables
+        dfsma = df[:-1]
         sma10 = tuple((dfsma.ta.sma(10)))
         sma50 = tuple((dfsma.ta.sma(50)))
         sma100 = tuple((dfsma.ta.sma(100)))
-        rsi = tuple((ta.rsi(last_candle_close)))
-        macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
+        rsi = tuple((ta.rsi(df['close'][:-1])))
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
         support_above, support_below, resistance_below, resistance_above, x_date = [], [], [], [], ''
         fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
@@ -124,7 +121,7 @@ class Supres(Values):
                 fibonacci_downtrend.append(retracement_levels_downtrend)
             return fibonacci_uptrend, fibonacci_downtrend
 
-        def drop_null() -> Index:
+        def drop_null():
             """
             Drop all rows with NULL values in the dataframe
             """
@@ -307,10 +304,10 @@ class Supres(Values):
             sample_price = df['close'][0]
             if sample_price < 1:
                 str_price_len = len(str(sample_price))
-            blank = " " * (len(str(sample_price)) + 1)
-            differ = len(float_resistance_above) - len(float_support_below)
 
             def legend_support_resistance_values() -> None:
+                blank = " " * (len(str(sample_price)) + 1)
+                differ = len(float_resistance_above) - len(float_support_below)
                 try:
                     if differ < 0:
                         for i in range(abs(differ)):
@@ -348,10 +345,6 @@ class Supres(Values):
                     y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
-                    marker=dict(color=legend_color, size=10)))
-                fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"MACD      : {float(macd['MACDh_12_26_9'][1]):.{str_price_len}f}",
-                    mode="lines",
                     marker=dict(color=legend_color, size=10)))
                 # Adding the SMA10, SMA50, and SMA100 to the chart and legend
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
@@ -495,7 +488,7 @@ if __name__ == "__main__":
                 "One or more issues caused the download to fail. "
                 "Make sure you typed the filename correctly in the settings.")
         Supres.main(historical_data.file_name, historical_data.time_frame)
-        delete_file.remove()
+        delete_file.remove(historical_data.file_name)
     except KeyError:
-        delete_file.remove()
+        delete_file.remove(historical_data.file_name)
         raise KeyError("Key error, algorithm issue")
