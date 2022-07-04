@@ -16,7 +16,7 @@ frame_select_dict = {"1M": [Client.KLINE_INTERVAL_1MINUTE, -260],
                      "3D": [Client.KLINE_INTERVAL_3DAY, -780]}
 
 
-def frame_select(kline: str):
+def frame_select(kline: str) -> tuple[str | int, str]:
     start_date = datetime.now()
     last_letter = frame_select_dict[kline][0][-1].upper()
     kline_interval = frame_select_dict[kline][1]
