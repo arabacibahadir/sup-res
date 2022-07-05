@@ -15,37 +15,42 @@ print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance A
 start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
 symbol_info = client.get_symbol_info(ticker)
+header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
+               'taker buy vol', 'taker buy quote vol', 'ignore')
 
 
 def hist_data():
     """
     The function is used to get historical data from the Binance API and write it to a csv file
     """
-    header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                   'taker buy vol', 'taker buy quote vol', 'ignore')
-
-    def historical_data_write(asset):
+    def historical_data_write(ticker_symbol):
         """
         Write the historical data to a csv file
         """
-        data = asset + ".csv"
-        csv_file_w = open(data, "w", newline='')
-        klines_writer = csv.writer(csv_file_w, delimiter=",")
-        for candlestick in candlesticks:
-            klines_writer.writerow(candlestick)
-        csv_file_w.close()
-        df = pd.read_csv(data)
-        # Reversing the order of the dataframe
-        df = df.iloc[::-1]
-        df.to_csv(data, header=header_list, index=False)
-        df = pd.read_csv(data)
-        # Converting the unix time to a readable date format for today
-        date = pd.to_datetime(df['unix'], unit='ms')
-        df.insert(1, 'date', date)
-        del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], \
-            df['tradecount']
-        df.to_csv(data, index=False)
+        def write_candlesticks():
+            csv_file_w = open(file_name, "w", newline='')
+            klines_writer = csv.writer(csv_file_w, delimiter=",")
+            klines_writer.writerow(header_list)
+            for candlestick in client.get_historical_klines(symbol=ticker_symbol, interval=time_frame, start_str=start,
+                                                            limit=300):
+                klines_writer.writerow(candlestick)
+            csv_file_w.close()
+
+        def final_csv():
+            df = pd.read_csv(file_name)
+            # Reversing the order of the dataframe
+            df = df.iloc[::-1]
+            df.to_csv(file_name, header=header_list, index=False)
+            df = pd.read_csv(file_name)
+            # Converting the unix time to a readable date format for today
+            date = pd.to_datetime(df['unix'], unit='ms')
+            df.insert(1, 'date', date)
+            del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], \
+                df['tradecount']
+            df.to_csv(file_name, index=False)
+
+        write_candlesticks()
+        final_csv()
 
     print("Data writing:", file_name)
-    candlesticks = client.get_historical_klines(ticker, time_frame, start, limit=300)
     historical_data_write(ticker)
