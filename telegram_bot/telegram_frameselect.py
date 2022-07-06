@@ -1,71 +1,27 @@
 from binance import Client
 from datetime import datetime, timedelta
 
-""" Supported time frames:
-Client.KLINE_INTERVAL_1MINUTE
-Client.KLINE_INTERVAL_3MINUTE
-Client.KLINE_INTERVAL_5MINUTE
-Client.KLINE_INTERVAL_15MINUTE
-Client.KLINE_INTERVAL_30MINUTE
-Client.KLINE_INTERVAL_1HOUR
-Client.KLINE_INTERVAL_2HOUR
-Client.KLINE_INTERVAL_4HOUR
-Client.KLINE_INTERVAL_6HOUR
-Client.KLINE_INTERVAL_8HOUR
-Client.KLINE_INTERVAL_12HOUR
-Client.KLINE_INTERVAL_1DAY
-Client.KLINE_INTERVAL_3DAY
-"""
+frame_select_dict = {"1M": [Client.KLINE_INTERVAL_1MINUTE, -260],
+                     "3M": [Client.KLINE_INTERVAL_3MINUTE, -780],
+                     "5M": [Client.KLINE_INTERVAL_5MINUTE, -1300],
+                     "15M": [Client.KLINE_INTERVAL_15MINUTE, -3900],
+                     "30M": [Client.KLINE_INTERVAL_30MINUTE, -7800],
+                     "1H": [Client.KLINE_INTERVAL_1HOUR, -260],
+                     "2H": [Client.KLINE_INTERVAL_2HOUR, -520],
+                     "4H": [Client.KLINE_INTERVAL_4HOUR, -1040],
+                     "6H": [Client.KLINE_INTERVAL_6HOUR, -1560],
+                     "8H": [Client.KLINE_INTERVAL_8HOUR, -2080],
+                     "12H": [Client.KLINE_INTERVAL_12HOUR, -15],
+                     "1D": [Client.KLINE_INTERVAL_1DAY, -260],
+                     "3D": [Client.KLINE_INTERVAL_3DAY, -780]}
 
 
-def frame_select(self: str):
-    """
-    The function takes in a string and returns a time frame and start date
-    :param self: str
-    :type self: str
-    :return: the time frame and the start date.
-    """
-    current = datetime.now()
-    if self == "1M":
-        time_frame = Client.KLINE_INTERVAL_1MINUTE
-        start_date = current + timedelta(minutes=-260)
-    elif self == "3M":
-        time_frame = Client.KLINE_INTERVAL_3MINUTE
-        start_date = current + timedelta(minutes=-780)
-    elif self == "5M":
-        time_frame = Client.KLINE_INTERVAL_5MINUTE
-        start_date = current + timedelta(minutes=-1300)
-    elif self == "15M":
-        time_frame = Client.KLINE_INTERVAL_15MINUTE
-        start_date = current + timedelta(minutes=-3900)
-    elif self == "30M":
-        time_frame = Client.KLINE_INTERVAL_30MINUTE
-        start_date = current + timedelta(minutes=-7800)
-    elif self == "1H":
-        time_frame = Client.KLINE_INTERVAL_1HOUR
-        start_date = current + timedelta(hours=-260)
-    elif self == "2H":
-        time_frame = Client.KLINE_INTERVAL_2HOUR
-        start_date = current + timedelta(hours=-520)
-    elif self == "4H":
-        time_frame = Client.KLINE_INTERVAL_4HOUR
-        start_date = current + timedelta(hours=-1040)
-    elif self == "6H":
-        time_frame = Client.KLINE_INTERVAL_6HOUR
-        start_date = current + timedelta(hours=-1560)
-    elif self == "8H":
-        time_frame = Client.KLINE_INTERVAL_8HOUR
-        start_date = current + timedelta(hours=-2080)
-    elif self == "12H":
-        time_frame = Client.KLINE_INTERVAL_12HOUR
-        start_date = current + timedelta(days=-15)
-    elif self == "1D":
-        time_frame = Client.KLINE_INTERVAL_1DAY
-        start_date = current + timedelta(days=-260)
-    elif self == "3D":
-        time_frame = Client.KLINE_INTERVAL_3DAY
-        start_date = current + timedelta(days=-780)
-    else:
-        return print("This time frame is not allowed.")
-    start = start_date.strftime("%d %B, %Y")
-    return time_frame, start
+def frame_select(kline: str) -> tuple[str | int, str]:
+    start_date = datetime.now()
+    last_letter = frame_select_dict[kline][0][-1].upper()
+    kline_interval = frame_select_dict[kline][1]
+    times = {"M": timedelta(minutes=kline_interval),
+             "H": timedelta(hours=kline_interval),
+             "D": timedelta(days=kline_interval)}
+    start_date += times[last_letter]
+    return frame_select_dict[kline][0], start_date.strftime("%d %B, %Y")
