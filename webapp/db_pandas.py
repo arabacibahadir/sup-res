@@ -21,24 +21,23 @@ alarm_data.to_csv('alarm_data.csv', index=False)
 alarm_list = ['alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', 'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10']
 
 
-# TODO: add alarms to other columns, right now it only works for alarm1
 def add_alarm_data(self, alarm):
     find = pd.read_csv('alarm_data.csv')
     pair = find.loc[find['symbol'] == self, ['symbol']]
-    # if all alarms are full? bunu checkle ilk alarmın boş olup olmadığını kontrol et
-    # check if alarm is already in alarm_data then return error
-
     if find.at[pair.index[0], 'symbol'] == self:
         for i in alarm_list:
             # could be there is a faster way to do this
             if find[find['symbol'] == self].to_dict('records')[0][i] == alarm:
                 return print("Alarm is already in alarm_data")
 
+            # TODO:if all alarms are full? check this
+
             if find[find['symbol'] == self].to_dict('records')[0][i] == 0:
                 find.at[pair.index[0], i] = alarm
                 find.to_csv('alarm_data.csv', index=False)
                 return print(f"{self}: {alarm} added")
             if find[find['symbol'] == self].to_dict('records')[0][i] != 0:
+                # TODO:sort alarms in db?
                 continue
 
 
