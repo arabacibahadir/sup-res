@@ -10,7 +10,6 @@ api_data = client.get_all_tickers()
 df = pd.DataFrame(api_data, columns=columns)
 df.to_csv('api_data.csv', index=False)
 
-
 alarm_data_columns = {'symbol': str(), 'alarm1': float, 'alarm2': float, 'alarm3': float, 'alarm4': float,
                       'alarm5': float, 'alarm6': float, 'alarm7': float, 'alarm8': float, 'alarm9': float,
                       'alarm10': float}
@@ -22,38 +21,52 @@ alarm_list = ['alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', 'alarm6', 'alarm
 
 
 def add_alarm_data(self, alarm):
-    find = pd.read_csv('alarm_data.csv')
-    pair = find.loc[find['symbol'] == self, ['symbol']]
-    if find.at[pair.index[0], 'symbol'] == self:
+    alarm_db = pd.read_csv('alarm_data.csv')
+    coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
+    coin_dict = alarm_db[alarm_db['symbol'] == self].to_dict('records')[0]
+    if alarm_db.at[coin.index[0], 'symbol'] == self:
         for i in alarm_list:
-            # could be there is a faster way to do this
-            if find[find['symbol'] == self].to_dict('records')[0][i] == alarm:
-                return print("Alarm is already in alarm_data")
+            if 0 not in coin_dict.values():
+                return print("All alarms are full. Try to remove one alarm to add new one.")
 
-            # TODO:if all alarms are full? check this
+            if alarm in coin_dict.values():
+                return print(f"{self}: {alarm} is already exist in alarm_data")
 
-            if find[find['symbol'] == self].to_dict('records')[0][i] == 0:
-                find.at[pair.index[0], i] = alarm
-                find.to_csv('alarm_data.csv', index=False)
+            if coin_dict[i] == 0:
+                alarm_db.at[coin.index[0], i] = alarm
+                alarm_db.to_csv('alarm_data.csv', index=False)
                 return print(f"{self}: {alarm} added")
-            if find[find['symbol'] == self].to_dict('records')[0][i] != 0:
-                # TODO:sort alarms in db?
+
+            if coin_dict[i] != 0:
                 continue
 
 
 def remove_alarm_data(self: str, alarm: float):
-    find = pd.read_csv('alarm_data.csv')
-    pair = find.loc[find['symbol'] == self, ['symbol']]
+    alarm_db = pd.read_csv('alarm_data.csv')
+    coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     for i in alarm_list:
-        if find[find['symbol'] == self].to_dict('records')[0][i] == alarm:
-            find.at[pair.index[0], i] = 0
-            find.to_csv('alarm_data.csv', index=False)
+        if alarm_db[alarm_db['symbol'] == self].to_dict('records')[0][i] == alarm:
+            alarm_db.at[coin.index[0], i] = 0
+            alarm_db.to_csv('alarm_data.csv', index=False)
             print(f"{self}: {alarm} removed")
             break
 
-#TESTING
+
+# TESTING
 add_alarm_data('BTCUSDT', 1000)
+add_alarm_data('ETHBTC', 3000)
 add_alarm_data('ETHBTC', 1000)
 add_alarm_data('ETHBTC', 2000)
+add_alarm_data('ETHBTC', 3003)
+add_alarm_data('ETHBTC', 3004)
+add_alarm_data('ETHBTC', 3005)
+add_alarm_data('ETHBTC', 3005)
+add_alarm_data('ETHBTC', 3022)
+add_alarm_data('ETHBTC', 3034)
+add_alarm_data('ETHBTC', 3067)
+add_alarm_data('ETHBTC', 3090)
+add_alarm_data('ETHBTC', 3007)
+add_alarm_data('ETHBTC', 3007)
+
 # remove_alarm_data('ETHBTC', 2000)
 # remove_alarm_data('BTCUSDT', 1000)
