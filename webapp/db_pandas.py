@@ -1,26 +1,30 @@
 from binance.client import Client
 import pandas as pd
-import time
 
-perf = time.perf_counter()
-client = Client("", "")
-columns = {'symbol': str(), 'price': float()}
-
-api_data = client.get_all_tickers()
-df = pd.DataFrame(api_data, columns=columns)
-df.to_csv('api_data.csv', index=False)
-
-alarm_data_columns = {'symbol': str(), 'alarm1': float, 'alarm2': float, 'alarm3': float, 'alarm4': float,
-                      'alarm5': float, 'alarm6': float, 'alarm7': float, 'alarm8': float, 'alarm9': float,
-                      'alarm10': float}
-alarm_data = pd.DataFrame(df['symbol'], columns=alarm_data_columns)
-alarm_data.fillna({'alarm1': 0, 'alarm2': 0, 'alarm3': 0, 'alarm4': 0, 'alarm5': 0, 'alarm6': 0,
-                   'alarm7': 0, 'alarm8': 0, 'alarm9': 0, 'alarm10': 0}, inplace=True)
-alarm_data.to_csv('alarm_data.csv', index=False)
-alarm_list = ['alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', 'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10']
+alarm_list = 'alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', 'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10'
 
 
-def add_alarm_data(self, alarm):
+def create_db():
+    client = Client("", "")
+    df = pd.DataFrame(client.get_all_tickers(), columns={'symbol': str(), 'price': float()})
+    df.to_csv('api_data.csv', index=False)
+
+    alarm_data_columns = {'symbol': str(), 'alarm1': float(), 'alarm2': float(), 'alarm3': float(), 'alarm4': float(),
+                          'alarm5': float(), 'alarm6': float(), 'alarm7': float(), 'alarm8': float(), 'alarm9': float(),
+                          'alarm10': float()}
+    alarm_data = pd.DataFrame(df['symbol'], columns=alarm_data_columns)
+    for _ in alarm_list:
+        alarm_data.fillna({_: 0}, inplace=True)
+    alarm_data.to_csv('alarm_data.csv', index=False)
+
+
+def get_live_price(self: str):
+    df = pd.DataFrame(Client("", "").get_all_tickers(), columns={'symbol': str(), 'price': float()})
+    coin = df.loc[df['symbol'] == self, ['symbol', 'price']]
+    return print(coin.to_dict('records')[0]['price'])
+
+
+def add_alarm_data(self: str, alarm: float):
     alarm_db = pd.read_csv('alarm_data.csv')
     coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     coin_dict = alarm_db[alarm_db['symbol'] == self].to_dict('records')[0]
@@ -53,6 +57,8 @@ def remove_alarm_data(self: str, alarm: float):
 
 
 # TESTING
+create_db()
+get_live_price('BTCUSDT')
 add_alarm_data('BTCUSDT', 1000)
 add_alarm_data('ETHBTC', 3000)
 add_alarm_data('ETHBTC', 1000)
