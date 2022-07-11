@@ -59,6 +59,13 @@ def remove_alarm_data(self: str, alarm: float):
             break
 
 
+def get_alarm_count():
+    alarm_db = pd.read_csv('alarm_data.csv')
+    for cell in alarm_db['alarm_count']:
+        if cell != 0:
+            symbol = alarm_db[alarm_db['alarm_count'] == cell]['symbol'].values[0]
+            print(f"{symbol}: {cell}")
+
 # TESTING
 # create_db()
 # get_live_price('BTCUSDT')
@@ -76,6 +83,6 @@ def remove_alarm_data(self: str, alarm: float):
 # add_alarm_data('ETHBTC', 3090)
 # add_alarm_data('ETHBTC', 3007)
 # add_alarm_data('ETHBTC', 3007)
-
+# get_alarm_count()
 # remove_alarm_data('ETHBTC', 2000)
 # remove_alarm_data('BTCUSDT', 1000)
