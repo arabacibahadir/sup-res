@@ -1,6 +1,5 @@
 from binance.client import Client
 import pandas as pd
-import time
 
 alarm_list = 'alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', \
              'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10'
@@ -15,7 +14,6 @@ def create_db():
                           'alarm3': float(), 'alarm4': float(), 'alarm5': float(), 'alarm6': float(),
                           'alarm7': float(), 'alarm8': float(), 'alarm9': float(), 'alarm10': float()}
     alarm_data = pd.DataFrame(df['symbol'], columns=alarm_data_columns)
-    alarm_data.fillna({'alarm_count': 0}, inplace=True)
     alarm_data.update(alarm_data.fillna(0))
     alarm_data.to_csv('alarm_data.csv', index=False)
 
@@ -70,7 +68,6 @@ def remove_alarm_cell(self: str, alarm: float):
     for i in alarm_list:
         if alarm_db[alarm_db['symbol'] == self].to_dict('records')[0][i] == alarm:
             alarm_db.at[coin.index[0], i] = 0
-            alarm_db.to_csv('alarm_data.csv', index=False)
             print(f"{self}: {alarm} removed")
             alarm_db.at[coin.index[0], 'alarm_count'] -= 1
             alarm_db.to_csv('alarm_data.csv', index=False)
