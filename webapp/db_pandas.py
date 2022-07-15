@@ -1,5 +1,6 @@
 from binance.client import Client
 import pandas as pd
+import os.path
 
 alarm_list = 'alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', \
              'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10'
@@ -93,7 +94,15 @@ def get_alarm_count():
             print(f"{symbol}: {cell}")
 
 
+def check_db_pandas():
+    if os.path.isfile('api_data.csv'):
+        print('api_data.csv exists')
+    else:
+        print('api_data.csv does not exist')
+        create_db()
+
 # TESTING
+# check_db_pandas()
 # create_db()
 # get_live_price('BTCUSDT')
 # shift_alarm('ETHBTC')
