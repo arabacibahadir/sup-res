@@ -7,16 +7,19 @@ alarm_list = 'alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', \
 
 
 def create_db():
-    client = Client("", "")
-    df = pd.DataFrame(client.get_all_tickers(), columns={'symbol': str(), 'price': float()})
-    df.to_csv('api_data.csv', index=False)
-
-    alarm_data_columns = {'symbol': str(), 'alarm_count': int(), 'alarm1': float(), 'alarm2': float(),
-                          'alarm3': float(), 'alarm4': float(), 'alarm5': float(), 'alarm6': float(),
-                          'alarm7': float(), 'alarm8': float(), 'alarm9': float(), 'alarm10': float()}
-    alarm_data = pd.DataFrame(df['symbol'], columns=alarm_data_columns)
-    alarm_data.update(alarm_data.fillna(0))
-    alarm_data.to_csv('alarm_data.csv', index=False)
+    if os.path.isfile('alarm_data.csv'):
+        print('alarm_data.csv exists')
+    else:
+        print('alarm_data.csv does not exist')
+        client = Client("", "")
+        df = pd.DataFrame(client.get_all_tickers(), columns={'symbol': str(), 'price': float()})
+        df.to_csv('api_data.csv', index=False)
+        alarm_data_columns = {'symbol': str(), 'alarm_count': int(), 'alarm1': float(), 'alarm2': float(),
+                              'alarm3': float(), 'alarm4': float(), 'alarm5': float(), 'alarm6': float(),
+                              'alarm7': float(), 'alarm8': float(), 'alarm9': float(), 'alarm10': float()}
+        alarm_data = pd.DataFrame(df['symbol'], columns=alarm_data_columns)
+        alarm_data.update(alarm_data.fillna(0))
+        alarm_data.to_csv('alarm_data.csv', index=False)
 
 
 def get_live_price(self: str):
@@ -94,15 +97,7 @@ def get_alarm_count():
             print(f"{symbol}: {cell}")
 
 
-def check_db_pandas():
-    if os.path.isfile('api_data.csv'):
-        print('api_data.csv exists')
-    else:
-        print('api_data.csv does not exist')
-        create_db()
-
 # TESTING
-# check_db_pandas()
 # create_db()
 # get_live_price('BTCUSDT')
 # shift_alarm('ETHBTC')
@@ -120,7 +115,7 @@ def check_db_pandas():
 # add_alarm_data('ETHBTC', 3090)
 # add_alarm_data('ETHBTC', 3007)
 # add_alarm_data('ETHBTC', 3007)
-# get_alarm_count()
+get_alarm_count()
 # remove_alarm_cell('ETHBTC', 2000)
 # remove_alarm_cell('BTCUSDT', 1000)
 # remove_all_alarms('BTCUSDT')
