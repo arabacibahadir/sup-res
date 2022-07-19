@@ -6,7 +6,10 @@ alarm_list = 'alarm1', 'alarm2', 'alarm3', 'alarm4', 'alarm5', \
              'alarm6', 'alarm7', 'alarm8', 'alarm9', 'alarm10'
 
 
-def create_db():
+def create_db() -> None:
+    """
+    If the file alarm_data.csv does not exist, create it.
+    """
     if os.path.isfile('alarm_data.csv'):
         print('alarm_data.csv exists')
     else:
@@ -29,6 +32,9 @@ def get_live_price(self: str):
 
 
 def add_alarm_data(self: str, alarm: float):
+    """
+    If the coin exists in the dataframe, then add the alarm to the first empty alarm column
+    """
     alarm_db = pd.read_csv('alarm_data.csv')
     coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     coin_dict = alarm_db[alarm_db['symbol'] == self].to_dict('records')[0]
@@ -52,6 +58,9 @@ def add_alarm_data(self: str, alarm: float):
 
 # shift alarm to left until there is no zero alarm
 def shift_alarm(self: str):
+    """
+    Shift the value to the next column
+    """
     alarm_db = pd.read_csv('alarm_data.csv')
     coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     for i in alarm_list:
@@ -67,6 +76,9 @@ def shift_alarm(self: str):
 
 
 def remove_alarm_cell(self: str, alarm: float):
+    """
+    Remove specific alarm from the dataframe
+    """
     alarm_db = pd.read_csv('alarm_data.csv')
     coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     for i in alarm_list:
@@ -80,6 +92,9 @@ def remove_alarm_cell(self: str, alarm: float):
 
 
 def remove_all_alarms(self: str):
+    """
+    Remove all alarms from the dataframe
+    """
     alarm_db = pd.read_csv('alarm_data.csv')
     coin = alarm_db.loc[alarm_db['symbol'] == self, ['symbol']]
     for i in alarm_list:
@@ -90,6 +105,10 @@ def remove_all_alarms(self: str):
 
 
 def get_alarm_count():
+    """
+    Loops through the 'alarm_count' column and prints out the symbol and
+    alarm count if the alarm count is not equal to zero
+    """
     alarm_db = pd.read_csv('alarm_data.csv')
     for cell in alarm_db['alarm_count']:
         if cell != 0:
@@ -115,7 +134,7 @@ def get_alarm_count():
 # add_alarm_data('ETHBTC', 3090)
 # add_alarm_data('ETHBTC', 3007)
 # add_alarm_data('ETHBTC', 3007)
-get_alarm_count()
+# get_alarm_count()
 # remove_alarm_cell('ETHBTC', 2000)
 # remove_alarm_cell('BTCUSDT', 1000)
 # remove_all_alarms('BTCUSDT')
