@@ -28,7 +28,7 @@ def create_db() -> None:
 def get_live_price(self: str):
     df = pd.DataFrame(Client("", "").get_all_tickers(), columns={'symbol': str(), 'price': float()})
     coin = df.loc[df['symbol'] == self, ['symbol', 'price']]
-    return print(coin.to_dict('records')[0]['price'])
+    return coin.to_dict('records')[0]['price']
 
 
 def add_alarm_data(self: str, alarm: float):
@@ -113,8 +113,10 @@ def get_alarm_count():
     for cell in alarm_db['alarm_count']:
         if cell != 0:
             symbol = alarm_db[alarm_db['alarm_count'] == cell]['symbol'].values[0]
-            print(f"{symbol}: {cell}")
+            print(f"{symbol}: {cell}", get_live_price(symbol))
 
+
+# TODO: compare price and alarm
 
 # TESTING
 # create_db()
