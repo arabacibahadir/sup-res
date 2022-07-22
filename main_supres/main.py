@@ -54,11 +54,11 @@ class Supres(Values):
         fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
         # Chart settings
         legend_color = "#D8D8D8"
-        plot_color = "#E7E7E7"
+        chart_color = "#E7E7E7"
         background_color = "#E7E7E7"
         support_line_color = "LightSeaGreen"
         resistance_line_color = "MediumPurple"
-        # Adding a watermark to the plot
+        # Add a watermark to the plot
         watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                                  font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
                                  showarrow=False))
@@ -125,15 +125,16 @@ class Supres(Values):
             """
             Drop all rows with NULL values in the dataframe
             """
-            for col in df.columns:
-                index_null = df[df[col] == "NULL"].index
-                df.drop(index_null, inplace=True)
-                df.isna().sum()
-            return df.columns
+            df.dropna(inplace=True)
+            # for col in df.columns:
+            #     index_null = df[df[col] == "NULL"].index
+            #     df.drop(index_null, inplace=True)
+            #     df.isna().sum()
+            # return df.columns
 
         def candlestick_patterns() -> list:
             """
-            The function takes in a dataframe and returns a list of candlestick patterns found in the dataframe
+            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe
             """
             from candlestick import candlestick
             nonlocal df
@@ -173,7 +174,7 @@ class Supres(Values):
                     t += 1
                 return pattern_list
 
-            # Looping through the dataframe and finding the pattern in the dataframe.
+            # Loop through the dataframe and find the pattern in the dataframe
             for item in range(-3, -30, -1):
                 last_row = df.iloc[item]
                 pattern_find_func(last_row)
@@ -196,8 +197,8 @@ class Supres(Values):
             """
             Check if the support and resistance lines are above or below the latest close price.
             """
-            # Finding support and resistance levels
-            # Checking if the support is below the latest close. If it is, it is appending it to the list
+            # Find support and resistance levels
+            # Check if the support is below the latest close. If it is, it is appending it to the list
             # support_below. If it isn't, it is appending it to the list resistance_below.
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
@@ -207,7 +208,7 @@ class Supres(Values):
                     support_below.append(support_line)
                 else:
                     resistance_below.append(support_line)
-            # Checking if the price is above the latest close price. If it is, it is appending it to the
+            # Check if the price is above the latest close price. If it is, it is appending it to the
             # resistance_above list. If it is not, it is appending it to the support_above list.
             for resistance_line in all_resistance_list:
                 if resistance_line > latest_close:
@@ -229,15 +230,15 @@ class Supres(Values):
                     marker=dict(color=legend_color, size=10)))
 
         def levels() -> tuple[list, list]:
-            # Checking if the support level is empty. If it is, it appends the minimum value of the low
+            # Check if the support level is empty. If it is, it appends the minimum value of the low
             # column to the list.
             if len(support_below) == 0:
                 support_below.append(min(df['low']))
-            # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
+            # Check if the resistance level is empty. If it is, it appends the minimum value of the high
             # column to the list.
             if len(resistance_above) == 0:
                 resistance_above.append(max(df['high']))
-            # Computing the Fibonacci sequence for the numbers in the range of the last element of the
+            # Compute the Fibonacci sequence for the numbers in the range of the last element of the
             # resistance_above list and the last element of the support_below list.
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
@@ -346,7 +347,7 @@ class Supres(Values):
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
                     marker=dict(color=legend_color, size=10)))
-                # Adding the SMA10, SMA50, and SMA100 to the chart and legend
+                # Add SMA10, SMA50, and SMA100 to the chart and legend
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma10,
                                          name=f"SMA10     : {float(sma10[-1]):.{str_price_len}f}",
                                          line=dict(color='#5c6cff', width=3)))
@@ -361,7 +362,7 @@ class Supres(Values):
                     marker=dict(color=legend_color, size=0)))
 
             def legend_fibonacci() -> None:
-                # Adding a line to the plot for each Fibonacci level
+                # Add a line to the legend for each Fibonacci level
                 mtp = len(fibonacci_multipliers) - 1
                 for _ in fibonacci_uptrend:
                     fig.add_trace(go.Scatter(
@@ -383,7 +384,7 @@ class Supres(Values):
         def chart_updates() -> None:
             fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe.upper()} Chart"),
                               hovermode='x', dragmode="zoom",
-                              paper_bgcolor=background_color, plot_bgcolor=plot_color, xaxis_rangeslider_visible=False,
+                              paper_bgcolor=background_color, plot_bgcolor=chart_color, xaxis_rangeslider_visible=False,
                               legend=dict(bgcolor=legend_color, font=dict(size=11)), margin=dict(t=30, l=0, b=0, r=0))
             fig.update_xaxes(showspikes=True, spikecolor="green", spikethickness=2)
             fig.update_yaxes(showspikes=True, spikecolor="green", spikethickness=2)
@@ -446,7 +447,7 @@ class Supres(Values):
                 ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
                 pinescript_lines.append(ls)
             lines = '\n'.join(map(str, pinescript_lines))
-            # Creating a new file called pinescript.txt and writing the lines_sma and lines variables to the file
+            # Create a new file called pinescript.txt and write the lines_sma and lines variables to the file
             file = open("../main_supres/pinescript.txt", "w")
             file.write(lines_sma + lines)
             file.close()
@@ -477,7 +478,7 @@ class Supres(Values):
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres")  # Changing the directory to the main_supres folder
+    os.chdir("../main_supres")  # Change the directory to the main_supres folder
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
