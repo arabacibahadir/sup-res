@@ -30,6 +30,7 @@ class Supres(Values):
         df = df.iloc[::-1]
         df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d")
         df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
+        df.dropna(inplace=True)
         historical_hightimeframe = (historical_data.Client.KLINE_INTERVAL_1DAY,
                                     historical_data.Client.KLINE_INTERVAL_3DAY)
         historical_lowtimeframe = (historical_data.Client.KLINE_INTERVAL_1MINUTE,
@@ -120,17 +121,6 @@ class Supres(Values):
                 retracement_levels_downtrend = high_price - (high_price - low_price) * multiplier
                 fibonacci_downtrend.append(retracement_levels_downtrend)
             return fibonacci_uptrend, fibonacci_downtrend
-
-        def drop_null():
-            """
-            Drop all rows with NULL values in the dataframe
-            """
-            df.dropna(inplace=True)
-            # for col in df.columns:
-            #     index_null = df[df[col] == "NULL"].index
-            #     df.drop(index_null, inplace=True)
-            #     df.isna().sum()
-            # return df.columns
 
         def candlestick_patterns() -> list:
             """
@@ -453,7 +443,6 @@ class Supres(Values):
             file.close()
             return lines
 
-        drop_null()
         sensitivity(2)
         check_lines()
         if selected_timeframe in historical_hightimeframe:
