@@ -40,17 +40,7 @@ def historical_data_write():
     df.insert(1, 'date', date)
     del df['Volume USDT'], df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], \
         df['ignore'], df['tradecount']
-
-    def drop_null():
-        """
-        Drop all rows with NULL values in the dataframe
-        """
-        for col in df.columns:
-            index_null = df[df[col] == "NULL"].index
-            df.drop(index_null, inplace=True)
-            df.isna().sum()
-
-    drop_null()
+    df.dropna(inplace=True)
     df.to_csv(data, index=False)
 
 
