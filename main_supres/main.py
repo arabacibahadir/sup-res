@@ -15,16 +15,16 @@ class Values:
     selected_timeframe: str
 
     def __post_init__(self):
-        self.ticker_csv.upper()
-        self.selected_timeframe.upper()
+        self.ticker_csv = self.ticker_csv.upper()
+        self.selected_timeframe = self.selected_timeframe.lower()
 
 
 class Supres(Values):
     @staticmethod
     def main(ticker_csv, selected_timeframe):
-        print(f"Start main function in {time.perf_counter() - perf} seconds")
-        print(f"{ticker_csv} data analysis in progress.")
-        candle_count = 254  # Number of candlesticks
+        print(f"Start main function in {time.perf_counter() - perf} seconds\n"
+              f"{ticker_csv} data analysis in progress.")
+        candle_count = 254  # Number of candlesticks to be analyzed
         df = pd.read_csv(ticker_csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                          keep_default_na=False)
         df = df.iloc[::-1]
@@ -147,7 +147,7 @@ class Supres(Values):
             df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
             pattern_find = []
 
-            def pattern_find_func(pattern_row) -> list:
+            def pattern_find_func(pattern_row, t=0) -> list:
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
@@ -155,7 +155,6 @@ class Supres(Values):
                 """
                 for col in df.columns:
                     pattern_find.append(col)
-                t = 0
                 for pattern in pattern_row:
                     if pattern == 'pattern_found':
                         # even pattern, odd date
@@ -163,7 +162,6 @@ class Supres(Values):
                         pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
                     t += 1
                 return pattern_list
-
             # Loop through the dataframe and find the pattern in the dataframe
             for item in range(-3, -30, -1):
                 last_row = df.iloc[item]
@@ -223,11 +221,11 @@ class Supres(Values):
             # Check if the support level is empty. If it is, it appends the minimum value of the low
             # column to the list.
             if len(support_below) == 0:
-                support_below.append(min(df['low']))
+                support_below.append(df.low.min())
             # Check if the resistance level is empty. If it is, it appends the minimum value of the high
             # column to the list.
             if len(resistance_above) == 0:
-                resistance_above.append(max(df['high']))
+                resistance_above.append(df.high.max())
             # Compute the Fibonacci sequence for the numbers in the range of the last element of the
             # resistance_above list and the last element of the support_below list.
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
@@ -253,12 +251,12 @@ class Supres(Values):
             fig.add_hline(y=70, name="RSI higher band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hrect(y0=30, y1=70, line_width=0, fillcolor="gray", opacity=0.2, row=3, col=1)
 
-        def draw_support() -> None:
+        def draw_support(c=0) -> None:
             """
             Draws the support lines and adds annotations to the chart.
             """
-            c = 0
-            while 1:
+            # c = 0
+            while True:
                 if c > len(support_list) - 1:
                     break
                 # Support lines
@@ -270,12 +268,11 @@ class Supres(Values):
                                    font=dict(size=15, color=support_line_color))
                 c += 1
 
-        def draw_resistance() -> None:
+        def draw_resistance(c=0) -> None:
             """
             Draws the resistance lines and adds annotations to the chart.
             """
-            c = 0
-            while 1:
+            while True:
                 if c > len(resistance_list) - 1:
                     break
                 # Resistance lines
@@ -296,7 +293,7 @@ class Supres(Values):
             if sample_price < 1:
                 str_price_len = len(str(sample_price))
 
-            def legend_support_resistance_values() -> None:
+            def legend_support_resistance_values(temp=0) -> None:
                 blank = " " * (len(str(sample_price)) + 1)
                 differ = len(float_resistance_above) - len(float_support_below)
                 try:
@@ -306,7 +303,6 @@ class Supres(Values):
                     if differ > 0:
                         for i in range(abs(differ)):
                             float_support_below.extend([0])
-                    temp = 0
                     for _ in range(max(len(float_resistance_above), len(float_support_below))):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
@@ -319,8 +315,9 @@ class Supres(Values):
                             name=legend_supres,
                             mode="lines",
                             marker=dict(color=legend_color, size=10)))
-                        temp += 1
-                        if temp == 14:
+                        if temp != 14:
+                            temp += 1
+                        else:
                             break
                 except IndexError:
                     pass
@@ -468,17 +465,18 @@ class Supres(Values):
 
 if __name__ == "__main__":
     os.chdir("../main_supres")  # Change the directory to the main_supres folder
+    file_name = historical_data.file_name
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
-        if os.path.isfile(historical_data.file_name):  # Check .csv file is there or not
-            print(f"{historical_data.file_name} downloaded and created.")
+        if os.path.isfile(file_name):  # Check .csv file is there or not
+            print(f"{file_name} downloaded and created.")
+            Supres.main(file_name, historical_data.time_frame)
+            delete_file.remove(file_name)
         else:
-            print(
-                "One or more issues caused the download to fail. "
-                "Make sure you typed the filename correctly in the settings.")
-        Supres.main(historical_data.file_name, historical_data.time_frame)
-        delete_file.remove(historical_data.file_name)
+            raise print("One or more issues caused the download to fail. "
+                  "Make sure you typed the filename correctly.")
+
     except KeyError:
-        delete_file.remove(historical_data.file_name)
+        delete_file.remove(file_name)
         raise KeyError("Key error, algorithm issue")
