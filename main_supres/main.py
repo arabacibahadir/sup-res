@@ -21,10 +21,9 @@ class Values:
 
 class Supres(Values):
     @staticmethod
-    def main(ticker_csv, selected_timeframe):
+    def main(ticker_csv, selected_timeframe, candle_count=254):
         print(f"Start main function in {time.perf_counter() - perf} seconds\n"
               f"{ticker_csv} data analysis in progress.")
-        candle_count = 254  # Number of candlesticks to be analyzed
         df = pd.read_csv(ticker_csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                          keep_default_na=False)
         df = df.iloc[::-1]
@@ -145,14 +144,15 @@ class Supres(Values):
             df = candlestick.star(df, target='star')
             df = candlestick.shooting_star(df, target='shooting_star')
             df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
-            pattern_find = []
 
-            def pattern_find_func(pattern_row, t=0) -> list:
+            def pattern_find_func(pattern_row, t=0, pattern_find=None) -> list:
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
                 the column name to a list and adds the date of the match to another list
                 """
+                if pattern_find is None:
+                    pattern_find = []
                 for col in df.columns:
                     pattern_find.append(col)
                 for pattern in pattern_row:
@@ -162,13 +162,13 @@ class Supres(Values):
                         pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
                     t += 1
                 return pattern_list
+
             # Loop through the dataframe and find the pattern in the dataframe
             for item in range(-3, -30, -1):
-                last_row = df.iloc[item]
-                pattern_find_func(last_row)
+                pattern_find_func(df.iloc[item])
             return pattern_list
 
-        def sensitivity(sens) -> tuple[list, list]:
+        def sensitivity(sens=2) -> tuple[list, list]:
             """
             Find the support and resistance levels for a given asset
             sensitivity:1 is recommended for daily charts or high frequency trade scalping
@@ -255,7 +255,6 @@ class Supres(Values):
             """
             Draws the support lines and adds annotations to the chart.
             """
-            # c = 0
             while True:
                 if c > len(support_list) - 1:
                     break
@@ -440,7 +439,7 @@ class Supres(Values):
             file.close()
             return lines
 
-        sensitivity(2)
+        sensitivity()
         check_lines()
         if selected_timeframe in historical_hightimeframe:
             candlestick_patterns()
@@ -475,7 +474,7 @@ if __name__ == "__main__":
             delete_file.remove(file_name)
         else:
             raise print("One or more issues caused the download to fail. "
-                  "Make sure you typed the filename correctly.")
+                        "Make sure you typed the filename correctly.")
 
     except KeyError:
         delete_file.remove(file_name)
