@@ -31,10 +31,12 @@ pip install -r requirements.txt
 
 When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. 
 ````
-Ticker:  # "btcusdt, ethusdt, ethbtc, bnbbusd" etc.
-btcusdt
-Time frame: # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d (m:minute, h:hour, d:day)
-1d
+Ticker and Time Frame:
+BTCUSDT 15M
+````
+````
+Supported Tickers: All Binance tickers
+Supported Time frames: 1M, 3M, 5M, 15M, 30M, 1H, 2H, 4H, 6H, 8H, 12H, 1D, 3D (M: Minute, H: Hour, D: Day)
 ````
 
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file, and change your user handle name. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api). Then uncomment `save` and `twitter` functions in `main.py`.

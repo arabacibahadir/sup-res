@@ -3,10 +3,8 @@ import pandas as pd
 from binance.client import Client
 import frameselect
 
-print("Ticker:")  # Pair
-ticker = input().upper()
-print("Time frame:")  # 15M, 1H, 1D etc
-frame_s = str(input().upper())
+print("Ticker and Time Frame:")  # Example:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
+ticker, frame_s = str(input().upper()).split()
 time_frame = frameselect.frame_select(frame_s)[0]
 # Creating a client object that is used to interact with the Binance API
 client = Client("", "")
@@ -14,7 +12,7 @@ has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # C
 print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
 start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
-symbol_info = client.get_symbol_info(ticker)
+symbol_data = client.get_symbol_info(ticker)
 header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
                'taker buy vol', 'taker buy quote vol', 'ignore')
 

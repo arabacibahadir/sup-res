@@ -389,7 +389,7 @@ class Supres(Values):
                 f"../main_supres/images/"
                 f"{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
                 full_html=False, include_plotlyjs='cdn')
-            text_image = f"#{historical_data.ticker} #{historical_data.symbol_info.get('baseAsset')} " \
+            text_image = f"#{historical_data.ticker} #{historical_data.symbol_data.get('baseAsset')} " \
                          f"{selected_timeframe} Support and resistance levels \n " \
                          f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
