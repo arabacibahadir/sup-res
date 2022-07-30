@@ -20,7 +20,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 ![git](https://user-images.githubusercontent.com/32988819/148457547-45d47bc2-52a0-426a-8d4c-861fe6fd013d.png)
 
 ## Installation :hammer_and_wrench:
-Sup-Res requires Python 3.6+ to run.
+Sup-Res requires Python 3.10+ to run.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries.
 
 ```bash
@@ -36,7 +36,7 @@ BTCUSDT 15M
 ````
 ````
 Supported Tickers: All Binance tickers
-Supported Time frames: 1M, 3M, 5M, 15M, 30M, 1H, 2H, 4H, 6H, 8H, 12H, 1D, 3D (M: Minute, H: Hour, D: Day)
+Supported Time Frames: 1M, 3M, 5M, 15M, 30M, 1H, 2H, 4H, 6H, 8H, 12H, 1D, 3D (M: Minute, H: Hour, D: Day)
 ````
 
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file, and change your user handle name. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api). Then uncomment `save` and `twitter` functions in `main.py`.
