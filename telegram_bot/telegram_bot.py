@@ -45,8 +45,8 @@ def historical_data_write():
 
 
 def main():
-    print(f"Start main function in {time.perf_counter() - perf} seconds")
-    print(f"{file_name} data analysis in progress.")
+    print(f"Start main function in {time.perf_counter() - perf} seconds\n"
+          f"{file_name} data analysis in progress.")
     candle_count = 254  # Number of candlesticks
     df = pd.read_csv(file_name, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                      keep_default_na=False)
@@ -64,7 +64,7 @@ def main():
     fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], []
     fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
     support_above, resistance_below, support_below, resistance_above = [], [], [], []
-    support_list, resistance_list = [], []  # support_list : Support list, resistance_list : Resistance list
+    support_list, resistance_list = [], []
     # Chart settings
     fig, x_date = [], ''  # Chart
     legend_color = "#D8D8D8"
@@ -80,56 +80,50 @@ def main():
     def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
         If the price of the asset is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise return 0
-
+        the last after_candle_count, then return True. Otherwise, return False
         :param candle_value: The price data for the asset
         :param candle_index: The index of the first bar in the support
         :param before_candle_count: The number of bars back you want to look
         :param after_candle_count: The number of bars in the second trend
-        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
+        :return: True if the price of the price is supported by the previous low price, False if it is not
         """
         try:
             for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
                 if candle_value.low[current_value] > candle_value.low[current_value - 1]:
-                    return 0
+                    return False
             for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
                 if candle_value.low[current_value] < candle_value.low[current_value - 1]:
-                    return 0
-            return 1
+                    return False
+            return True
         except KeyError:
             pass
 
     def resistance(candle_value, candle_index, before_candle_count, after_candle_count):
         """
-        If the price of the stock is increasing for the last before_candle_count and decreasing for
-        the last after_candle_count, then return 1. Otherwise return 0
-
+            If the price of the stock is increasing for the last before_candle_count and decreasing for the last
+            after_candle_count, then return True. Otherwise, return False
         :param candle_value: The price data for the asset
-        :param candle_index: The index of the first bar in the resistance
-        :param before_candle_count: The number of bars back you want to look
-        :param after_candle_count: The number of days after the first resistance line where the price will be considered
-        to be broken
-        :return: 1 if the price has been increasing for the last n1 periods and decreasing for the last
-        n2 periods.
+            :param candle_index: The index of the first candlestick in the resistance
+            :param before_candle_count: The number of candlesticks back you want to analyze
+            :param after_candle_count: The number of candlesticks after the can
+            :return: True if the price has been increasing for the last n1 periods and decreasing for the n2 periods
         """
         try:
             for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
                 if candle_value.high[current_value] < candle_value.high[current_value - 1]:
-                    return 0
+                    return False
             for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
                 if candle_value.high[current_value] > candle_value.high[current_value - 1]:
-                    return 0
-            return 1
+                    return False
+                return True
         except KeyError:
             pass
 
     def fibonacci_pricelevels(high_price, low_price):
         """
-        The function `fib_pl` takes two arguments, `high_price` and `low_price`, and returns a list of
-        retracement levels
         Uptrend Fibonacci Retracement Formula =>
         Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-        :param high_price: The high price for the current price level
+        :param high_price: High price for the current price level
         :param low_price: Low price for the period
         """
         for multiplier in fibonacci_multipliers:
@@ -140,8 +134,7 @@ def main():
 
     def candlestick_patterns():
         """
-        The function takes in a dataframe and returns a list of candlestick patterns found in the
-        dataframe
+            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe
         """
         from candlestick import candlestick
         nonlocal df
@@ -161,27 +154,27 @@ def main():
         df = candlestick.piercing_pattern(df, target='piercing_pattern')
         df = candlestick.star(df, target='star')
         df = candlestick.shooting_star(df, target='shooting_star')
-        pattern_find = []
+        df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
 
-        def pattern_find_func(self):
+        def pattern_find_func(pattern_row, t=0, pattern_find=None):
             """
             The function takes in a dataframe and a list of column names. It then iterates through the
             list of column names and checks if the column name is in the dataframe. If it is, it adds
             the column name to a list and adds the date of the match to another list
             """
+            if pattern_find is None:
+                pattern_find = []
             for col in df.columns:
                 pattern_find.append(col)
-            t = 0
-            for pattern in self:
-                if pattern == True:
-                    pattern_list.append(pattern_find[t])
-                    pattern_list.append(self['date'].strftime('%b-%d-%y'))
-                t += 1
+                for pattern in pattern_row:
+                    if pattern == 'pattern_found':
+                        # even pattern, odd date
+                        pattern_list.append(pattern_find[t])
+                        pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
+                    t += 1
 
-        # Looping through the dataframe and finding the pattern in the dataframe.
         for item in range(-3, -30, -1):
-            last_row = df.iloc[item]
-            pattern_find_func(last_row)
+            pattern_find_func(df.iloc[item])
 
     historical_lowtimeframe = (Client.KLINE_INTERVAL_1MINUTE,
                                Client.KLINE_INTERVAL_3MINUTE,
@@ -218,27 +211,31 @@ def main():
         sensitivity:1 is recommended for daily charts or high frequency trade scalping 
         :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
         """
-        for row in range(3, len(df) - 1):
-            if support(df, row, 3, sens):
-                support_list.append((row, df.low[row]))
-            if resistance(df, row, 3, sens):
-                resistance_list.append((row, df.high[row]))
+        for sens_row in range(3, len(df) - 1):
+            if support(df, sens_row, 3, sens):
+                support_list.append((sens_row, df.low[sens_row]))
+            if resistance(df, sens_row, 3, sens):
+                resistance_list.append((sens_row, df.high[sens_row]))
+        return support_list, resistance_list
 
     sensitivity(2)
 
-    all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
-    all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
-    latest_close = tuple(df['close'])[-1]
-
     def check_lines():
-        # Checking if the support is below the latest close. If it is, it is appending it to the list
+        """
+        Check if the support and resistance lines are above or below the latest close price.
+        """
+        # Find support and resistance levels
+        # Check if the support is below the latest close. If it is, it is appending it to the list
         # support_below. If it isn't, it is appending it to the list resistance_below.
+        all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+        all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
+        latest_close = tuple(df['close'])[-1]
         for support_line in all_support_list:  # Find closes
             if support_line < latest_close:
                 support_below.append(support_line)
             else:
                 resistance_below.append(support_line)
-        # Checking if the price is above the latest close price. If it is, it is appending it to the
+        # Check if the price is above the latest close price. If it is, it is appending it to the
         # resistance_above list. If it is not, it is appending it to the support_above list.
         for resistance_line in all_resistance_list:
             if resistance_line > latest_close:
@@ -252,16 +249,19 @@ def main():
     resistance_above.extend(resistance_below)
     support_below = sorted(support_below, reverse=True)
     resistance_above = sorted(resistance_above)
-    # Checking if the support level is empty. If it is, it appends the minimum value of the low
-    # column to the list.
-    if len(support_below) == 0:
-        support_below.append(min(df['low']))
-    # Checking if the resistance level is empty. If it is, it appends the minimum value of the high
-    # column to the list.
-    if len(resistance_above) == 0:
-        resistance_above.append(max(df['high']))
 
-    # Computing the Fibonacci sequence for the numbers in the range of the last element of the
+    def levels():
+        # Check if the support level is empty. If it is, it appends the minimum value of the low
+        # column to the list.
+        if len(support_below) == 0:
+            support_below.append(df.low.min())
+        # Check if the resistance level is empty. If it is, it appends the minimum value of the high
+        # column to the list.
+        if len(resistance_above) == 0:
+            resistance_above.append(df.high.max())
+            # Compute the Fibonacci sequence for the numbers in the range of the last element of the
+
+    levels()
     # resistance_above list and the last element of the support_below list.
     fibonacci_pricelevels(resistance_above[-1], support_below[-1])
     resistance_above = [float(above) for above in resistance_above]
@@ -272,7 +272,6 @@ def main():
     while 1:
         if c > len(support_list) - 1:
             break
-        # Support Lines
         fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
                       x1=len(df) + 25,
                       y1=support_list[c][1], line=dict(color=support_color, width=2))
@@ -286,7 +285,6 @@ def main():
     while 1:
         if c > len(resistance_list) - 1:
             break
-        # Resistance Lines
         fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
                       x1=len(df) + 25,
                       y1=resistance_list[c][1], line=dict(color=res_color, width=1))
@@ -363,13 +361,13 @@ def main():
         y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
         marker=dict(color=legend_color, size=0)))
     mtp = 7
-    # Adding a line to the plot for each Fibonacci level.
+    # Add a line to the legend for each Fibonacci level
     for _ in fibonacci_uptrend:
-        fig.add_trace(go.Scatter(
-            y=[support_list[0]],
-            name=f"Fib {fibonacci_multipliers[mtp]:.3f} : {float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
-                 f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ", mode="lines",
-            marker=dict(color=legend_color, size=10)))
+        fig.add_trace(go.Scatter(y=[support_list[0]],
+                                 name=f"Fib {fibonacci_multipliers[mtp]:.3f} : "
+                                      f"{float(fibonacci_uptrend[mtp]):.{str_price_len}f} "
+                                      f"| {float(fibonacci_downtrend[mtp]):.{str_price_len}f} ", mode="lines",
+                                 marker=dict(color=legend_color, size=10)))
         mtp -= 1
 
     def candle_patterns():
@@ -401,7 +399,7 @@ def main():
 
     def save():
         """
-        Saves the image and text file.
+        Saves the image and html file of the plotly chart, then it tweets the image and text
         """
         if not os.path.exists("../telegram_bot"):
             os.mkdir("../telegram_bot")
@@ -436,7 +434,7 @@ def main():
         f.close()
 
     pinescript_code()
-    print(f"\nCompleted execution in {time.perf_counter() - perf} seconds")
+    print(f"Completed execution in {time.perf_counter() - perf} seconds")
 
 
 if __name__ == "__main__":
