@@ -9,14 +9,6 @@ import plotly.graph_objects as go
 from binance.client import Client
 import telegram_frameselect
 
-os.chdir("../telegram_bot")  # Changing the directory to the `telegram_bot` folder
-client = Client("", "")
-current = datetime.now()
-current_time = current.strftime("%b-%d-%y %H:%M")
-# Taking the arguments from the command line and assigning them to variables.
-ticker = sys.argv[1]  # Pair
-frame_s = sys.argv[2]  # Timeframe
-
 
 def historical_data_write():
     """
@@ -61,18 +53,27 @@ def main():
     sma100 = tuple((dfsma.ta.sma(100)))
     rsi = tuple((ta.rsi(last_candle_close)))
     macd = ta.macd(close=last_candle_close, fast=12, slow=26, signal=9)
-    fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], []
+    support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
     fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
-    support_above, resistance_below, support_below, resistance_above = [], [], [], []
-    support_list, resistance_list = [], []
-    # Chart settings
-    fig, x_date = [], ''  # Chart
+    support_above, resistance_below, support_below, resistance_above, fig, x_date = [], [], [], [], [], ''
+    historical_lowtimeframe = (Client.KLINE_INTERVAL_1MINUTE,
+                               Client.KLINE_INTERVAL_3MINUTE,
+                               Client.KLINE_INTERVAL_5MINUTE,
+                               Client.KLINE_INTERVAL_15MINUTE,
+                               Client.KLINE_INTERVAL_30MINUTE,
+                               Client.KLINE_INTERVAL_1HOUR,
+                               Client.KLINE_INTERVAL_2HOUR,
+                               Client.KLINE_INTERVAL_4HOUR,
+                               Client.KLINE_INTERVAL_6HOUR,
+                               Client.KLINE_INTERVAL_8HOUR,
+                               Client.KLINE_INTERVAL_12HOUR)
+    historical_hightimeframe = (Client.KLINE_INTERVAL_1DAY,
+                                Client.KLINE_INTERVAL_3DAY)
     legend_color = "#D8D8D8"
     plot_color = "#E7E7E7"
     background_color = "#E7E7E7"
     support_color = "LightSeaGreen"
     res_color = "MediumPurple"
-    # Adding a watermark to the plot.
     watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                              font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.5,
                              showarrow=False))
@@ -134,7 +135,7 @@ def main():
 
     def candlestick_patterns():
         """
-            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe
+        Takes in a dataframe and returns a list of candlestick patterns found in the dataframe
         """
         from candlestick import candlestick
         nonlocal df
@@ -176,19 +177,7 @@ def main():
         for item in range(-3, -30, -1):
             pattern_find_func(df.iloc[item])
 
-    historical_lowtimeframe = (Client.KLINE_INTERVAL_1MINUTE,
-                               Client.KLINE_INTERVAL_3MINUTE,
-                               Client.KLINE_INTERVAL_5MINUTE,
-                               Client.KLINE_INTERVAL_15MINUTE,
-                               Client.KLINE_INTERVAL_30MINUTE,
-                               Client.KLINE_INTERVAL_1HOUR,
-                               Client.KLINE_INTERVAL_2HOUR,
-                               Client.KLINE_INTERVAL_4HOUR,
-                               Client.KLINE_INTERVAL_6HOUR,
-                               Client.KLINE_INTERVAL_8HOUR,
-                               Client.KLINE_INTERVAL_12HOUR)
-    historical_hightimeframe = (Client.KLINE_INTERVAL_1DAY,
-                                Client.KLINE_INTERVAL_3DAY)
+
 
     if time_frame in historical_hightimeframe:
         candlestick_patterns()
@@ -267,32 +256,37 @@ def main():
     resistance_above = [float(above) for above in resistance_above]
     support_below = [float(below) for below in support_below]
 
-    c = 0
-    # Adding the support lines and annotations to the chart.
-    while 1:
-        if c > len(support_list) - 1:
-            break
-        fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
-                      x1=len(df) + 25,
-                      y1=support_list[c][1], line=dict(color=support_color, width=2))
-        # Support annotations
-        fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
-                           font=dict(size=15, color=support_color))
-        c += 1
+    def draw_support(c=0):
+        """
+        Draws the support lines and adds annotations to the chart.
+        """
+        while 1:
+            if c > len(support_list) - 1:
+                break
+            fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
+                          x1=len(df) + 25,
+                          y1=support_list[c][1], line=dict(color=support_color, width=2))
+            # Support annotations
+            fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
+                               font=dict(size=15, color=support_color))
+            c += 1
 
-    c = 0
-    # Adding the resistance lines and annotations to the chart.
-    while 1:
-        if c > len(resistance_list) - 1:
-            break
-        fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
-                      x1=len(df) + 25,
-                      y1=resistance_list[c][1], line=dict(color=res_color, width=1))
-        # Resistance annotations
-        fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
-                           font=dict(size=15, color=res_color))
-        c += 1
-
+    def draw_resistance(c=0):
+        """
+        Draws the resistance lines and adds annotations to the chart.
+        """
+        while 1:
+            if c > len(resistance_list) - 1:
+                break
+            fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
+                          x1=len(df) + 25,
+                          y1=resistance_list[c][1], line=dict(color=res_color, width=1))
+            # Resistance annotations
+            fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
+                               font=dict(size=15, color=res_color))
+            c += 1
+    draw_support()
+    draw_resistance()
     # Legend texts
     fig.add_trace(go.Scatter(
         y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
@@ -377,7 +371,7 @@ def main():
         fig.add_trace(go.Scatter(
             y=[support_list[0]], name="Latest Candlestick Patterns",
             mode="markers", marker=dict(color=legend_color, size=14)))
-        for pat1 in range(1, len(pattern_list), 2):  # candlestick patterns
+        for pat1 in range(1, len(pattern_list), 2):
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
                 marker=dict(color=legend_color, size=10)))
@@ -438,7 +432,12 @@ def main():
 
 
 if __name__ == "__main__":
-
+    os.chdir("../telegram_bot")  # Changing the directory to the `telegram_bot` folder
+    client = Client("", "")
+    current = datetime.now()
+    current_time = current.strftime("%b-%d-%y %H:%M")
+    ticker = sys.argv[1]  # Pair
+    frame_s = sys.argv[2]  # Timeframe
     # Selecting the time frame for the data to be retrieved.
     time_frame = telegram_frameselect.frame_select(frame_s)[0]
     # Selecting the frame that the user wants to start from.
