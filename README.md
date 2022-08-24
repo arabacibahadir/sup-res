@@ -21,7 +21,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 
 ## Installation :hammer_and_wrench:
 Sup-Res requires Python 3.10+ to run.
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries. This process may take a long time.
 
 ```bash
 pip install -r requirements.txt
