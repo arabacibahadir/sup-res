@@ -9,7 +9,11 @@ time_frame = frameselect.frame_select(frame_s)[0]
 # Creating a client object that is used to interact with the Binance API
 client = Client("", "")
 has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # Check pair is in Binance API
-print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
+if has_pair:
+    print("Pair is in Binance API.")
+else:
+    print("Pair is not in Binance API.")
+    exit()
 start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
 symbol_data = client.get_symbol_info(ticker)
