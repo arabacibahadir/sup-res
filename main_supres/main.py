@@ -168,7 +168,7 @@ class Supres(Values):
                 pattern_find_func(df.iloc[item])
             return pattern_list
 
-        def sensitivity(sens=2) -> tuple[list, list]:
+        def sensitivity(sens=3) -> tuple[list, list]:
             """
             Find the support and resistance levels for a given asset
             sensitivity:1 is recommended for daily charts or high frequency trade scalping
@@ -401,11 +401,13 @@ class Supres(Values):
                 while tweet.is_image_tweet().text != text_image:
                     time.sleep(1)
                     if tweet.is_image_tweet().text != text_image:
+                        resistance_above_nonzero = list(filter(lambda x: x != 0, float_resistance_above))
+                        support_below_nonzero = list(filter(lambda x: x != 0, float_support_below))
                         tweet.api.update_status(status=f"#{historical_data.ticker}  "
                                                        f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} "
                                                        f"{selected_timeframe} Support and resistance levels"
-                                                       f"\nRes={float_resistance_above[:7]} \n"
-                                                       f"Sup={float_support_below[:7]}",
+                                                       f"\nRes={resistance_above_nonzero[:7]} \n"
+                                                       f"Sup={support_below_nonzero[:7]}",
                                                 in_reply_to_status_id=tweet.is_image_tweet().id)
                     break
             # for_tweet()
