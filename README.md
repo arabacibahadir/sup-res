@@ -9,7 +9,7 @@ Sup-Res is  mobile-ready, offline-storage compatible and a great companion for f
 
 ## Features :star2:
 
-- Easily find support and resistance levels on the chart
+- Easily find support-resistance and liquidity levels on the chart
 - Using it in almost any time series with sensitivity adjustment 
 - Export documents as `HTML, PDF, .jpeg, .png` 
 - Automatically share to your twitter followers with an image and text of support-resistance levels
