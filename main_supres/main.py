@@ -45,7 +45,15 @@ class Supres(Values):
                                    historical_data.Client.KLINE_INTERVAL_12HOUR)
 
         # Sma, Rsi, Macd, Fibonacci variables
-        def indicators(ma_length1=10, ma_length2=50, ma_length3=100):
+        def indicators(ma_length1=10, ma_length2=50, ma_length3=100) -> tuple[tuple, tuple, tuple, tuple]:
+            """
+            This function takes in three integer arguments, and returns a dataframe with three columns,
+            each containing the moving average of the closing price for the given length.
+            
+            :param ma_length1: The length of the first moving average, defaults to 10 (optional)
+            :param ma_length2: The length of the second moving average, defaults to 50 (optional)
+            :param ma_length3: The length of the third moving average, defaults to 100 (optional)
+            """
             dfsma = df[:-1]
             sma_1 = tuple((dfsma.ta.sma(ma_length1)))
             sma_2 = tuple((dfsma.ta.sma(ma_length2)))
