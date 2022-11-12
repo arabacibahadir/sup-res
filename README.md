@@ -2,7 +2,7 @@
 
 _For online demonstration_ -> https://arabacibahadir.github.io/sup-res/ 
 
-Sup-Res is  mobile-ready, offline-storage compatible and a great companion for finding support and resistance lines with a scalable chart.
+Sup-Res is  mobile-ready, offline-storage compatible and a great companion for finding liquidity pools, support and resistance levels with a scalable chart.
 
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/32988819/166165397-af4c7f29-1746-49b6-be3a-9a12d838f7e6.gif)
 
