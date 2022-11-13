@@ -1,12 +1,10 @@
-import os
+from pathlib import Path
 import time
 from dataclasses import dataclass
-
 import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
 import delete_file
 import historical_data
 
@@ -51,7 +49,6 @@ class Supres(Values):
             """
             This function takes in three integer arguments, and returns a dataframe with three columns,
             each containing the moving average of the closing price for the given length.
-            
             :param ma_length1: The length of the first moving average, defaults to 10 (optional)
             :param ma_length2: The length of the second moving average, defaults to 50 (optional)
             :param ma_length3: The length of the third moving average, defaults to 100 (optional)
@@ -234,27 +231,10 @@ class Supres(Values):
                     y=[support_list[0]], name=f"{pattern_list[pat1][1]} : {str(pattern_list[pat1][0]).capitalize()}",
                     mode="lines", marker=dict(color=legend_color, size=10)))
 
-        # def levels() -> tuple[list, list]:
-            # Check if the support level is empty. If it is, it appends the minimum value of the low
-            # column to the list.
-            # if len(support_below) == 0:
-            #     support_below.append(df.low.min())
-            # # Check if the resistance level is empty. If it is, it appends the minimum value of the high
-            # # column to the list.
-            # if len(resistance_above) == 0:
-            #     resistance_above.append(df.high.max())
-            # Compute the Fibonacci sequence for the numbers in the range of the last element of the
-            # resistance_above list and the last element of the support_below list.
-            # return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
-
         def create_candlestick_plot() -> None:
-            fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
-                                         name="Candlestick",
-                                         text=df['date'].dt.strftime(x_date),
-                                         open=df['open'],
-                                         high=df['high'],
-                                         low=df['low'],
-                                         close=df['close']), row=1, col=1)
+            fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date), name="Candlestick",
+                                         text=df['date'].dt.strftime(x_date), open=df['open'], high=df['high'],
+                                         low=df['low'], close=df['close']), row=1, col=1)
             fig.update_layout(annotations=[watermark_layout])
 
         def add_volume_subplot() -> None:
@@ -329,12 +309,8 @@ class Supres(Values):
                         else:
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
-                        fig.add_trace(go.Scatter(
-                            y=[support_list[0]],
-                            name=legend_supres,
-                            mode="lines",
-                            marker=dict(color=legend_color, size=10)))
-
+                        fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
+                                      marker=dict(color=legend_color, size=10)))
                         if temp != 14:
                             temp += 1
                         else:
@@ -400,8 +376,6 @@ class Supres(Values):
             """
             Saves the image and html file of the plotly chart, then it tweets the image and text
             """
-            if not os.path.exists("../main_supres/images"):
-                os.mkdir("images")
             image = \
                 f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
             fig.write_image(image, width=1920, height=1080)  # Save image for tweet
@@ -413,7 +387,7 @@ class Supres(Values):
                          f"{selected_timeframe} Support and resistance levels \n " \
                          f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
-            def for_tweet() -> None:
+            def send_tweet() -> None:
                 """
                 Takes a screenshot of a chart, then tweets it with a caption.
                 """
@@ -431,7 +405,7 @@ class Supres(Values):
                                                        f"Sup={support_below_nonzero[:7]}",
                                                 in_reply_to_status_id=tweet.is_image_tweet().id)
                     break
-            # for_tweet()
+            # send_tweet()
 
         def pinescript_code() -> str:
             """
@@ -458,7 +432,7 @@ class Supres(Values):
             lines = '\n'.join(map(str, pinescript_lines))
             # Create a new file that called pinescript.txt and write the lines_sma and lines variables to the file
             with open("../main_supres/pinescript.txt", "w") as pine:
-                pine.writelines(lines_sma+lines)
+                pine.writelines(lines_sma + lines)
             return lines
 
         sensitivity()
@@ -471,7 +445,6 @@ class Supres(Values):
         create_candlestick_plot()
         add_volume_subplot()
         add_rsi_subplot()
-        # levels()
         float_resistance_above = list(map(float, sorted(resistance_above + resistance_below)))
         float_support_below = list(map(float, sorted(support_below + support_above, reverse=True)))
         draw_support()
@@ -485,12 +458,16 @@ class Supres(Values):
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres")  # Change the directory to the main_supres folder
+    print(f"Current directory: {Path.cwd()}")
+    # change the directory to the main_supres folder
+    path = Path.cwd().parent.joinpath("main_supres").resolve()
+    print(f"Changed directory to {path}")
     file_name = historical_data.file_name
+    print("Data path: ", path / file_name)
     try:
         perf = time.perf_counter()
         historical_data.hist_data()
-        if os.path.isfile(file_name):  # Check .csv file is there or not
+        if (path / file_name).is_file():  # Check .csv file is there or not
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             delete_file.remove(file_name)
