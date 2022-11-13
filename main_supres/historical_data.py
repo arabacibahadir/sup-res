@@ -24,34 +24,25 @@ def hist_data():
     """
     The function is used to get historical data from the Binance API and write it to a csv file
     """
+
     def historical_data_write(ticker_symbol):
         """
         Write the historical data to a csv file
         """
-        def write_candlesticks():
-            csv_file_w = open(file_name, "w", newline='')
-            klines_writer = csv.writer(csv_file_w, delimiter=",")
-            klines_writer.writerow(header_list)
-            for candlestick in client.get_historical_klines(symbol=ticker_symbol, interval=time_frame, start_str=start,
-                                                            limit=300):
-                klines_writer.writerow(candlestick)
-            csv_file_w.close()
-
-        def final_csv():
-            df = pd.read_csv(file_name)
-            # Reversing the order of the dataframe
-            df = df.iloc[::-1]
-            df.to_csv(file_name, header=header_list, index=False)
-            # df = pd.read_csv(file_name)
-            # Converting the unix time to a readable date format for today
-            date = pd.to_datetime(df['unix'], unit='ms')
-            df.insert(1, 'date', date)
-            del df['volume'], df['close time'], df['taker buy vol'], df['taker buy quote vol'], df['ignore'], \
-                df['tradecount']
-            df.to_csv(file_name, index=False)
-
-        write_candlesticks()
-        final_csv()
+        csv_file_w = open(file_name, "w", newline='')
+        klines_writer = csv.writer(csv_file_w, delimiter=",")
+        klines_writer.writerow(header_list)
+        for candlestick in reversed(client.get_historical_klines(symbol=ticker_symbol, interval=time_frame,
+                                                                 start_str=start, limit=300)):
+            klines_writer.writerow(candlestick)
+        csv_file_w.close()
+        df = pd.read_csv(file_name)
+        # Converting the unix time to a readable date format for today
+        date = pd.to_datetime(df['unix'], unit='ms')
+        df.insert(1, 'date', date)
+        df.drop(labels=["volume", "close time", "tradecount", "taker buy vol", "taker buy quote vol", "ignore"],
+                inplace=True, axis=1)
+        df.to_csv(file_name, index=False)
 
     print("Data writing:", file_name)
     historical_data_write(ticker)
