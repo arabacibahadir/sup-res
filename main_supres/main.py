@@ -49,7 +49,7 @@ class Supres(Values):
             """
             This function takes in three integer arguments, and returns a dataframe with three columns,
             each containing the moving average of the closing price for the given length.
-            :param ma_length1: The length of the first moving average, defaults to 10 (optional)
+            :param ma_length1: The length of the first moving average, defaults to 20 (optional)
             :param ma_length2: The length of the second moving average, defaults to 50 (optional)
             :param ma_length3: The length of the third moving average, defaults to 100 (optional)
             """
@@ -78,11 +78,6 @@ class Supres(Values):
             """
             If the price of the asset is increasing for the last before_candle_count and decreasing for
             the last after_candle_count, then return True. Otherwise, return False
-            :param candle_value: The price data for the asset
-            :param candle_index: The index of the first bar in the support
-            :param before_candle_count: The number of bars back you want to look
-            :param after_candle_count: The number of bars in the second trend
-            :return: True if the price of the price is supported by the previous low price, False if it is not
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -99,11 +94,6 @@ class Supres(Values):
             """
             If the price of the stock is increasing for the last before_candle_count and decreasing for the last
             after_candle_count, then return True. Otherwise, return False
-            :param candle_value: The price data for the asset
-            :param candle_index: The index of the first candlestick in the resistance
-            :param before_candle_count: The number of candlesticks back you want to analyze
-            :param after_candle_count: The number of candlesticks after the can
-            :return: True if the price has been increasing for the last n1 periods and decreasing for the n2 periods
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -162,13 +152,10 @@ class Supres(Values):
                 """
                 t = 0
                 pattern_find = [col for col in df.columns]
-                # for col in df.columns:
-                #     pattern_find.append(col)
                 for pattern in pattern_row:
                     if pattern == 'pattern_found':
-                        # even pattern, odd date
+                        # pattern, date
                         pattern_list.append((pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))
-                        # pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
                     t += 1
                 return pattern_list
 
@@ -467,7 +454,7 @@ if __name__ == "__main__":
     print("Data path: ", path / file_name)
     try:
         perf = time.perf_counter()
-        historical_data.hist_data()
+        historical_data.historical_data_write(historical_data.ticker)
         if (path / file_name).is_file():  # Check .csv file is there or not
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
