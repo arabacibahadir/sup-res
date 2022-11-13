@@ -6,15 +6,14 @@ import frameselect
 print("Ticker and Time Frame:")  # Example:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
 ticker, frame_s = str(input().upper()).split()
 time_frame = frameselect.frame_select(frame_s)[0]
+start = frameselect.frame_select(frame_s)[1]
 # Creating a client object that is used to interact with the Binance API
 client = Client("", "")
-has_pair = any(ticker == i.get('symbol') for i in client.get_all_tickers())  # Check pair is in Binance API
-if has_pair:
+if any(ticker == i.get('symbol') for i in client.get_all_tickers()):  # Check pair is in Binance API
     print("Pair is in Binance API.")
 else:
     print("Pair is not in Binance API.")
     exit()
-start = frameselect.frame_select(frame_s)[1]
 file_name = ticker + ".csv"
 symbol_data = client.get_symbol_info(ticker)
 header_list = ('unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
@@ -43,7 +42,7 @@ def hist_data():
             # Reversing the order of the dataframe
             df = df.iloc[::-1]
             df.to_csv(file_name, header=header_list, index=False)
-            df = pd.read_csv(file_name)
+            # df = pd.read_csv(file_name)
             # Converting the unix time to a readable date format for today
             date = pd.to_datetime(df['unix'], unit='ms')
             df.insert(1, 'date', date)
