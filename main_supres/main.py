@@ -5,7 +5,7 @@ import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import delete_file
+# import delete_file
 import historical_data
 
 
@@ -225,8 +225,7 @@ class Supres(Values):
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
                 marker=dict(color=legend_color, size=14)))
-            # for pat1 in range(len(pattern_list)):  # Candlestick patterns
-            for pat1, count in enumerate(pattern_list):
+            for pat1, count in enumerate(pattern_list):  # Candlestick patterns
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"{pattern_list[pat1][1]} : {str(pattern_list[pat1][0]).capitalize()}",
                     mode="lines", marker=dict(color=legend_color, size=10)))
@@ -376,6 +375,8 @@ class Supres(Values):
             """
             Saves the image and html file of the plotly chart, then it tweets the image and text
             """
+            if not Path("images").exists():
+                Path("images").mkdir()
             image = \
                 f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
             fig.write_image(image, width=1920, height=1080)  # Save image for tweet
@@ -470,11 +471,13 @@ if __name__ == "__main__":
         if (path / file_name).is_file():  # Check .csv file is there or not
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
-            delete_file.remove(file_name)
+            print("Data analysis is done. Browser opening.")
+            Path(file_name).unlink()
+            print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
                         "Make sure you typed the filename correctly.")
 
     except KeyError:
-        delete_file.remove(file_name)
+        Path(file_name).unlink()
         raise KeyError("Key error, algorithm issue")
