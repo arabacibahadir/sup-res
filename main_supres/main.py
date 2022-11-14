@@ -1,11 +1,10 @@
-from pathlib import Path
+import os
 import time
 from dataclasses import dataclass
 import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-# import delete_file
 import historical_data
 
 
@@ -362,8 +361,8 @@ class Supres(Values):
             """
             Saves the image and html file of the plotly chart, then it tweets the image and text
             """
-            if not Path("images").exists():
-                Path("images").mkdir()
+            if not os.path.exists("../main_supres/images"):
+                os.mkdir("images")
             image = \
                 f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
             fig.write_image(image, width=1920, height=1080)  # Save image for tweet
@@ -446,25 +445,22 @@ class Supres(Values):
 
 
 if __name__ == "__main__":
-    print(f"Current directory: {Path.cwd()}")
-    # change the directory to the main_supres folder
-    path = Path.cwd().parent.joinpath("main_supres").resolve()
-    print(f"Changed directory to {path}")
+    os.chdir("../main_supres")  # Change the directory to the main_supres folder
     file_name = historical_data.file_name
-    print("Data path: ", path / file_name)
     try:
         perf = time.perf_counter()
         historical_data.historical_data_write(historical_data.ticker)
-        if (path / file_name).is_file():  # Check .csv file is there or not
+        if os.path.isfile(file_name):  # Check .csv file is there or not
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             print("Data analysis is done. Browser opening.")
-            Path(file_name).unlink()
+            #remove the .csv file
+            os.remove(file_name)
             print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
                         "Make sure you typed the filename correctly.")
 
     except KeyError:
-        Path(file_name).unlink()
+        os.remove(file_name)
         raise KeyError("Key error, algorithm issue")
