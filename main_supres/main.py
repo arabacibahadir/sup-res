@@ -5,7 +5,6 @@ import pandas as pd
 import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import delete_file
 import historical_data
 
 
@@ -45,12 +44,11 @@ class Supres(Values):
                                    historical_data.Client.KLINE_INTERVAL_12HOUR)
 
         # Sma, Rsi, Macd, Fibonacci variables
-        def indicators(ma_length1=10, ma_length2=50, ma_length3=100) -> tuple[tuple, tuple, tuple, tuple]:
+        def indicators(ma_length1=20, ma_length2=50, ma_length3=100) -> tuple[tuple, tuple, tuple, tuple]:
             """
             This function takes in three integer arguments, and returns a dataframe with three columns,
             each containing the moving average of the closing price for the given length.
-            
-            :param ma_length1: The length of the first moving average, defaults to 10 (optional)
+            :param ma_length1: The length of the first moving average, defaults to 20 (optional)
             :param ma_length2: The length of the second moving average, defaults to 50 (optional)
             :param ma_length3: The length of the third moving average, defaults to 100 (optional)
             """
@@ -64,13 +62,10 @@ class Supres(Values):
         sma1, sma2, sma3, rsi = indicators()
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
         support_above, support_below, resistance_below, resistance_above, x_date = [], [], [], [], ''
-        fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886, 1.13)
+        fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886)
         # Chart settings
-        legend_color = "#D8D8D8"
-        chart_color = "#E7E7E7"
-        background_color = "#E7E7E7"
-        support_line_color = "LightSeaGreen"
-        resistance_line_color = "MediumPurple"
+        legend_color, chart_color, background_color, support_line_color, resistance_line_color = \
+            "#D8D8D8", "#E7E7E7", "#E7E7E7", "LightSeaGreen", "MediumPurple"
         # Add a watermark to the plot
         watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
                                  font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
@@ -82,11 +77,6 @@ class Supres(Values):
             """
             If the price of the asset is increasing for the last before_candle_count and decreasing for
             the last after_candle_count, then return True. Otherwise, return False
-            :param candle_value: The price data for the asset
-            :param candle_index: The index of the first bar in the support
-            :param before_candle_count: The number of bars back you want to look
-            :param after_candle_count: The number of bars in the second trend
-            :return: True if the price of the price is supported by the previous low price, False if it is not
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -103,11 +93,6 @@ class Supres(Values):
             """
             If the price of the stock is increasing for the last before_candle_count and decreasing for the last
             after_candle_count, then return True. Otherwise, return False
-            :param candle_value: The price data for the asset
-            :param candle_index: The index of the first candlestick in the resistance
-            :param before_candle_count: The number of candlesticks back you want to analyze
-            :param after_candle_count: The number of candlesticks after the can
-            :return: True if the price has been increasing for the last n1 periods and decreasing for the n2 periods
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -158,21 +143,18 @@ class Supres(Values):
             df = candlestick.shooting_star(df, target='shooting_star')
             df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
 
-            def pattern_find_func(pattern_row, t=0, pattern_find=None) -> list:
+            def pattern_find_func(pattern_row) -> list:
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
                 the column name to a list and adds the date of the match to another list
                 """
-                if pattern_find is None:
-                    pattern_find = []
-                for col in df.columns:
-                    pattern_find.append(col)
+                t = 0
+                pattern_find = [col for col in df.columns]
                 for pattern in pattern_row:
                     if pattern == 'pattern_found':
-                        # even pattern, odd date
-                        pattern_list.append(pattern_find[t])
-                        pattern_list.append(pattern_row['date'].strftime('%b-%d-%y'))
+                        # pattern, date
+                        pattern_list.append((pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))
                     t += 1
                 return pattern_list
 
@@ -181,7 +163,7 @@ class Supres(Values):
                 pattern_find_func(df.iloc[item])
             return pattern_list
 
-        def sensitivity(sens=3) -> tuple[list, list]:
+        def sensitivity(sens=2) -> tuple[list, list]:
             """
             Find the support and resistance levels for a given asset
             sensitivity:1 is recommended for daily charts or high frequency trade scalping
@@ -194,7 +176,7 @@ class Supres(Values):
                     resistance_list.append((sens_row, df.high[sens_row]))
             return support_list, resistance_list
 
-        def check_lines() -> tuple[list, list]:
+        def chart_lines():
             """
             Check if the support and resistance lines are above or below the latest close price.
             """
@@ -203,12 +185,14 @@ class Supres(Values):
             # support_below. If it isn't, it is appending it to the list resistance_below.
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
-            latest_close = tuple(df['close'])[-1]
+            latest_close = df['close'].iloc[-1]
             for support_line in all_support_list:  # Find closes
                 if support_line < latest_close:
                     support_below.append(support_line)
                 else:
                     resistance_below.append(support_line)
+            if len(support_below) == 0:
+                support_below.append(df.low.min())
             # Check if the price is above the latest close price. If it is, it is appending it to the
             # resistance_above list. If it is not, it is appending it to the support_above list.
             for resistance_line in all_resistance_list:
@@ -216,7 +200,9 @@ class Supres(Values):
                     resistance_above.append(resistance_line)
                 else:
                     support_above.append(resistance_line)
-            return list(all_support_list), list(all_resistance_list)
+            if len(resistance_above) == 0:
+                resistance_above.append(df.high.max())
+            return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
         def legend_candle_patterns() -> None:
             fig.add_trace(go.Scatter(
@@ -225,32 +211,15 @@ class Supres(Values):
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name="Latest Candlestick Patterns", mode="markers",
                 marker=dict(color=legend_color, size=14)))
-            for pat1 in range(1, len(pattern_list), 2):  # Candlestick patterns
+            for pat1, count in enumerate(pattern_list):  # Candlestick patterns
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"{pattern_list[pat1]} -> {pattern_list[pat1 - 1]}", mode="lines",
-                    marker=dict(color=legend_color, size=10)))
-
-        def levels() -> tuple[list, list]:
-            # Check if the support level is empty. If it is, it appends the minimum value of the low
-            # column to the list.
-            if len(support_below) == 0:
-                support_below.append(df.low.min())
-            # Check if the resistance level is empty. If it is, it appends the minimum value of the high
-            # column to the list.
-            if len(resistance_above) == 0:
-                resistance_above.append(df.high.max())
-            # Compute the Fibonacci sequence for the numbers in the range of the last element of the
-            # resistance_above list and the last element of the support_below list.
-            return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
+                    y=[support_list[0]], name=f"{pattern_list[pat1][1]} : {str(pattern_list[pat1][0]).capitalize()}",
+                    mode="lines", marker=dict(color=legend_color, size=10)))
 
         def create_candlestick_plot() -> None:
-            fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date),
-                                         name="Candlestick",
-                                         text=df['date'].dt.strftime(x_date),
-                                         open=df['open'],
-                                         high=df['high'],
-                                         low=df['low'],
-                                         close=df['close']), row=1, col=1)
+            fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date), name="Candlestick",
+                                         text=df['date'].dt.strftime(x_date), open=df['open'], high=df['high'],
+                                         low=df['low'], close=df['close']), row=1, col=1)
             fig.update_layout(annotations=[watermark_layout])
 
         def add_volume_subplot() -> None:
@@ -264,10 +233,11 @@ class Supres(Values):
             fig.add_hline(y=70, name="RSI higher band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
             fig.add_hrect(y0=30, y1=70, line_width=0, fillcolor="gray", opacity=0.2, row=3, col=1)
 
-        def draw_support(c=0) -> None:
+        def draw_support() -> None:
             """
             Draws the support lines and adds annotations to the chart.
             """
+            c = 0
             while True:
                 if c > len(support_list) - 1:
                     break
@@ -280,10 +250,11 @@ class Supres(Values):
                                    font=dict(size=15, color=support_line_color))
                 c += 1
 
-        def draw_resistance(c=0) -> None:
+        def draw_resistance() -> None:
             """
             Draws the resistance lines and adds annotations to the chart.
             """
+            c = 0
             while True:
                 if c > len(resistance_list) - 1:
                     break
@@ -305,15 +276,16 @@ class Supres(Values):
             if sample_price < 1:
                 str_price_len = len(str(sample_price))
 
-            def legend_support_resistance_values(temp=0) -> None:
+            def legend_support_resistance_values() -> None:
+                temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
-                differ = len(float_resistance_above) - len(float_support_below)
+                differ = abs(len(float_resistance_above) - len(float_support_below))
                 try:
                     if differ < 0:
-                        for i in range(abs(differ)):
+                        for i in range(differ):
                             float_resistance_above.extend([0])
-                    if differ > 0:
-                        for i in range(abs(differ)):
+                    if differ >= 0:
+                        for i in range(differ):
                             float_support_below.extend([0])
                     for _ in range(max(len(float_resistance_above), len(float_support_below))):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
@@ -322,11 +294,8 @@ class Supres(Values):
                         else:
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
-                        fig.add_trace(go.Scatter(
-                            y=[support_list[0]],
-                            name=legend_supres,
-                            mode="lines",
-                            marker=dict(color=legend_color, size=10)))
+                        fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
+                                      marker=dict(color=legend_color, size=10)))
                         if temp != 14:
                             temp += 1
                         else:
@@ -339,22 +308,22 @@ class Supres(Values):
                     y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
                     marker=dict(color=legend_color, size=0)))
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"-------  twitter.com/sup_res  --------", mode="markers",
+                    y=[support_list[0]], name=f"-------  twitter.com/wykonos  --------", mode="markers",
                     marker=dict(color=legend_color, size=0)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"RSI         : {int(rsi[-1])}", mode="lines",
+                    y=[support_list[0]], name=f"RSI        : {int(rsi[-1])}", mode="lines",
                     marker=dict(color=legend_color, size=10)))
                 # Add SMA10, SMA50, and SMA100 to the chart and legend
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma1,
-                                         name=f"SMA10     : {float(sma1[-1]):.{str_price_len}f}",
+                                         name=f"SMA1     : {float(sma1[-1]):.{str_price_len}f}",
                                          line=dict(color='#5c6cff', width=3)))
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma2,
-                                         name=f"SMA50     : {float(sma2[-1]):.{str_price_len}f}",
+                                         name=f"SMA2     : {float(sma2[-1]):.{str_price_len}f}",
                                          line=dict(color='#950fba', width=3)))
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma3,
-                                         name=f"SMA100   : {float(sma3[-1]):.{str_price_len}f}",
+                                         name=f"SMA3     : {float(sma3[-1]):.{str_price_len}f}",
                                          line=dict(color='#a69b05', width=3)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
@@ -405,7 +374,7 @@ class Supres(Values):
                          f"{selected_timeframe} Support and resistance levels \n " \
                          f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
 
-            def for_tweet() -> None:
+            def send_tweet() -> None:
                 """
                 Takes a screenshot of a chart, then tweets it with a caption.
                 """
@@ -423,7 +392,7 @@ class Supres(Values):
                                                        f"Sup={support_below_nonzero[:7]}",
                                                 in_reply_to_status_id=tweet.is_image_tweet().id)
                     break
-            # for_tweet()
+            # send_tweet()
 
         def pinescript_code() -> str:
             """
@@ -448,14 +417,13 @@ class Supres(Values):
                 ls = f"hline({line_sup}, title=\"Lines\", color=color.green, linestyle=hline.style_solid, linewidth=1)"
                 pinescript_lines.append(ls)
             lines = '\n'.join(map(str, pinescript_lines))
-            # Create a new file called pinescript.txt and write the lines_sma and lines variables to the file
-            file = open("../main_supres/pinescript.txt", "w")
-            file.write(lines_sma + lines)
-            file.close()
+            # Create a new file that called pinescript.txt and write the lines_sma and lines variables to the file
+            with open("../main_supres/pinescript.txt", "w") as pine:
+                pine.writelines(lines_sma + lines)
             return lines
 
         sensitivity()
-        check_lines()
+        chart_lines()
         if selected_timeframe in historical_hightimeframe:
             candlestick_patterns()
             x_date = '%b-%d-%y'
@@ -464,7 +432,6 @@ class Supres(Values):
         create_candlestick_plot()
         add_volume_subplot()
         add_rsi_subplot()
-        levels()
         float_resistance_above = list(map(float, sorted(resistance_above + resistance_below)))
         float_support_below = list(map(float, sorted(support_below + support_above, reverse=True)))
         draw_support()
@@ -472,7 +439,7 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        pinescript_code()
+        # pinescript_code()
         print(f"Completed execution in {time.perf_counter() - perf} seconds")
         return fig.show(id='the_graph', config={'displaylogo': False})
 
@@ -482,15 +449,18 @@ if __name__ == "__main__":
     file_name = historical_data.file_name
     try:
         perf = time.perf_counter()
-        historical_data.hist_data()
+        historical_data.historical_data_write(historical_data.ticker)
         if os.path.isfile(file_name):  # Check .csv file is there or not
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
-            delete_file.remove(file_name)
+            print("Data analysis is done. Browser opening.")
+            #remove the .csv file
+            os.remove(file_name)
+            print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
                         "Make sure you typed the filename correctly.")
 
     except KeyError:
-        delete_file.remove(file_name)
+        os.remove(file_name)
         raise KeyError("Key error, algorithm issue")
