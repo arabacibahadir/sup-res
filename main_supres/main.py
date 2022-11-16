@@ -62,14 +62,14 @@ class Supres(Values):
         sma1, sma2, sma3, rsi = indicators()
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
         support_above, support_below, resistance_below, resistance_above, x_date = [], [], [], [], ''
-        fibonacci_multipliers = (0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886)
+        fibonacci_multipliers = 0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886
         # Chart settings
         legend_color, chart_color, background_color, support_line_color, resistance_line_color = \
             "#D8D8D8", "#E7E7E7", "#E7E7E7", "LightSeaGreen", "MediumPurple"
         # Add a watermark to the plot
-        watermark_layout = (dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
-                                 font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
-                                 showarrow=False))
+        watermark_layout = dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
+                                font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
+                                showarrow=False)
         fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
                             vertical_spacing=0, row_width=[0.1, 0.1, 0.8])
 
@@ -205,6 +205,9 @@ class Supres(Values):
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
         def legend_candle_patterns() -> None:
+            """
+            The function takes the list of candlestick patterns and adds them to the chart as a legend text.
+            """
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name="----------------------------------------", mode="markers",
                 marker=dict(color=legend_color, size=14)))
@@ -217,16 +220,27 @@ class Supres(Values):
                     mode="lines", marker=dict(color=legend_color, size=10)))
 
         def create_candlestick_plot() -> None:
+            """
+            Creates a candlestick plot using the dataframe df, and adds it to the figure.
+            """
             fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date), name="Candlestick",
                                          text=df['date'].dt.strftime(x_date), open=df['open'], high=df['high'],
                                          low=df['low'], close=df['close']), row=1, col=1)
             fig.update_layout(annotations=[watermark_layout])
 
         def add_volume_subplot() -> None:
+            """
+            Adds a volume subplot to the figure
+            """
             fig.add_trace(go.Bar(x=df['date'][:-1].dt.strftime(x_date), y=df['Volume USDT'], name="Volume USDT",
                                  showlegend=False), row=2, col=1)
 
         def add_rsi_subplot() -> None:
+            """
+            Adds a subplot to the figure object called fig, which is a 3x1 grid of subplots. The
+            subplot is a scatter plot of the RSI values, with a horizontal line at 30 and 70, and a gray
+            rectangle between the two lines.
+            """
             fig.add_trace(go.Scatter(x=df['date'][:-1].dt.strftime(x_date), y=rsi, name="RSI",
                                      showlegend=False), row=3, col=1)
             fig.add_hline(y=30, name="RSI lower band", line=dict(color='red', width=1), line_dash='dash', row=3, col=1)
@@ -268,6 +282,10 @@ class Supres(Values):
                 c += 1
 
         def legend_texts() -> None:
+            """
+            Adds a trace to the chart for each indicator, and then adds a trace for each indicator's
+            value
+            """
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
                 marker=dict(color=resistance_line_color, size=10)))
@@ -277,6 +295,9 @@ class Supres(Values):
                 str_price_len = len(str(sample_price))
 
             def legend_support_resistance_values() -> None:
+                """
+                Takes the support and resistance values and adds them to the legend.
+                """
                 temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
                 differ = abs(len(float_resistance_above) - len(float_support_below))
@@ -296,7 +317,7 @@ class Supres(Values):
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                         fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
                                       marker=dict(color=legend_color, size=10)))
-                        if temp != 14:
+                        if temp <= 14:
                             temp += 1
                         else:
                             break
@@ -304,6 +325,9 @@ class Supres(Values):
                     pass
 
             def text_and_indicators() -> None:
+                """
+                Adds a trace to the chart for each indicator, and then adds a trace for each indicator's value.
+                """
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
                     marker=dict(color=legend_color, size=0)))
@@ -330,7 +354,9 @@ class Supres(Values):
                     marker=dict(color=legend_color, size=0)))
 
             def legend_fibonacci() -> None:
-                # Add a line to the legend for each Fibonacci level
+                """
+                Adds to the legend for each Fibonacci level text.
+                """
                 mtp = len(fibonacci_multipliers) - 1
                 for _ in fibonacci_uptrend:
                     fig.add_trace(go.Scatter(
@@ -350,6 +376,9 @@ class Supres(Values):
                 legend_candle_patterns()
 
         def chart_updates() -> None:
+            """
+            Updates the chart's layout, background color, chart color, legend color, and margin.
+            """
             fig.update_layout(title=str(f"{historical_data.ticker} {selected_timeframe.upper()} Chart"),
                               hovermode='x', dragmode="zoom",
                               paper_bgcolor=background_color, plot_bgcolor=chart_color, xaxis_rangeslider_visible=False,
@@ -424,6 +453,7 @@ class Supres(Values):
 
         sensitivity()
         chart_lines()
+        # Checking if the selected timeframe is in the historical_hightimeframe list.
         if selected_timeframe in historical_hightimeframe:
             candlestick_patterns()
             x_date = '%b-%d-%y'
@@ -454,7 +484,7 @@ if __name__ == "__main__":
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             print("Data analysis is done. Browser opening.")
-            #remove the .csv file
+            # remove the .csv file
             os.remove(file_name)
             print(f"{file_name} file deleted.")
         else:
