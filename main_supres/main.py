@@ -46,7 +46,7 @@ class Supres(Values):
         # Sma, Rsi, Macd, Fibonacci variables
         def indicators(ma_length1=20, ma_length2=50, ma_length3=100) -> tuple[tuple, tuple, tuple, tuple]:
             """
-            This function takes in three integer arguments, and returns a dataframe with three columns,
+            Takes in three integer arguments, and returns a dataframe with three columns,
             each containing the moving average of the closing price for the given length.
             :param ma_length1: The length of the first moving average, defaults to 20 (optional)
             :param ma_length2: The length of the second moving average, defaults to 50 (optional)
@@ -66,17 +66,13 @@ class Supres(Values):
         # Chart settings
         legend_color, chart_color, background_color, support_line_color, resistance_line_color = \
             "#D8D8D8", "#E7E7E7", "#E7E7E7", "LightSeaGreen", "MediumPurple"
-        # Add a watermark to the plot
-        watermark_layout = dict(name="draft watermark", text="twitter.com/sup_res", textangle=-30, opacity=0.15,
-                                font=dict(color="black", size=100), xref="paper", yref="paper", x=0.5, y=0.3,
-                                showarrow=False)
         fig = make_subplots(rows=3, cols=1, shared_xaxes=True,
                             vertical_spacing=0, row_width=[0.1, 0.1, 0.8])
 
         def support(candle_value, candle_index, before_candle_count, after_candle_count) -> (bool | None):
             """
             If the price of the asset is increasing for the last before_candle_count and decreasing for
-            the last after_candle_count, then return True. Otherwise, return False
+            the last after_candle_count, then return True. Otherwise, return False.
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -92,7 +88,7 @@ class Supres(Values):
         def resistance(candle_value, candle_index, before_candle_count, after_candle_count) -> (bool | None):
             """
             If the price of the stock is increasing for the last before_candle_count and decreasing for the last
-            after_candle_count, then return True. Otherwise, return False
+            after_candle_count, then return True. Otherwise, return False.
             """
             try:
                 for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
@@ -109,7 +105,7 @@ class Supres(Values):
             """
             Uptrend Fibonacci Retracement Formula =>
             Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-            :param high_price: High price for the current price level
+            :param high_price: High price for the period
             :param low_price: Low price for the period
             """
             for multiplier in fibonacci_multipliers:
@@ -121,7 +117,8 @@ class Supres(Values):
 
         def candlestick_patterns() -> list:
             """
-            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe
+            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe then returns
+            pattern list.
             """
             from candlestick import candlestick
             nonlocal df
@@ -147,7 +144,7 @@ class Supres(Values):
                 """
                 The function takes in a dataframe and a list of column names. It then iterates through the
                 list of column names and checks if the column name is in the dataframe. If it is, it adds
-                the column name to a list and adds the date of the match to another list
+                the column name to a list and adds the date of the match to another list.
                 """
                 t = 0
                 pattern_find = [col for col in df.columns]
@@ -165,8 +162,8 @@ class Supres(Values):
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
-            Find the support and resistance levels for a given asset
-            sensitivity:1 is recommended for daily charts or high frequency trade scalping
+            Find the support and resistance levels for a given asset.
+            sensitivity:1 is recommended for daily charts or high frequency trade scalping.
             :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
             """
             for sens_row in range(3, len(df) - 1):
@@ -226,11 +223,11 @@ class Supres(Values):
             fig.add_trace(go.Candlestick(x=df['date'][:-1].dt.strftime(x_date), name="Candlestick",
                                          text=df['date'].dt.strftime(x_date), open=df['open'], high=df['high'],
                                          low=df['low'], close=df['close']), row=1, col=1)
-            fig.update_layout(annotations=[watermark_layout])
+
 
         def add_volume_subplot() -> None:
             """
-            Adds a volume subplot to the figure
+            Adds a volume subplot to the figure.
             """
             fig.add_trace(go.Bar(x=df['date'][:-1].dt.strftime(x_date), y=df['Volume USDT'], name="Volume USDT",
                                  showlegend=False), row=2, col=1)
@@ -283,8 +280,7 @@ class Supres(Values):
 
         def legend_texts() -> None:
             """
-            Adds a trace to the chart for each indicator, and then adds a trace for each indicator's
-            value
+            Adds a trace to the chart for each indicator, and then adds a trace for each indicator's value.
             """
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
