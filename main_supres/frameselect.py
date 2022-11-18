@@ -11,7 +11,7 @@ frame_select_dict = {"1M": [Client.KLINE_INTERVAL_1MINUTE, -260],
                      "4H": [Client.KLINE_INTERVAL_4HOUR, -1040],
                      "6H": [Client.KLINE_INTERVAL_6HOUR, -1560],
                      "8H": [Client.KLINE_INTERVAL_8HOUR, -2080],
-                     "12H": [Client.KLINE_INTERVAL_12HOUR, -15],
+                     "12H": [Client.KLINE_INTERVAL_12HOUR, -3120],
                      "1D": [Client.KLINE_INTERVAL_1DAY, -260],
                      "3D": [Client.KLINE_INTERVAL_3DAY, -780]}
 
