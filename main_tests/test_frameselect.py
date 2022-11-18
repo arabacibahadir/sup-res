@@ -1,0 +1,32 @@
+from main_supres import frameselect
+from datetime import datetime, timedelta
+
+
+def test_frameselect():
+    today = datetime.now()
+    m1 = today - timedelta(minutes=260)
+    m3 = today - timedelta(minutes=780)
+    m5 = today - timedelta(minutes=1300)
+    m15 = today - timedelta(minutes=3900)
+    m30 = today - timedelta(minutes=7800)
+    h1 = today - timedelta(hours=260)
+    h2 = today - timedelta(hours=520)
+    h4 = today - timedelta(hours=1040)
+    h6 = today - timedelta(hours=1560)
+    h8 = today - timedelta(hours=2080)
+    h12 = today - timedelta(hours=15)
+    d1 = today - timedelta(days=260)
+    d3 = today - timedelta(days=780)
+    assert frameselect.frame_select("1M") == ("1m", m1.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("3M") == ("3m", m3.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("5M") == ("5m", m5.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("15M") == ("15m", m15.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("30M") == ("30m", m30.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("1H") == ("1h", h1.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("2H") == ("2h", h2.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("4H") == ("4h", h4.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("6H") == ("6h", h6.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("8H") == ("8h", h8.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("12H") == ("12h", h12.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("1D") == ("1d", d1.strftime("%d %B, %Y"))
+    assert frameselect.frame_select("3D") == ("3d", d3.strftime("%d %B, %Y"))
