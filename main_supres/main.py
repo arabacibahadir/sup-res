@@ -224,7 +224,6 @@ class Supres(Values):
                                          text=df['date'].dt.strftime(x_date), open=df['open'], high=df['high'],
                                          low=df['low'], close=df['close']), row=1, col=1)
 
-
         def add_volume_subplot() -> None:
             """
             Adds a volume subplot to the figure.
@@ -285,10 +284,8 @@ class Supres(Values):
             fig.add_trace(go.Scatter(
                 y=[support_list[0]], name=f"Resistances    ||   Supports", mode="markers+lines",
                 marker=dict(color=resistance_line_color, size=10)))
-            str_price_len = 3
             sample_price = df['close'][0]
-            if sample_price < 1:
-                str_price_len = len(str(sample_price))
+            str_price_len = len(str(sample_price)) if sample_price < 1 else 3
 
             def legend_support_resistance_values() -> None:
                 """
@@ -312,11 +309,8 @@ class Supres(Values):
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                         fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
-                                      marker=dict(color=legend_color, size=10)))
-                        if temp <= 14:
-                            temp += 1
-                        else:
-                            break
+                                                 marker=dict(color=legend_color, size=10)))
+                        temp += 1 if temp < 14 else 0
                 except IndexError:
                     pass
 
@@ -326,9 +320,6 @@ class Supres(Values):
                 """
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
-                    marker=dict(color=legend_color, size=0)))
-                fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"-------  twitter.com/wykonos  --------", mode="markers",
                     marker=dict(color=legend_color, size=0)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
