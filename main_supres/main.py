@@ -153,8 +153,8 @@ class Supres(Values):
                 return pattern_list
 
             # Loop through the dataframe and find the pattern in the dataframe
-            for item in range(-3, -30, -1):
-                pattern_find_func(df.iloc[item])
+            for _ in range(-3, -30, -1):
+                pattern_find_func(df.iloc[_])
             return pattern_list
 
         def sensitivity(sens=2) -> tuple[list, list]:
@@ -293,10 +293,10 @@ class Supres(Values):
                 differ = abs(len(float_resistance_above) - len(float_support_below))
                 try:
                     if differ < 0:
-                        for i in range(differ):
+                        for _ in range(differ):
                             float_resistance_above.extend([0])
                     if differ >= 0:
-                        for i in range(differ):
+                        for _ in range(differ):
                             float_support_below.extend([0])
                     for _ in range(max(len(float_resistance_above), len(float_support_below))):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
@@ -318,8 +318,6 @@ class Supres(Values):
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"github.com/arabacibahadir/sup-res", mode="markers",
                     marker=dict(color=legend_color, size=0)))
-                fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"RSI          : {int(rsi[-1])}", mode="lines",
                     marker=dict(color=legend_color, size=10)))
