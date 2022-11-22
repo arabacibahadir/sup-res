@@ -44,13 +44,10 @@ class Supres(Values):
                                    historical_data.Client.KLINE_INTERVAL_12HOUR)
 
         # Sma, Rsi, Macd, Fibonacci variables
-        def indicators(ma_length1=20, ma_length2=50, ma_length3=100) -> tuple[tuple, tuple, tuple, tuple]:
+        def indicators(ma_length1, ma_length2, ma_length3) -> tuple[tuple, tuple, tuple, tuple]:
             """
             Takes in three integer arguments, and returns a dataframe with three columns,
             each containing the moving average of the closing price for the given length.
-            :param ma_length1: The length of the first moving average, defaults to 20 (optional)
-            :param ma_length2: The length of the second moving average, defaults to 50 (optional)
-            :param ma_length3: The length of the third moving average, defaults to 100 (optional)
             """
             dfsma = df[:-1]
             sma_1 = tuple((dfsma.ta.sma(ma_length1)))
@@ -58,8 +55,8 @@ class Supres(Values):
             sma_3 = tuple((dfsma.ta.sma(ma_length3)))
             rsi_tuple = tuple((ta.rsi(df['close'][:-1])))
             return sma_1, sma_2, sma_3, rsi_tuple
-
-        sma1, sma2, sma3, rsi = indicators()
+        sma_values = 20, 50, 100
+        sma1, sma2, sma3, rsi = indicators(*sma_values)
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
         support_above, support_below, resistance_below, resistance_above, x_date = [], [], [], [], ''
         fibonacci_multipliers = 0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886
@@ -324,17 +321,17 @@ class Supres(Values):
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"Indicators", mode="markers", marker=dict(color=legend_color, size=14)))
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"RSI        : {int(rsi[-1])}", mode="lines",
+                    y=[support_list[0]], name=f"RSI          : {int(rsi[-1])}", mode="lines",
                     marker=dict(color=legend_color, size=10)))
-                # Add SMA10, SMA50, and SMA100 to the chart and legend
+                # Add SMA1, SMA2, and SMA3 to the chart and legend
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma1,
-                                         name=f"SMA1     : {float(sma1[-1]):.{str_price_len}f}",
+                                         name=f"SMA{sma_values[0]}     : {float(sma1[-1]):.{str_price_len}f}",
                                          line=dict(color='#5c6cff', width=3)))
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma2,
-                                         name=f"SMA2     : {float(sma2[-1]):.{str_price_len}f}",
+                                         name=f"SMA{sma_values[1]}     : {float(sma2[-1]):.{str_price_len}f}",
                                          line=dict(color='#950fba', width=3)))
                 fig.add_trace(go.Scatter(x=df['date'].dt.strftime(x_date), y=sma3,
-                                         name=f"SMA3     : {float(sma3[-1]):.{str_price_len}f}",
+                                         name=f"SMA{sma_values[2]}   : {float(sma3[-1]):.{str_price_len}f}",
                                          line=dict(color='#a69b05', width=3)))
                 fig.add_trace(go.Scatter(
                     y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
@@ -412,7 +409,7 @@ class Supres(Values):
 
         def pinescript_code() -> str:
             """
-            It takes resistance and support lines, and writes them to a file called pinescript.txt.
+            Writes resistance and support lines to a file called pinescript.txt.
             """
             pinescript_lines = []
             lines_sma = f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {selected_timeframe}'," \
