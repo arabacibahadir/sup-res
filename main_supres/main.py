@@ -147,8 +147,8 @@ class Supres(Values):
                 pattern_find = [col for col in df.columns]
                 for pattern in pattern_row:
                     if pattern == 'pattern_found':
-                        # pattern, date
-                        pattern_list.append((pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))
+                        pattern_list.append(
+                            (pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))  # pattern, date
                     t += 1
                 return pattern_list
 
@@ -332,7 +332,7 @@ class Supres(Values):
                                          name=f"SMA{sma_values[2]}   : {float(sma3[-1]):.{str_price_len}f}",
                                          line=dict(color='#a69b05', width=3)))
                 fig.add_trace(go.Scatter(
-                    y=[support_list[0]], name=f"-- Fibonacci Uptrend | Downtrend --", mode="markers",
+                    y=[support_list[0]], name=f"       Fibonacci Uptrend | Downtrend ", mode="markers",
                     marker=dict(color=legend_color, size=0)))
 
             def legend_fibonacci() -> None:
