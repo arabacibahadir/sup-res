@@ -52,9 +52,9 @@ user_handle = '@HANDLE-NAME'
 
 Pine Script file will be created after run successfully main function. 
 
-Your python alias could be different like "py, python3", you should change your alias if you are using telegram-bot if your python alias is different. 
+Your python alias might be different like "py, python3", you should change your alias if you are using telegram-bot if your python alias is different. 
 
->You can get more precise lines by changing sensitivity of the data in the code. 
+>By adjusting the sensitivity of the data in the code, you can obtain lines that are more precise.
 
 
 ![chart](https://user-images.githubusercontent.com/32988819/166165460-b1e2be3e-014c-4aea-83e6-c118075f68df.png)
@@ -62,11 +62,11 @@ Your python alias could be different like "py, python3", you should change your 
 
  
 ## Main Motivation :books:
-New investors are investing without having any technical knowledge. Also, those with little experience follow the price actions and make their buys and sells according to various charts. Technical analysis is the bulk of this work.
+Those who are new to investing do so without any technical expertise. Additionally, individuals who have limited experience make their buys and sells in accordance with various charts and follow the price actions. The main focus of this work is technical analysis.
 
-I worked on a code that could provide help for users who don't have much experience with _price action_. If you really have no idea and are investing, then don't. Before investing, you should observe the market movements and do not get **FOMO**.
+I worked on a piece of code that could be useful for users with little prior knowledge of price action. Don't invest if you really have no idea what you're doing. You should keep an eye on market trends before investing and try not to feel **FOMO**.
 
-Supports and resistances are generally zones, not just lines. Especially in cryptocurrencies, markets push you towards points where you can stop your position. Watch out for high volume breakouts, sudden price changes, and trend reversals. If you are investing in low volume coins, it is very dangerous to trade on new coin charts without support and resistance levels.
+Zones rather than just lines typically represent supports and resistances. Markets push you toward points where you can stop your position, particularly in cryptocurrencies. Keep an eye out for breakouts with high volume, sudden price changes, and trend reversals. It is extremely risky to trade on new coin charts without support and resistance levels if you are investing in low volume coins.
 
 
 ![image](https://user-images.githubusercontent.com/32988819/166165539-5a4eea0a-456e-482d-aa56-96b5eaffc37a.png)
@@ -74,7 +74,7 @@ Supports and resistances are generally zones, not just lines. Especially in cryp
 
 ## Support-Resistance Lines :chart_with_downwards_trend:
 
-If a pair has failed to break a point multiple times or has risen by repeatedly tapping that point, you can draw a reliable line there. The general opinion is that this price should be touched at least 2 times, if possible, 3 times. If there are more touches, reliability increases. If the current price is above the old resistance, this resistance will act as support. Vice versa is also true.
+You can draw a trustworthy line at a point where a pair has repeatedly failed to break it or has advanced by tapping it. The consensus is that this price should be touched at least twice and ideally three times. Reliability rises as the number of touches increases. If the price moves below the support line, this support will act as resistance. The opposite is also true. If the price breaks the resistance, it can work as support, but these situations should be fully supported by volume.
 
 ![28sep](https://user-images.githubusercontent.com/32988819/135044659-579b26c8-8141-41c2-9b4e-d3c99b41b571.png)
 
@@ -88,7 +88,7 @@ _28 September 2021 BTCUSDT Binance_
 [Fibonacci Retracement Levels](https://www.investopedia.com/terms/f/fibonacciretracement.asp),
 [Candlestick Patterns](https://www.elearnmarkets.com/blog/30-candlestick-charts-in-stock-market/)
 
-Never rely on just one piece of data and indicators, it can be misleading. Always include _fundamental analysis_ alongside _technical analysis_.
+Never rely solely on a single piece of information or indicator as this can be deceptive. Fundamental analysis should always be combined with technical analysis.
 
 ![legend](https://user-images.githubusercontent.com/32988819/168901021-81d885d4-19de-4ba6-a3d0-c69faf2ccbf5.png)
 
@@ -121,7 +121,7 @@ Also telegram bot works with Pine Script.
 
 
 ## Contributing :handshake:
-Pull requests are welcome, any contributions you make are greatly appreciated. Before PR please open an issue what you would like to change.
+Pull requests are welcome, any contributions you make are greatly appreciated. Please open an issue with what you want changed before submitting a PR.
 
 Follow [PEP 8 Coding Style guidelines](https://www.python.org/dev/peps/pep-0008/).
 
