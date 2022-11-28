@@ -431,6 +431,19 @@ class Supres(Values):
             # Create a new file that called pinescript.txt and write the lines_sma and lines variables to the file
             with open("../main_supres/pinescript.txt", "w") as pine:
                 pine.writelines(lines_sma + lines)
+
+                def ichimoku():  # read ichimoku_cloud.txt and write it to pinescript.txt
+                    with open("../main_supres/ichimoku_cloud.txt", "r") as ichimoku_read:
+                        # write a blank line to separate the ichimoku cloud from the support and resistance lines
+                        pine.write("\n")
+                        pine.writelines(ichimoku_read.read())
+
+                def daily_levels():
+                    with open("../main_supres/daily_levels.txt", "r") as d_levels:
+                        pine.write("\n")
+                        pine.writelines(d_levels.read())
+                ichimoku()
+                daily_levels()
             return lines
 
         sensitivity()
