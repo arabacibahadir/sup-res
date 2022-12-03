@@ -433,13 +433,13 @@ class Supres(Values):
                 pine.writelines(lines_sma + lines)
 
                 def ichimoku():  # read ichimoku_cloud.txt and write it to pinescript.txt
-                    with open("../main_supres/ichimoku_cloud.txt", "r") as ichimoku_read:
+                    with open("pinescripts/ichimoku_cloud.txt", "r") as ichimoku_read:
                         # write a blank line to separate the ichimoku cloud from the support and resistance lines
                         pine.write("\n")
                         pine.writelines(ichimoku_read.read())
 
                 def daily_levels():
-                    with open("../main_supres/daily_levels.txt", "r") as d_levels:
+                    with open("pinescripts/daily_levels.txt", "r") as d_levels:
                         pine.write("\n")
                         pine.writelines(d_levels.read())
                 ichimoku()
@@ -464,7 +464,7 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        # pinescript_code()
+        pinescript_code()
         print(f"Completed execution in {time.perf_counter() - perf} seconds")
         return fig.show(id='the_graph', config={'displaylogo': False})
 
