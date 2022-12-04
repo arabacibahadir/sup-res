@@ -1,4 +1,3 @@
-import csv
 import pandas as pd
 from binance.client import Client
 import frameselect
