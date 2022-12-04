@@ -119,23 +119,29 @@ class Supres(Values):
             """
             from candlestick import candlestick
             nonlocal df
-            df = candlestick.inverted_hammer(df, target='inverted_hammer')
-            df = candlestick.hammer(df, target='hammer')
-            df = candlestick.doji(df, target='doji')
-            df = candlestick.bearish_harami(df, target='bearish_harami')
-            df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
-            df = candlestick.bullish_harami(df, target='bullish_harami')
-            df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
-            df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
-            df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
-            df = candlestick.hanging_man(df, target='hanging_man')
-            df = candlestick.gravestone_doji(df, target='gravestone_doji')
-            df = candlestick.morning_star(df, target='morning_star')
-            df = candlestick.morning_star_doji(df, target='morning_star_doji')
-            df = candlestick.piercing_pattern(df, target='piercing_pattern')
-            df = candlestick.star(df, target='star')
-            df = candlestick.shooting_star(df, target='shooting_star')
-            df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
+            all_patterns = [
+                candlestick.inverted_hammer,
+                candlestick.hammer,
+                candlestick.doji,
+                candlestick.bearish_harami,
+                candlestick.bearish_engulfing,
+                candlestick.bullish_harami,
+                candlestick.bullish_engulfing,
+                candlestick.dark_cloud_cover,
+                candlestick.dragonfly_doji,
+                candlestick.hanging_man,
+                candlestick.gravestone_doji,
+                candlestick.morning_star,
+                candlestick.morning_star_doji,
+                candlestick.piercing_pattern,
+                candlestick.star,
+                candlestick.shooting_star]
+            # Loop through the candlestick pattern functions
+            for pattern in all_patterns:
+                # Apply the candlestick pattern function to the data frame
+                df = pattern(df)
+            # Replace True values with 'pattern_found'
+            df.replace({True: 'pattern_found'}, inplace=True)
 
             def pattern_find_func(pattern_row) -> list:
                 """
@@ -145,17 +151,13 @@ class Supres(Values):
                 """
                 t = 0
                 pattern_find = [col for col in df.columns]
-                for pattern in pattern_row:
-                    if pattern == 'pattern_found':
+                for pattern_f in pattern_row:
+                    if pattern_f == 'pattern_found':
                         pattern_list.append(
                             (pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))  # pattern, date
                     t += 1
                 return pattern_list
-
-            # Loop through the dataframe and find the pattern in the dataframe
-            for _ in range(-3, -30, -1):
-                pattern_find_func(df.iloc[_])
-            return pattern_list
+            return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
@@ -186,7 +188,7 @@ class Supres(Values):
                 else:
                     resistance_below.append(support_line)
             if len(support_below) == 0:
-                support_below.append(df.low.min())
+                support_below.append(min(df.low))
             # Check if the price is above the latest close price. If it is, it is appending it to the
             # resistance_above list. If it is not, it is appending it to the support_above list.
             for resistance_line in all_resistance_list:
@@ -195,7 +197,7 @@ class Supres(Values):
                 else:
                     support_above.append(resistance_line)
             if len(resistance_above) == 0:
-                resistance_above.append(df.high.max())
+                resistance_above.append(max(df.high))
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
         def legend_candle_patterns() -> None:
