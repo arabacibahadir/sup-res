@@ -292,12 +292,10 @@ class Supres(Values):
                 blank = " " * (len(str(sample_price)) + 1)
                 differ = abs(len(float_resistance_above) - len(float_support_below))
                 try:
-                    if differ < 0:
-                        for _ in range(differ):
-                            float_resistance_above.extend([0])
-                    if differ >= 0:
-                        for _ in range(differ):
-                            float_support_below.extend([0])
+                    if len(float_resistance_above) < len(float_support_below):
+                        float_resistance_above.extend([0] * differ)
+                    else:
+                        float_support_below.extend([0] * differ)
                     for _ in range(max(len(float_resistance_above), len(float_support_below))):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
@@ -381,9 +379,9 @@ class Supres(Values):
                 f"../main_supres/images/"
                 f"{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
                 full_html=False, include_plotlyjs='cdn')
-            text_image = f"#{historical_data.ticker} #{historical_data.symbol_data.get('baseAsset')} " \
+            text_image = f"#{historical_data.ticker} " \
                          f"{selected_timeframe} Support and resistance levels \n " \
-                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
+                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
             def send_tweet() -> None:
                 """
@@ -464,7 +462,7 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        pinescript_code()
+        # pinescript_code()
         print(f"Completed execution in {time.perf_counter() - perf} seconds")
         return fig.show(id='the_graph', config={'displaylogo': False})
 
