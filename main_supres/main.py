@@ -246,35 +246,27 @@ class Supres(Values):
             """
             Draws the support lines and adds annotations to the chart.
             """
-            c = 0
-            while True:
-                if c > len(support_list) - 1:
-                    break
+            for s in range(len(support_list)):
                 # Support lines
-                fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
+                fig.add_shape(type='line', x0=support_list[s][0] - 1, y0=support_list[s][1],
                               x1=len(df) + 25,
-                              y1=support_list[c][1], line=dict(color=support_line_color, width=2))
+                              y1=support_list[s][1], line=dict(color=support_line_color, width=2))
                 # Support annotations
-                fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
+                fig.add_annotation(x=len(df) + 7, y=support_list[s][1], text=str(support_list[s][1]),
                                    font=dict(size=15, color=support_line_color))
-                c += 1
 
         def draw_resistance() -> None:
             """
             Draws the resistance lines and adds annotations to the chart.
             """
-            c = 0
-            while True:
-                if c > len(resistance_list) - 1:
-                    break
+            for r in range(len(resistance_list)):
                 # Resistance lines
-                fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
+                fig.add_shape(type='line', x0=resistance_list[r][0] - 1, y0=resistance_list[r][1],
                               x1=len(df) + 25,
-                              y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
+                              y1=resistance_list[r][1], line=dict(color=resistance_line_color, width=1))
                 # Resistance annotations
-                fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
+                fig.add_annotation(x=len(df) + 20, y=resistance_list[r][1], text=str(resistance_list[r][1]),
                                    font=dict(size=15, color=resistance_line_color))
-                c += 1
 
         def legend_texts() -> None:
             """
@@ -298,7 +290,7 @@ class Supres(Values):
                         float_resistance_above.extend([0] * differ)
                     else:
                         float_support_below.extend([0] * differ)
-                    for _ in range(max(len(float_resistance_above), len(float_support_below))):
+                    for _ in range(min(max(len(float_resistance_above), len(float_support_below)),12)):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
@@ -307,7 +299,7 @@ class Supres(Values):
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                         fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
                                                  marker=dict(color=legend_color, size=10)))
-                        temp += 1 if temp < 14 else 0
+                        temp += 1 if temp < 12 else 0
                 except IndexError:
                     pass
 
