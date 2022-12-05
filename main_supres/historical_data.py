@@ -4,9 +4,9 @@ import frameselect
 
 
 class BinanceTicker:
-    def __init__(self, ticker, time_frame):
-        self.ticker = ticker
-        self.time_frame = time_frame
+    def __init__(self, ticker_binance, time_frame_binance):
+        self.ticker = ticker_binance
+        self.time_frame = time_frame_binance
         self.client = Client("", "")  # Replace with your own API keys
         self.file_name = ticker + ".csv"
         self.header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
