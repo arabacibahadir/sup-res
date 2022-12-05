@@ -117,25 +117,12 @@ class Supres(Values):
             Takes in a dataframe and returns a list of candlestick patterns found in the dataframe then returns
             pattern list.
             """
-            from candlestick import candlestick
+            from candlestick import candlestick as cd
             nonlocal df
-            all_patterns = [
-                candlestick.inverted_hammer,
-                candlestick.hammer,
-                candlestick.doji,
-                candlestick.bearish_harami,
-                candlestick.bearish_engulfing,
-                candlestick.bullish_harami,
-                candlestick.bullish_engulfing,
-                candlestick.dark_cloud_cover,
-                candlestick.dragonfly_doji,
-                candlestick.hanging_man,
-                candlestick.gravestone_doji,
-                candlestick.morning_star,
-                candlestick.morning_star_doji,
-                candlestick.piercing_pattern,
-                candlestick.star,
-                candlestick.shooting_star]
+            all_patterns = [cd.inverted_hammer,cd.hammer,cd.doji,cd.bearish_harami,cd.bearish_engulfing,
+                            cd.bullish_harami,cd.bullish_engulfing, cd.dark_cloud_cover,cd.dragonfly_doji,
+                            cd.hanging_man, cd.gravestone_doji, cd.morning_star, cd.morning_star_doji,
+                            cd.piercing_pattern, cd.star, cd.shooting_star]
             # Loop through the candlestick pattern functions
             for pattern in all_patterns:
                 # Apply the candlestick pattern function to the data frame
@@ -463,21 +450,19 @@ class Supres(Values):
 
 if __name__ == "__main__":
     os.chdir("../main_supres")  # Change the directory to the main_supres folder
-    file_name = historical_data.file_name
+    file_name = historical_data.user_ticker.file_name
     try:
         perf = time.perf_counter()
-        historical_data.historical_data_write(historical_data.ticker)
-        if os.path.isfile(file_name):  # Check .csv file is there or not
+        historical_data.user_ticker.historical_data_write()
+        if os.path.isfile(file_name):  # Check .csv file exists
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             print("Data analysis is done. Browser opening.")
-            # remove the .csv file
-            os.remove(file_name)
+            os.remove(file_name) # remove the .csv file
             print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
                         "Make sure you typed the filename correctly.")
-
     except KeyError:
         os.remove(file_name)
         raise KeyError("Key error, algorithm issue")
