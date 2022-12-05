@@ -19,7 +19,8 @@ header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', '
 
 def historical_data_write(ticker_symbol):
     """
-    Write the historical data to a csv file
+    Writes the historical data for a given ticker symbol to a csv file.
+    :param ticker_symbol: The ticker symbol for which to retrieve historical data.
     """
     df = pd.DataFrame(reversed(
         client.get_historical_klines(symbol=ticker_symbol, interval=time_frame, start_str=start)), columns=header_list)
