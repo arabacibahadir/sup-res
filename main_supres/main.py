@@ -117,25 +117,18 @@ class Supres(Values):
             Takes in a dataframe and returns a list of candlestick patterns found in the dataframe then returns
             pattern list.
             """
-            from candlestick import candlestick
+            from candlestick import candlestick as cd
             nonlocal df
-            df = candlestick.inverted_hammer(df, target='inverted_hammer')
-            df = candlestick.hammer(df, target='hammer')
-            df = candlestick.doji(df, target='doji')
-            df = candlestick.bearish_harami(df, target='bearish_harami')
-            df = candlestick.bearish_engulfing(df, target='bearish_engulfing')
-            df = candlestick.bullish_harami(df, target='bullish_harami')
-            df = candlestick.bullish_engulfing(df, target='bullish_engulfing')
-            df = candlestick.dark_cloud_cover(df, target='dark_cloud_cover')
-            df = candlestick.dragonfly_doji(df, target='dragonfly_doji')
-            df = candlestick.hanging_man(df, target='hanging_man')
-            df = candlestick.gravestone_doji(df, target='gravestone_doji')
-            df = candlestick.morning_star(df, target='morning_star')
-            df = candlestick.morning_star_doji(df, target='morning_star_doji')
-            df = candlestick.piercing_pattern(df, target='piercing_pattern')
-            df = candlestick.star(df, target='star')
-            df = candlestick.shooting_star(df, target='shooting_star')
-            df.replace({True: 'pattern_found'}, inplace=True)  # Dodge boolean 'True' output
+            all_patterns = [cd.inverted_hammer,cd.hammer,cd.doji,cd.bearish_harami,cd.bearish_engulfing,
+                            cd.bullish_harami,cd.bullish_engulfing, cd.dark_cloud_cover,cd.dragonfly_doji,
+                            cd.hanging_man, cd.gravestone_doji, cd.morning_star, cd.morning_star_doji,
+                            cd.piercing_pattern, cd.star, cd.shooting_star]
+            # Loop through the candlestick pattern functions
+            for pattern in all_patterns:
+                # Apply the candlestick pattern function to the data frame
+                df = pattern(df)
+            # Replace True values with 'pattern_found'
+            df.replace({True: 'pattern_found'}, inplace=True)
 
             def pattern_find_func(pattern_row) -> list:
                 """
@@ -145,17 +138,13 @@ class Supres(Values):
                 """
                 t = 0
                 pattern_find = [col for col in df.columns]
-                for pattern in pattern_row:
-                    if pattern == 'pattern_found':
+                for pattern_f in pattern_row:
+                    if pattern_f == 'pattern_found':
                         pattern_list.append(
                             (pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))  # pattern, date
                     t += 1
                 return pattern_list
-
-            # Loop through the dataframe and find the pattern in the dataframe
-            for _ in range(-3, -30, -1):
-                pattern_find_func(df.iloc[_])
-            return pattern_list
+            return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
@@ -186,7 +175,7 @@ class Supres(Values):
                 else:
                     resistance_below.append(support_line)
             if len(support_below) == 0:
-                support_below.append(df.low.min())
+                support_below.append(min(df.low))
             # Check if the price is above the latest close price. If it is, it is appending it to the
             # resistance_above list. If it is not, it is appending it to the support_above list.
             for resistance_line in all_resistance_list:
@@ -195,7 +184,7 @@ class Supres(Values):
                 else:
                     support_above.append(resistance_line)
             if len(resistance_above) == 0:
-                resistance_above.append(df.high.max())
+                resistance_above.append(max(df.high))
             return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
 
         def legend_candle_patterns() -> None:
@@ -244,35 +233,27 @@ class Supres(Values):
             """
             Draws the support lines and adds annotations to the chart.
             """
-            c = 0
-            while True:
-                if c > len(support_list) - 1:
-                    break
+            for s in range(len(support_list)):
                 # Support lines
-                fig.add_shape(type='line', x0=support_list[c][0] - 1, y0=support_list[c][1],
+                fig.add_shape(type='line', x0=support_list[s][0] - 1, y0=support_list[s][1],
                               x1=len(df) + 25,
-                              y1=support_list[c][1], line=dict(color=support_line_color, width=2))
+                              y1=support_list[s][1], line=dict(color=support_line_color, width=2))
                 # Support annotations
-                fig.add_annotation(x=len(df) + 7, y=support_list[c][1], text=str(support_list[c][1]),
+                fig.add_annotation(x=len(df) + 7, y=support_list[s][1], text=str(support_list[s][1]),
                                    font=dict(size=15, color=support_line_color))
-                c += 1
 
         def draw_resistance() -> None:
             """
             Draws the resistance lines and adds annotations to the chart.
             """
-            c = 0
-            while True:
-                if c > len(resistance_list) - 1:
-                    break
+            for r in range(len(resistance_list)):
                 # Resistance lines
-                fig.add_shape(type='line', x0=resistance_list[c][0] - 1, y0=resistance_list[c][1],
+                fig.add_shape(type='line', x0=resistance_list[r][0] - 1, y0=resistance_list[r][1],
                               x1=len(df) + 25,
-                              y1=resistance_list[c][1], line=dict(color=resistance_line_color, width=1))
+                              y1=resistance_list[r][1], line=dict(color=resistance_line_color, width=1))
                 # Resistance annotations
-                fig.add_annotation(x=len(df) + 20, y=resistance_list[c][1], text=str(resistance_list[c][1]),
+                fig.add_annotation(x=len(df) + 20, y=resistance_list[r][1], text=str(resistance_list[r][1]),
                                    font=dict(size=15, color=resistance_line_color))
-                c += 1
 
         def legend_texts() -> None:
             """
@@ -292,13 +273,11 @@ class Supres(Values):
                 blank = " " * (len(str(sample_price)) + 1)
                 differ = abs(len(float_resistance_above) - len(float_support_below))
                 try:
-                    if differ < 0:
-                        for _ in range(differ):
-                            float_resistance_above.extend([0])
-                    if differ >= 0:
-                        for _ in range(differ):
-                            float_support_below.extend([0])
-                    for _ in range(max(len(float_resistance_above), len(float_support_below))):
+                    if len(float_resistance_above) < len(float_support_below):
+                        float_resistance_above.extend([0] * differ)
+                    else:
+                        float_support_below.extend([0] * differ)
+                    for _ in range(min(max(len(float_resistance_above), len(float_support_below)),12)):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
@@ -307,7 +286,7 @@ class Supres(Values):
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
                         fig.add_trace(go.Scatter(y=[support_list[0]], name=legend_supres, mode="lines",
                                                  marker=dict(color=legend_color, size=10)))
-                        temp += 1 if temp < 14 else 0
+                        temp += 1 if temp < 12 else 0
                 except IndexError:
                     pass
 
@@ -381,9 +360,9 @@ class Supres(Values):
                 f"../main_supres/images/"
                 f"{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.html",
                 full_html=False, include_plotlyjs='cdn')
-            text_image = f"#{historical_data.ticker} #{historical_data.symbol_data.get('baseAsset')} " \
+            text_image = f"#{historical_data.ticker} " \
                          f"{selected_timeframe} Support and resistance levels \n " \
-                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]} #crypto #btc"
+                         f"{df['date'].dt.strftime('%b-%d-%Y')[candle_count]}"
 
             def send_tweet() -> None:
                 """
@@ -464,28 +443,26 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        pinescript_code()
+        # pinescript_code()
         print(f"Completed execution in {time.perf_counter() - perf} seconds")
         return fig.show(id='the_graph', config={'displaylogo': False})
 
 
 if __name__ == "__main__":
     os.chdir("../main_supres")  # Change the directory to the main_supres folder
-    file_name = historical_data.file_name
+    file_name = historical_data.user_ticker.file_name
     try:
         perf = time.perf_counter()
-        historical_data.historical_data_write(historical_data.ticker)
-        if os.path.isfile(file_name):  # Check .csv file is there or not
+        historical_data.user_ticker.historical_data_write()
+        if os.path.isfile(file_name):  # Check .csv file exists
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             print("Data analysis is done. Browser opening.")
-            # remove the .csv file
-            os.remove(file_name)
+            os.remove(file_name) # remove the .csv file
             print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
                         "Make sure you typed the filename correctly.")
-
     except KeyError:
         os.remove(file_name)
         raise KeyError("Key error, algorithm issue")
