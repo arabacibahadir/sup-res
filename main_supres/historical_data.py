@@ -10,10 +10,9 @@ class BinanceTicker:
         self.client = Client("", "")  # Replace with your own API keys
         self.file_name = ticker + ".csv"
         self.header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                       'taker buy vol', 'taker buy quote vol', 'ignore']
+                            'taker buy vol', 'taker buy quote vol', 'ignore']
 
-
-    def check_pair(self,ticker_symbol):
+    def check_pair(self, ticker_symbol):
         """
         Checks if the given ticker symbol is a valid pair.
         :param ticker_symbol: The ticker symbol to check.
@@ -46,5 +45,5 @@ class BinanceTicker:
 print("Ticker and Time Frame: ")  # Example:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
 ticker, frame_s = str(input().upper()).split()
 time_frame, start = frameselect.frame_select(frame_s)
-user_ticker=BinanceTicker(ticker, time_frame)
+user_ticker = BinanceTicker(ticker, time_frame)
 user_ticker.check_pair(ticker)

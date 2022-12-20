@@ -55,6 +55,7 @@ class Supres(Values):
             sma_3 = tuple((dfsma.ta.sma(ma_length3)))
             rsi_tuple = tuple((ta.rsi(df['close'][:-1])))
             return sma_1, sma_2, sma_3, rsi_tuple
+
         sma_values = 20, 50, 100
         sma1, sma2, sma3, rsi = indicators(*sma_values)
         support_list, resistance_list, fibonacci_uptrend, fibonacci_downtrend, pattern_list = [], [], [], [], []
@@ -119,8 +120,8 @@ class Supres(Values):
             """
             from candlestick import candlestick as cd
             nonlocal df
-            all_patterns = [cd.inverted_hammer,cd.hammer,cd.doji,cd.bearish_harami,cd.bearish_engulfing,
-                            cd.bullish_harami,cd.bullish_engulfing, cd.dark_cloud_cover,cd.dragonfly_doji,
+            all_patterns = [cd.inverted_hammer, cd.hammer, cd.doji, cd.bearish_harami, cd.bearish_engulfing,
+                            cd.bullish_harami, cd.bullish_engulfing, cd.dark_cloud_cover, cd.dragonfly_doji,
                             cd.hanging_man, cd.gravestone_doji, cd.morning_star, cd.morning_star_doji,
                             cd.piercing_pattern, cd.star, cd.shooting_star]
             # Loop through the candlestick pattern functions
@@ -144,6 +145,7 @@ class Supres(Values):
                             (pattern_find[t], pattern_row['date'].strftime('%b-%d-%y')))  # pattern, date
                     t += 1
                 return pattern_list
+
             return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
 
         def sensitivity(sens=2) -> tuple[list, list]:
@@ -277,7 +279,7 @@ class Supres(Values):
                         float_resistance_above.extend([0] * differ)
                     else:
                         float_support_below.extend([0] * differ)
-                    for _ in range(min(max(len(float_resistance_above), len(float_support_below)),12)):
+                    for _ in range(min(max(len(float_resistance_above), len(float_support_below)), 12)):
                         if float_resistance_above[temp] == 0:  # This is for legend alignment
                             legend_supres = f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     " \
                                             f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
@@ -421,6 +423,7 @@ class Supres(Values):
                     with open("pinescripts/daily_levels.txt", "r") as d_levels:
                         pine.write("\n")
                         pine.writelines(d_levels.read())
+
                 ichimoku()
                 daily_levels()
             return lines
@@ -458,7 +461,7 @@ if __name__ == "__main__":
             print(f"{file_name} downloaded and created.")
             Supres.main(file_name, historical_data.time_frame)
             print("Data analysis is done. Browser opening.")
-            os.remove(file_name) # remove the .csv file
+            os.remove(file_name)  # remove the .csv file
             print(f"{file_name} file deleted.")
         else:
             raise print("One or more issues caused the download to fail. "
