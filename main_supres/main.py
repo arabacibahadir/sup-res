@@ -23,6 +23,7 @@ class Supres(Values):
     def main(ticker_csv, selected_timeframe, candle_count=254):
         print(f"Start main function in {time.perf_counter() - perf} seconds\n"
               f"{ticker_csv} data analysis in progress.")
+        now_supres = time.perf_counter()
         df = pd.read_csv(ticker_csv, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=candle_count,
                          keep_default_na=False)
         df = df.iloc[::-1]
@@ -447,7 +448,8 @@ class Supres(Values):
         chart_updates()
         # save()
         # pinescript_code()
-        print(f"Completed execution in {time.perf_counter() - perf} seconds")
+        print(f"Completed sup-res execution in {time.perf_counter() - now_supres} seconds")
+        print(f"Completed execution in total {time.perf_counter() - perf} seconds")
         return fig.show(id='the_graph', config={'displaylogo': False})
 
 

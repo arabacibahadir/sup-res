@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 from binance.client import Client
 import frameselect
@@ -44,6 +45,8 @@ class BinanceTicker:
 
 print("Ticker and Time Frame: ")  # Example:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
 ticker, frame_s = str(input().upper()).split()
+binance_api_runtime = time.perf_counter()
 time_frame, start = frameselect.frame_select(frame_s)
 user_ticker = BinanceTicker(ticker, time_frame)
 user_ticker.check_pair(ticker)
+print("Binance API historical data runtime: ", time.perf_counter() - binance_api_runtime, "seconds")
