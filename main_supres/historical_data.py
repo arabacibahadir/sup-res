@@ -8,10 +8,22 @@ class BinanceTicker:
     def __init__(self, ticker_binance, time_frame_binance):
         self.ticker = ticker_binance
         self.time_frame = time_frame_binance
-        self.client = Client("", "")  # Replace with your own API keys
+        self.client = Client("", "")
         self.file_name = ticker + ".csv"
-        self.header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                            'taker buy vol', 'taker buy quote vol', 'ignore']
+        self.header_list = [
+            "unix",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "close time",
+            "Volume USDT",
+            "tradecount",
+            "taker buy vol",
+            "taker buy quote vol",
+            "ignore",
+        ]
 
     def check_pair(self, ticker_symbol):
         """
@@ -31,22 +43,43 @@ class BinanceTicker:
         """
         Writes the historical data for a given ticker symbol to a csv file.
         """
-        df = pd.DataFrame(reversed(
-            user_ticker.client.get_historical_klines(symbol=self.ticker, interval=self.time_frame, start_str=start)),
-            columns=self.header_list)
+        df = pd.DataFrame(
+            reversed(
+                user_ticker.client.get_historical_klines(
+                    symbol=self.ticker, interval=self.time_frame, start_str=start
+                )
+            ),
+            columns=self.header_list,
+        )
         # Converting the unix time to a readable date format for today
-        date = pd.to_datetime(df['unix'], unit='ms')
-        df.insert(1, 'date', date)
-        df.drop(labels=["volume", "close time", "tradecount", "taker buy vol", "taker buy quote vol", "ignore"],
-                inplace=True, axis=1)
+        date = pd.to_datetime(df["unix"], unit="ms")
+        df.insert(1, "date", date)
+        df.drop(
+            labels=[
+                "volume",
+                "close time",
+                "tradecount",
+                "taker buy vol",
+                "taker buy quote vol",
+                "ignore",
+            ],
+            inplace=True,
+            axis=1,
+        )
         df.to_csv(self.file_name, index=False)
         print("Data writing:", self.file_name)
 
 
-print("Ticker and Time Frame: ")  # Example:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
+# Example input:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
+print("Example input: BTCUSDT 1H, ETHBTC 3D, BNBUSDT 15M")
+print("Ticker and Time Frame: ")
 ticker, frame_s = str(input().upper()).split()
 binance_api_runtime = time.perf_counter()
 time_frame, start = frameselect.frame_select(frame_s)
 user_ticker = BinanceTicker(ticker, time_frame)
 user_ticker.check_pair(ticker)
-print("Binance API historical data runtime: ", time.perf_counter() - binance_api_runtime, "seconds")
+print(
+    "Binance API historical data runtime: ",
+    time.perf_counter() - binance_api_runtime,
+    "seconds",
+)

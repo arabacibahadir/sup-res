@@ -8,15 +8,27 @@ import frameselect
 
 
 def hist_data():
-    header_list = ['unix', 'open', 'high', 'low', 'close', 'volume', 'close time', 'Volume USDT', 'tradecount',
-                   'taker buy vol', 'taker buy quote vol', 'ignore']
+    header_list = [
+        "unix",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "close time",
+        "Volume USDT",
+        "tradecount",
+        "taker buy vol",
+        "taker buy quote vol",
+        "ignore",
+    ]
 
     def historical_data_write(self):
         """
         The function writes the data to a csv file
         """
         data = self + ".csv"
-        csv_file_write = open(data, "w", newline='')
+        csv_file_write = open(data, "w", newline="")
         klines_writer = csv.writer(csv_file_write, delimiter=",")
         for candlestick in candlesticks:
             klines_writer.writerow(candlestick)
@@ -30,7 +42,14 @@ def hist_data():
 
 
 def main():
-    df = pd.read_csv(file_name, delimiter=',', encoding="utf-8-sig", index_col=False, nrows=254, keep_default_na=False)
+    df = pd.read_csv(
+        file_name,
+        delimiter=",",
+        encoding="utf-8-sig",
+        index_col=False,
+        nrows=254,
+        keep_default_na=False,
+    )
     df = df.iloc[::-1]
     df.reset_index(drop=True, inplace=True)
     df = pd.concat([df, df.tail(1)], axis=0, ignore_index=True)
@@ -38,20 +57,30 @@ def main():
 
     def support(candle_value, candle_index, before_candle_count, after_candle_count):
         """
-                If the price of the asset is increasing for the last before_candle_count and decreasing for
-                the last after_candle_count, then return 1. Otherwise, return 0
-                :param candle_value: The price data for the asset
-                :param candle_index: The index of the first bar in the support
-                :param before_candle_count: The number of bars back you want to look
-                :param after_candle_count: The number of bars in the second trend
-                :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
-                """
+        If the price of the asset is increasing for the last before_candle_count and decreasing for
+        the last after_candle_count, then return 1. Otherwise, return 0
+        :param candle_value: The price data for the asset
+        :param candle_index: The index of the first bar in the support
+        :param before_candle_count: The number of bars back you want to look
+        :param after_candle_count: The number of bars in the second trend
+        :return: 1 if the price of the asset is supported by the previous low price, and 0 if it is not.
+        """
         try:
-            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
-                if candle_value.low[current_value] > candle_value.low[current_value - 1]:
+            for current_value in range(
+                candle_index - before_candle_count + 1, candle_index + 1
+            ):
+                if (
+                    candle_value.low[current_value]
+                    > candle_value.low[current_value - 1]
+                ):
                     return 0
-            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
-                if candle_value.low[current_value] < candle_value.low[current_value - 1]:
+            for current_value in range(
+                candle_index + 1, candle_index + after_candle_count + 1
+            ):
+                if (
+                    candle_value.low[current_value]
+                    < candle_value.low[current_value - 1]
+                ):
                     return 0
             return 1
         except KeyError:
@@ -70,11 +99,21 @@ def main():
         n2 periods.
         """
         try:
-            for current_value in range(candle_index - before_candle_count + 1, candle_index + 1):
-                if candle_value.high[current_value] < candle_value.high[current_value - 1]:
+            for current_value in range(
+                candle_index - before_candle_count + 1, candle_index + 1
+            ):
+                if (
+                    candle_value.high[current_value]
+                    < candle_value.high[current_value - 1]
+                ):
                     return 0
-            for current_value in range(candle_index + 1, candle_index + after_candle_count + 1):
-                if candle_value.high[current_value] > candle_value.high[current_value - 1]:
+            for current_value in range(
+                candle_index + 1, candle_index + after_candle_count + 1
+            ):
+                if (
+                    candle_value.high[current_value]
+                    > candle_value.high[current_value - 1]
+                ):
                     return 0
             return 1
         except KeyError:
@@ -90,7 +129,7 @@ def main():
             df.isna().sum()
 
     drop_null()
-    df = df[:len(df)]
+    df = df[: len(df)]
 
     def sensitivity(sens):
         for row in range(3, len(df) - 1):
@@ -105,7 +144,7 @@ def main():
     res_above = []
     sup = tuple(map(lambda sup1: sup1[1], ss))
     res = tuple(map(lambda res1: res1[1], rr))
-    latest_close = tuple(df['close'])[-1]
+    latest_close = tuple(df["close"])[-1]
 
     def supres():
         for s in sup:
@@ -127,28 +166,57 @@ def main():
     sup_below = sorted(sup_below, reverse=True)
     res_above = sorted(res_above)
     if not sup_below:
-        sup_below.append(min(df['low']))
+        sup_below.append(min(df["low"]))
 
     if not res_above:
-        res_above.append(min(df['high']))
+        res_above.append(min(df["high"]))
 
     res_above = [float(a) for a in res_above]
     sup_below = [float(a) for a in sup_below]
 
-    print('res:', res_above)
-    print('sup:', sup_below)
-    with open('../main_supres/all_timeframes.txt', 'a') as f:
-        f.writelines([ticker, " ", i, "\nResistance:", str(res_above), "\nSupport:", str(sup_below), "\n\n"])
+    print("res:", res_above)
+    print("sup:", sup_below)
+    with open("../main_supres/all_timeframes.txt", "a") as f:
+        f.writelines(
+            [
+                ticker,
+                " ",
+                i,
+                "\nResistance:",
+                str(res_above),
+                "\nSupport:",
+                str(sup_below),
+                "\n\n",
+            ]
+        )
 
 
 if __name__ == "__main__":
     perf = time.perf_counter()
     client = Client("", "")
-    ticker_list = ['BTCUSDT', 'ETHUSDT']  # Add coin pairs here, it will generate all_timeframes.txt file
-    frame_s = ('3M', '5M', '15M', '30M', '1H', '2H', '4H', '6H', '8H', '12H', '1D', '3D')
-    timestamp = client.get_server_time().get('serverTime') / 1000
-    server_time = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    with open('../main_supres/all_timeframes.txt', 'w') as file:
+    ticker_list = [
+        "BTCUSDT",
+        "ETHUSDT",
+    ]  # Add coin pairs here, it will generate all_timeframes.txt file
+    frame_s = (
+        "3M",
+        "5M",
+        "15M",
+        "30M",
+        "1H",
+        "2H",
+        "4H",
+        "6H",
+        "8H",
+        "12H",
+        "1D",
+        "3D",
+    )
+    timestamp = client.get_server_time().get("serverTime") / 1000
+    server_time = datetime.datetime.fromtimestamp(timestamp).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+    with open("../main_supres/all_timeframes.txt", "w") as file:
         file.writelines(["Server time: ", server_time, "\n"])
     print(f"Server time: {server_time}")
     for ticker in ticker_list:

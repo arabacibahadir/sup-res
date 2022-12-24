@@ -1,10 +1,10 @@
 import tweepy
 import git_twitter_access
 
-api_key = git_twitter_access.twitter_credentials['api_key']
-api_key_secret = git_twitter_access.twitter_credentials['api_key_secret']
-access_token = git_twitter_access.twitter_credentials['access_token']
-access_token_secret = git_twitter_access.twitter_credentials['access_token_secret']
+api_key = git_twitter_access.twitter_credentials["api_key"]
+api_key_secret = git_twitter_access.twitter_credentials["api_key_secret"]
+access_token = git_twitter_access.twitter_credentials["access_token"]
+access_token_secret = git_twitter_access.twitter_credentials["access_token_secret"]
 authenticator = tweepy.OAuthHandler(api_key, api_key_secret)
 authenticator.set_access_token(access_token, access_token_secret)
 api = tweepy.API(authenticator, wait_on_rate_limit=True)
@@ -24,5 +24,7 @@ def is_image_tweet():
     """
     This is getting the latest tweet from the user.
     """
-    get_last_status = api.user_timeline(screen_name=git_twitter_access.user_handle, count=1)
+    get_last_status = api.user_timeline(
+        screen_name=git_twitter_access.user_handle, count=1
+    )
     return get_last_status[0]
