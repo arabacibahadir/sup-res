@@ -92,21 +92,8 @@ Never rely solely on a single piece of information or indicator as this can be d
 
 ![legend](https://user-images.githubusercontent.com/32988819/168901021-81d885d4-19de-4ba6-a3d0-c69faf2ccbf5.png)
 
-
-![candle](https://user-images.githubusercontent.com/32988819/131737076-f52ac75e-1f4d-4d79-b14c-61a81ee8ecfe.png)
-
-## Some screenshots :camera_flash:
 _BTCUSDT_ chart
 ![Jun-27-22BTCUSDT](https://user-images.githubusercontent.com/32988819/176189250-c4564312-cfd7-41d9-aaed-620ca4bcabc7.jpeg)
-
-
-![proofsups](https://user-images.githubusercontent.com/32988819/134022109-31c46da5-f1d3-4865-990e-91dd2fd75367.png)
-
-![proof22](https://user-images.githubusercontent.com/32988819/134344483-7bb93cb7-ab29-4505-82bd-06f387e992c5.png)
-
-![48500proof](https://user-images.githubusercontent.com/32988819/133648941-de7f0b2d-0780-4a11-8e6f-98d06b1f6ad1.png)
-
-![works](https://user-images.githubusercontent.com/32988819/133649195-6645e31b-1736-4076-ba26-385063d4915e.png)
 
 ## Pine Script :bookmark_tabs:
 
@@ -115,10 +102,7 @@ Also telegram bot works with Pine Script.
 
 ![pinecodes](https://user-images.githubusercontent.com/32988819/136625978-355c9591-6865-441a-871a-dd3526b4308f.png)
 
-![pine_trade](https://user-images.githubusercontent.com/32988819/136625994-1f0400a6-6c97-4126-b1b2-0f630f739133.png)
-
 ![lines](https://user-images.githubusercontent.com/32988819/136626000-85bb5d7d-73d3-4568-bd0d-61d17dbc67b6.png)
-
 
 ## Contributing :handshake:
 Pull requests are welcome, any contributions you make are greatly appreciated. Please open an issue with what you want changed before submitting a PR.
