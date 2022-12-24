@@ -100,7 +100,7 @@ class Supres(Values):
             except KeyError:
                 pass
 
-        def fibonacci_pricelevels(high_price, low_price) -> tuple[list, list]:
+        def fibonacci_pricelevels(high_price, low_price) -> tuple[list[float], list[float]]:
             """
             Uptrend Fibonacci Retracement Formula =>
             Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
@@ -188,7 +188,9 @@ class Supres(Values):
                     support_above.append(resistance_line)
             if len(resistance_above) == 0:
                 resistance_above.append(max(df.high))
-            return fibonacci_pricelevels(resistance_above[-1], support_below[-1])
+            lowest_support = min(support_below)
+            highest_resistance = max(resistance_above)
+            return fibonacci_pricelevels(highest_resistance, lowest_support)
 
         def legend_candle_patterns() -> None:
             """
