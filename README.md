@@ -92,17 +92,26 @@ Never rely solely on a single piece of information or indicator as this can be d
 
 ![legend](https://user-images.githubusercontent.com/32988819/168901021-81d885d4-19de-4ba6-a3d0-c69faf2ccbf5.png)
 
-_BTCUSDT_ chart
-![Jun-27-22BTCUSDT](https://user-images.githubusercontent.com/32988819/176189250-c4564312-cfd7-41d9-aaed-620ca4bcabc7.jpeg)
-
 ## Pine Script :bookmark_tabs:
 
 Sup-Res supports Pine Script scripting language. Just **run** *main.py* file, then **copy** "./pinescript.txt" and **paste** *Tradingview Pine Script* section.
 Also telegram bot works with Pine Script.
 
-![pinecodes](https://user-images.githubusercontent.com/32988819/136625978-355c9591-6865-441a-871a-dd3526b4308f.png)
-
-![lines](https://user-images.githubusercontent.com/32988819/136626000-85bb5d7d-73d3-4568-bd0d-61d17dbc67b6.png)
+Here is the example Pine Script code:
+````
+//@version=5
+indicator('Sup-Res BTCUSDT 1d', overlay=true)
+plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)
+plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)
+plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)
+hline(18626.0, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(18910.94, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(19706.66, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(20111.62, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(21888.0, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(22799.0, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+hline(24668.0, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)
+````
 
 ## Contributing :handshake:
 Pull requests are welcome, any contributions you make are greatly appreciated. Please open an issue with what you want changed before submitting a PR.
