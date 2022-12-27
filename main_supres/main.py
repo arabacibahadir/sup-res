@@ -377,27 +377,27 @@ class Supres(Values):
                 """
                 temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
-                differ = abs(len(f_resistanceabove) - len(f_supportbelow))
+                differ = abs(len(f_res_above) - len(f_sup_below))
                 try:
-                    if len(f_resistanceabove) < len(f_supportbelow):
-                        f_resistanceabove.extend([0] * differ)
+                    if len(f_res_above) < len(f_sup_below):
+                        f_res_above.extend([0] * differ)
                     else:
-                        f_supportbelow.extend([0] * differ)
+                        f_sup_below.extend([0] * differ)
                     for _ in range(
                         min(
-                            max(len(f_resistanceabove), len(f_supportbelow)),
+                            max(len(f_res_above), len(f_sup_below)),
                             12,
                         )
                     ):
-                        if f_resistanceabove[temp] == 0:  # This is for legend alignment
+                        if f_res_above[temp] == 0:  # This is for legend alignment
                             legend_supres = (
-                                f"{float(f_resistanceabove[temp]):.{str_price_len - 1}f}{blank}     "
-                                f"||   {float(f_supportbelow[temp]):.{str_price_len - 1}f}"
+                                f"{float(f_res_above[temp]):.{str_price_len - 1}f}{blank}     "
+                                f"||   {float(f_sup_below[temp]):.{str_price_len - 1}f}"
                             )
                         else:
                             legend_supres = (
-                                f"{float(f_resistanceabove[temp]):.{str_price_len - 1}f}       "
-                                f"||   {float(f_supportbelow[temp]):.{str_price_len - 1}f}"
+                                f"{float(f_res_above[temp]):.{str_price_len - 1}f}       "
+                                f"||   {float(f_sup_below[temp]):.{str_price_len - 1}f}"
                             )
                         fig.add_trace(
                             go.Scatter(
@@ -515,7 +515,11 @@ class Supres(Values):
             """
             if not os.path.exists("../main_supres/images"):
                 os.mkdir("images")
-            image = f"../main_supres/images/{df['date'].dt.strftime('%b-%d-%y')[candle_count]}{historical_data.ticker}.jpeg"
+            image = (
+                f"../main_supres/images/"
+                f"{df['date'].dt.strftime('%b-%d-%y')[candle_count]}"
+                f"{historical_data.ticker}.jpeg"
+            )
             fig.write_image(image, width=1920, height=1080)  # Save image for tweet
             fig.write_html(
                 f"../main_supres/images/"
@@ -540,10 +544,10 @@ class Supres(Values):
                     time.sleep(1)
                     if tweet.is_image_tweet().text != text_image:
                         resistance_above_nonzero = list(
-                            filter(lambda x: x != 0, f_resistanceabove)
+                            filter(lambda x: x != 0, f_res_above)
                         )
                         support_below_nonzero = list(
-                            filter(lambda x: x != 0, f_supportbelow)
+                            filter(lambda x: x != 0, f_sup_below)
                         )
                         tweet.api.update_status(
                             status=f"#{historical_data.ticker}  "
@@ -568,10 +572,8 @@ class Supres(Values):
         create_candlestick_plot()
         add_volume_subplot()
         add_rsi_subplot()
-        f_resistanceabove = list(
-            map(float, sorted(resistance_above + resistance_below))
-        )
-        f_supportbelow = list(
+        f_res_above = list(map(float, sorted(resistance_above + resistance_below)))
+        f_sup_below = list(
             map(float, sorted(support_below + support_above, reverse=True))
         )
         draw_support()
@@ -579,7 +581,7 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        # pinescript_code(historical_data.ticker,selected_timeframe,f_resistanceabove,f_supportbelow)
+        # pinescript_code(historical_data.ticker, selected_timeframe, f_res_above, f_sup_below)
         print(
             f"Completed sup-res execution in {time.perf_counter() - now_supres} seconds"
         )
