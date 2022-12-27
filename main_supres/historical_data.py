@@ -8,7 +8,9 @@ class BinanceTicker:
     def __init__(self, ticker_binance, time_frame_binance):
         self.ticker = ticker_binance
         self.time_frame = time_frame_binance
-        self.client = Client("", "")
+        # If you are living in the US, you need to use the binance.us API
+        # self.client = Client("", "", tld="us")
+        self.client = Client("", "", tld="com")
         self.file_name = ticker + ".csv"
         self.header_list = [
             "unix",
