@@ -1,11 +1,14 @@
 import os
 import time
 from dataclasses import dataclass
+
 import pandas as pd
-import pandas_ta.momentum as ta
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
 import historical_data
+import indicators_sma_rsi
+import support_resistance
 
 
 @dataclass
@@ -55,38 +58,32 @@ class Supres(Values):
             historical_data.Client.KLINE_INTERVAL_8HOUR,
             historical_data.Client.KLINE_INTERVAL_12HOUR,
         )
-
-        # Sma, Rsi, Macd, Fibonacci variables
-        def indicators(
-            ma_length1, ma_length2, ma_length3
-        ) -> tuple[tuple, tuple, tuple, tuple]:
-            """
-            Takes in three integer arguments, and returns a dataframe with three columns,
-            each containing the moving average of the closing price for the given length.
-            """
-            dfsma = df[:-1]
-            sma_1 = tuple((dfsma.ta.sma(ma_length1)))
-            sma_2 = tuple((dfsma.ta.sma(ma_length2)))
-            sma_3 = tuple((dfsma.ta.sma(ma_length3)))
-            rsi_tuple = tuple((ta.rsi(df["close"][:-1])))
-            return sma_1, sma_2, sma_3, rsi_tuple
-
         sma_values = 20, 50, 100
-        sma1, sma2, sma3, rsi = indicators(*sma_values)
+        sma1, sma2, sma3, rsi = indicators_sma_rsi.indicators(df[:-1], *sma_values)
         (
             support_list,
             resistance_list,
             fibonacci_uptrend,
             fibonacci_downtrend,
             pattern_list,
-        ) = ([], [], [], [], [])
-        support_above, support_below, resistance_below, resistance_above, x_date = (
+            support_above,
+            support_below,
+            resistance_below,
+            resistance_above,
+            x_dat,
+        ) = (
+            [],
+            [],
+            [],
+            [],
+            [],
             [],
             [],
             [],
             [],
             "",
         )
+
         fibonacci_multipliers = 0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886
         # Chart settings
         (
@@ -103,62 +100,6 @@ class Supres(Values):
             vertical_spacing=0,
             row_width=[0.1, 0.1, 0.8],
         )
-
-        def support(
-            candle_value, candle_index, before_candle_count, after_candle_count
-        ) -> (bool | None):
-            """
-            If the price of the asset is increasing for the last before_candle_count and decreasing for
-            the last after_candle_count, then return True. Otherwise, return False.
-            """
-            try:
-                for current_value in range(
-                    candle_index - before_candle_count + 1, candle_index + 1
-                ):
-                    if (
-                        candle_value.low[current_value]
-                        > candle_value.low[current_value - 1]
-                    ):
-                        return False
-                for current_value in range(
-                    candle_index + 1, candle_index + after_candle_count + 1
-                ):
-                    if (
-                        candle_value.low[current_value]
-                        < candle_value.low[current_value - 1]
-                    ):
-                        return False
-                return True
-            except KeyError:
-                pass
-
-        def resistance(
-            candle_value, candle_index, before_candle_count, after_candle_count
-        ) -> (bool | None):
-            """
-            If the price of the stock is increasing for the last before_candle_count and decreasing for the last
-            after_candle_count, then return True. Otherwise, return False.
-            """
-            try:
-                for current_value in range(
-                    candle_index - before_candle_count + 1, candle_index + 1
-                ):
-                    if (
-                        candle_value.high[current_value]
-                        < candle_value.high[current_value - 1]
-                    ):
-                        return False
-                for current_value in range(
-                    candle_index + 1, candle_index + after_candle_count + 1
-                ):
-                    if (
-                        candle_value.high[current_value]
-                        > candle_value.high[current_value - 1]
-                    ):
-                        return False
-                return True
-            except KeyError:
-                pass
 
         def fibonacci_pricelevels(
             high_price, low_price
@@ -179,6 +120,47 @@ class Supres(Values):
                 )
                 fibonacci_downtrend.append(retracement_levels_downtrend)
             return fibonacci_uptrend, fibonacci_downtrend
+
+        def sensitivity(sens=2) -> tuple[list, list]:
+            """
+            Find the support and resistance levels for a given asset.
+            sensitivity:1 is recommended for daily charts or high frequency trade scalping.
+            :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
+            """
+            for sens_row in range(3, len(df) - 1):
+                if support_resistance.support(df, sens_row, 3, sens):
+                    support_list.append((sens_row, df.low[sens_row]))
+                if support_resistance.resistance(df, sens_row, 3, sens):
+                    resistance_list.append((sens_row, df.high[sens_row]))
+            return support_list, resistance_list
+
+        def chart_lines():
+            """
+            Check if the support and resistance lines are above or below the latest close price.
+            """
+            # Find support and resistance levels
+            # Check if the support is below the latest close. If it is, it is appending it to the list
+            # support_below. If it isn't, it is appending it to the list resistance_below.
+            all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
+            all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
+            latest_close = df["close"].iloc[-1]
+            for support_line in all_support_list:  # Find closes
+                if support_line < latest_close:
+                    support_below.append(support_line)
+                else:
+                    resistance_below.append(support_line)
+            if len(support_below) == 0:
+                support_below.append(min(df.low))
+            # Check if the price is above the latest close price. If it is, it is appending it to the
+            # resistance_above list. If it is not, it is appending it to the support_above list.
+            for resistance_line in all_resistance_list:
+                if resistance_line > latest_close:
+                    resistance_above.append(resistance_line)
+                else:
+                    support_above.append(resistance_line)
+            if len(resistance_above) == 0:
+                resistance_above.append(max(df.high))
+            return fibonacci_pricelevels(max(resistance_above), min(support_below))
 
         def candlestick_patterns() -> list:
             """
@@ -230,49 +212,6 @@ class Supres(Values):
                 return pattern_list
 
             return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
-
-        def sensitivity(sens=2) -> tuple[list, list]:
-            """
-            Find the support and resistance levels for a given asset.
-            sensitivity:1 is recommended for daily charts or high frequency trade scalping.
-            :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
-            """
-            for sens_row in range(3, len(df) - 1):
-                if support(df, sens_row, 3, sens):
-                    support_list.append((sens_row, df.low[sens_row]))
-                if resistance(df, sens_row, 3, sens):
-                    resistance_list.append((sens_row, df.high[sens_row]))
-            return support_list, resistance_list
-
-        def chart_lines():
-            """
-            Check if the support and resistance lines are above or below the latest close price.
-            """
-            # Find support and resistance levels
-            # Check if the support is below the latest close. If it is, it is appending it to the list
-            # support_below. If it isn't, it is appending it to the list resistance_below.
-            all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
-            all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
-            latest_close = df["close"].iloc[-1]
-            for support_line in all_support_list:  # Find closes
-                if support_line < latest_close:
-                    support_below.append(support_line)
-                else:
-                    resistance_below.append(support_line)
-            if len(support_below) == 0:
-                support_below.append(min(df.low))
-            # Check if the price is above the latest close price. If it is, it is appending it to the
-            # resistance_above list. If it is not, it is appending it to the support_above list.
-            for resistance_line in all_resistance_list:
-                if resistance_line > latest_close:
-                    resistance_above.append(resistance_line)
-                else:
-                    support_above.append(resistance_line)
-            if len(resistance_above) == 0:
-                resistance_above.append(max(df.high))
-            lowest_support = min(support_below)
-            highest_resistance = max(resistance_above)
-            return fibonacci_pricelevels(highest_resistance, lowest_support)
 
         def legend_candle_patterns() -> None:
             """
@@ -438,29 +377,27 @@ class Supres(Values):
                 """
                 temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
-                differ = abs(len(float_resistance_above) - len(float_support_below))
+                differ = abs(len(f_resistanceabove) - len(f_supportbelow))
                 try:
-                    if len(float_resistance_above) < len(float_support_below):
-                        float_resistance_above.extend([0] * differ)
+                    if len(f_resistanceabove) < len(f_supportbelow):
+                        f_resistanceabove.extend([0] * differ)
                     else:
-                        float_support_below.extend([0] * differ)
+                        f_supportbelow.extend([0] * differ)
                     for _ in range(
                         min(
-                            max(len(float_resistance_above), len(float_support_below)),
+                            max(len(f_resistanceabove), len(f_supportbelow)),
                             12,
                         )
                     ):
-                        if (
-                            float_resistance_above[temp] == 0
-                        ):  # This is for legend alignment
+                        if f_resistanceabove[temp] == 0:  # This is for legend alignment
                             legend_supres = (
-                                f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}{blank}     "
-                                f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
+                                f"{float(f_resistanceabove[temp]):.{str_price_len - 1}f}{blank}     "
+                                f"||   {float(f_supportbelow[temp]):.{str_price_len - 1}f}"
                             )
                         else:
                             legend_supres = (
-                                f"{float(float_resistance_above[temp]):.{str_price_len - 1}f}       "
-                                f"||   {float(float_support_below[temp]):.{str_price_len - 1}f}"
+                                f"{float(f_resistanceabove[temp]):.{str_price_len - 1}f}       "
+                                f"||   {float(f_supportbelow[temp]):.{str_price_len - 1}f}"
                             )
                         fig.add_trace(
                             go.Scatter(
@@ -603,10 +540,10 @@ class Supres(Values):
                     time.sleep(1)
                     if tweet.is_image_tweet().text != text_image:
                         resistance_above_nonzero = list(
-                            filter(lambda x: x != 0, float_resistance_above)
+                            filter(lambda x: x != 0, f_resistanceabove)
                         )
                         support_below_nonzero = list(
-                            filter(lambda x: x != 0, float_support_below)
+                            filter(lambda x: x != 0, f_supportbelow)
                         )
                         tweet.api.update_status(
                             status=f"#{historical_data.ticker}  "
@@ -620,50 +557,6 @@ class Supres(Values):
 
             # send_tweet()
 
-        def pinescript_code() -> str:
-            """
-            Writes resistance and support lines to a file called pinescript.txt.
-            """
-            pinescript_lines = []
-            lines_sma = (
-                f"//@version=5\nindicator('Sup-Res {historical_data.ticker} {selected_timeframe}',"
-                f" overlay=true)\n"
-                "plot(ta.sma(close, 50), title='50 SMA', color=color.new(color.blue, 0), linewidth=1)\n"
-                "plot(ta.sma(close, 100), title='100 SMA', color=color.new(color.purple, 0), linewidth=1)\n"
-                "plot(ta.sma(close, 200), title='200 SMA', color=color.new(color.red, 0), linewidth=1)\n"
-            )
-
-            for line_res in float_resistance_above[:10]:
-                if line_res == 0:
-                    continue
-                lr = f'hline({line_res}, title="Lines", color=color.red, linestyle=hline.style_solid, linewidth=1)'
-                pinescript_lines.append(lr)
-
-            for line_sup in float_support_below[:10]:
-                if line_sup == 0:
-                    continue
-                ls = f'hline({line_sup}, title="Lines", color=color.green, linestyle=hline.style_solid, linewidth=1)'
-                pinescript_lines.append(ls)
-            lines = "\n".join(map(str, pinescript_lines))
-            # Create a new file that called pinescript.txt and write the lines_sma and lines variables to the file
-            with open("../main_supres/pinescript.txt", "w") as pine:
-                pine.writelines(lines_sma + lines)
-
-                def ichimoku():  # read ichimoku_cloud.txt and write it to pinescript.txt
-                    with open("pinescripts/ichimoku_cloud.txt", "r") as ichimoku_read:
-                        # write a blank line to separate the ichimoku cloud from the support and resistance lines
-                        pine.write("\n")
-                        pine.writelines(ichimoku_read.read())
-
-                def daily_levels():
-                    with open("pinescripts/daily_levels.txt", "r") as d_levels:
-                        pine.write("\n")
-                        pine.writelines(d_levels.read())
-
-                ichimoku()
-                daily_levels()
-            return lines
-
         sensitivity()
         chart_lines()
         # Checking if the selected timeframe is in the historical_hightimeframe list.
@@ -675,10 +568,10 @@ class Supres(Values):
         create_candlestick_plot()
         add_volume_subplot()
         add_rsi_subplot()
-        float_resistance_above = list(
+        f_resistanceabove = list(
             map(float, sorted(resistance_above + resistance_below))
         )
-        float_support_below = list(
+        f_supportbelow = list(
             map(float, sorted(support_below + support_above, reverse=True))
         )
         draw_support()
@@ -686,7 +579,7 @@ class Supres(Values):
         legend_texts()
         chart_updates()
         # save()
-        # pinescript_code()
+        # pinescript_code(historical_data.ticker,selected_timeframe,f_resistanceabove,f_supportbelow)
         print(
             f"Completed sup-res execution in {time.perf_counter() - now_supres} seconds"
         )
