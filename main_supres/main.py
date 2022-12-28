@@ -44,6 +44,7 @@ class Supres(Values):
         historical_hightimeframe = (
             historical_data.Client.KLINE_INTERVAL_1DAY,
             historical_data.Client.KLINE_INTERVAL_3DAY,
+            historical_data.Client.KLINE_INTERVAL_1WEEK,
         )
         historical_lowtimeframe = (
             historical_data.Client.KLINE_INTERVAL_1MINUTE,

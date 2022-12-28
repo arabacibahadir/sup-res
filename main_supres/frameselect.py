@@ -15,6 +15,7 @@ frame_select_dict = {
     "12H": [Client.KLINE_INTERVAL_12HOUR, -3120],
     "1D": [Client.KLINE_INTERVAL_1DAY, -260],
     "3D": [Client.KLINE_INTERVAL_3DAY, -780],
+    "1W": [Client.KLINE_INTERVAL_1WEEK, -1040],
 }
 
 
@@ -26,6 +27,7 @@ def frame_select(kline: str) -> tuple[str | int, str]:
         "M": timedelta(minutes=kline_interval),
         "H": timedelta(hours=kline_interval),
         "D": timedelta(days=kline_interval),
+        "W": timedelta(weeks=kline_interval),
     }
     start_date += times[last_letter]
     return frame_select_dict[kline][0], start_date.strftime("%d %B, %Y")
