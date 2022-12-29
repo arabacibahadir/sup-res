@@ -35,8 +35,10 @@ Ticker and Time Frame:
 BTCUSDT 15M
 ````
 ````
-Supported Tickers: All Binance tickers
-Supported Time Frames: 1M, 3M, 5M, 15M, 30M, 1H, 2H, 4H, 6H, 8H, 12H, 1D, 3D (M: Minute, H: Hour, D: Day)
+Supported Tickers: 
+All Binance tickers
+Supported Time Frames: 
+1M, 3M, 5M, 15M, 30M, 1H, 2H, 4H, 6H, 8H, 12H, 1D, 3D, 1W (M: Minute, H: Hour, D: Day, W: Week)
 ````
 
 If you want to share as a tweet, change api keys with yours in `git_tw_access.py` file, and change your user handle name. [Twitter API guide](https://developer.twitter.com/en/docs/twitter-api). Then uncomment `save` and `twitter` functions in `main.py`.
