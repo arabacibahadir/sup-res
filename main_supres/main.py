@@ -591,7 +591,6 @@ class Supres(Values):
 
 
 if __name__ == "__main__":
-    os.chdir("../main_supres")  # Change the directory to the main_supres folder
     file_name = historical_data.user_ticker.file_name
     try:
         perf = time.perf_counter()
