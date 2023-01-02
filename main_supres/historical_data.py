@@ -11,7 +11,7 @@ class BinanceTicker:
         # If you are living in the US, you need to use the binance.us API
         # self.client = Client("", "", tld="us")
         self.client = Client("", "", tld="com")
-        self.file_name = ticker + ".csv"
+        self.file_name = self.ticker + ".csv"
         self.header_list = [
             "unix",
             "open",
@@ -39,7 +39,6 @@ class BinanceTicker:
         else:
             print("Pair is not found in Binance API.")
             exit()
-            return
 
     def historical_data_write(self):
         """
