@@ -71,7 +71,6 @@ class Supres(Values):
             support_below,
             resistance_below,
             resistance_above,
-            x_dat,
         ) = (
             [],
             [],
@@ -82,7 +81,6 @@ class Supres(Values):
             [],
             [],
             [],
-            "",
         )
 
         fibonacci_multipliers = 0.236, 0.382, 0.500, 0.618, 0.705, 0.786, 0.886
@@ -125,8 +123,9 @@ class Supres(Values):
         def sensitivity(sens=2) -> tuple[list, list]:
             """
             Find the support and resistance levels for a given asset.
-            sensitivity:1 is recommended for daily charts or high frequency trade scalping.
-            :param sens: sensitivity parameter default:2, level of detail 1-2-3 can be given to function
+            sens:1 is recommended for daily charts or high frequency trade scalping.
+            :param sens: sensitivity parameter default:2, level of
+            detail 1-2-3 can be given to function
             """
             for sens_row in range(3, len(df) - 1):
                 if support_resistance.support(df, sens_row, 3, sens):
@@ -139,9 +138,6 @@ class Supres(Values):
             """
             Check if the support and resistance lines are above or below the latest close price.
             """
-            # Find support and resistance levels
-            # Check if the support is below the latest close. If it is, it is appending it to the list
-            # support_below. If it isn't, it is appending it to the list resistance_below.
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
             latest_close = df["close"].iloc[-1]
@@ -152,8 +148,6 @@ class Supres(Values):
                     resistance_below.append(support_line)
             if len(support_below) == 0:
                 support_below.append(min(df.low))
-            # Check if the price is above the latest close price. If it is, it is appending it to the
-            # resistance_above list. If it is not, it is appending it to the support_above list.
             for resistance_line in all_resistance_list:
                 if resistance_line > latest_close:
                     resistance_above.append(resistance_line)
@@ -165,8 +159,8 @@ class Supres(Values):
 
         def candlestick_patterns() -> list:
             """
-            Takes in a dataframe and returns a list of candlestick patterns found in the dataframe then returns
-            pattern list.
+            Takes in a dataframe and returns a list of candlestick patterns
+            found in the dataframe then returns pattern list.
             """
             from candlestick import candlestick as cd
 
@@ -198,9 +192,7 @@ class Supres(Values):
 
             def pattern_find_func(pattern_row) -> list:
                 """
-                The function takes in a dataframe and a list of column names. It then iterates through the
-                list of column names and checks if the column name is in the dataframe. If it is, it adds
-                the column name to a list and adds the date of the match to another list.
+                Find Candlestick patterns in the dataframe.
                 """
                 t = 0
                 pattern_find = [col for col in df.columns]
@@ -215,9 +207,6 @@ class Supres(Values):
             return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
 
         def legend_candle_patterns() -> None:
-            """
-            The function takes the list of candlestick patterns and adds them to the chart as a legend text.
-            """
             fig.add_trace(
                 go.Scatter(
                     y=[support_list[0]],
@@ -278,11 +267,6 @@ class Supres(Values):
             )
 
         def add_rsi_subplot() -> None:
-            """
-            Adds a subplot to the figure object called fig, which is a 3x1 grid of subplots. The
-            subplot is a scatter plot of the RSI values, with a horizontal line at 30 and 70, and a gray
-            rectangle between the two lines.
-            """
             fig.add_trace(
                 go.Scatter(
                     x=df["date"][:-1].dt.strftime(x_date),
@@ -358,13 +342,10 @@ class Supres(Values):
                 )
 
         def legend_texts() -> None:
-            """
-            Adds a trace to the chart for each indicator, and then adds a trace for each indicator's value.
-            """
             fig.add_trace(
                 go.Scatter(
                     y=[support_list[0]],
-                    name=f"Resistances    ||   Supports",
+                    name="Resistances    ||   Supports",
                     mode="markers+lines",
                     marker=dict(color=resistance_line_color, size=10),
                 )
@@ -413,13 +394,10 @@ class Supres(Values):
                     pass
 
             def text_and_indicators() -> None:
-                """
-                Adds a trace to the chart for each indicator, and then adds a trace for each indicator's value.
-                """
                 fig.add_trace(
                     go.Scatter(
                         y=[support_list[0]],
-                        name=f"github.com/arabacibahadir/sup-res",
+                        name="github.com/arabacibahadir/sup-res",
                         mode="markers",
                         marker=dict(color=legend_color, size=0),
                     )
@@ -460,7 +438,7 @@ class Supres(Values):
                 fig.add_trace(
                     go.Scatter(
                         y=[support_list[0]],
-                        name=f"       Fibonacci Uptrend | Downtrend ",
+                        name="       Fibonacci Uptrend | Downtrend ",
                         mode="markers",
                         marker=dict(color=legend_color, size=0),
                     )
