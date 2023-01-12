@@ -4,7 +4,38 @@ import os
 import time
 import pandas as pd
 from binance.client import Client
-import frameselect
+
+
+frame_select_dict = {
+    "1M": [Client.KLINE_INTERVAL_1MINUTE, -260],
+    "3M": [Client.KLINE_INTERVAL_3MINUTE, -780],
+    "5M": [Client.KLINE_INTERVAL_5MINUTE, -1300],
+    "15M": [Client.KLINE_INTERVAL_15MINUTE, -3900],
+    "30M": [Client.KLINE_INTERVAL_30MINUTE, -7800],
+    "1H": [Client.KLINE_INTERVAL_1HOUR, -260],
+    "2H": [Client.KLINE_INTERVAL_2HOUR, -520],
+    "4H": [Client.KLINE_INTERVAL_4HOUR, -1040],
+    "6H": [Client.KLINE_INTERVAL_6HOUR, -1560],
+    "8H": [Client.KLINE_INTERVAL_8HOUR, -2080],
+    "12H": [Client.KLINE_INTERVAL_12HOUR, -3120],
+    "1D": [Client.KLINE_INTERVAL_1DAY, -260],
+    "3D": [Client.KLINE_INTERVAL_3DAY, -780],
+    "1W": [Client.KLINE_INTERVAL_1WEEK, -1040],
+}
+
+
+def frame_select(kline: str) -> tuple[str | int, str]:
+    start_date = datetime.datetime.now()
+    last_letter = frame_select_dict[kline][0][-1].upper()
+    kline_interval = frame_select_dict[kline][1]
+    times = {
+        "M": datetime.timedelta(minutes=kline_interval),
+        "H": datetime.timedelta(hours=kline_interval),
+        "D": datetime.timedelta(days=kline_interval),
+        "W": datetime.timedelta(weeks=kline_interval),
+    }
+    start_date += times[last_letter]
+    return frame_select_dict[kline][0], start_date.strftime("%d %B, %Y")
 
 
 def hist_data():
@@ -176,7 +207,7 @@ def main():
 
     print("res:", res_above)
     print("sup:", sup_below)
-    with open("../main_supres/all_timeframes.txt", "a") as f:
+    with open("../miniscripts/all_timeframes.txt", "a") as f:
         f.writelines(
             [
                 ticker,
@@ -216,15 +247,15 @@ if __name__ == "__main__":
     server_time = datetime.datetime.fromtimestamp(timestamp).strftime(
         "%Y-%m-%d %H:%M:%S"
     )
-    with open("../main_supres/all_timeframes.txt", "w") as file:
+    with open("../miniscripts/all_timeframes.txt", "w") as file:
         file.writelines(["Server time: ", server_time, "\n"])
     print(f"Server time: {server_time}")
     for ticker in ticker_list:
         print("----", ticker, "----")
-        file_name = "../main_supres/" + str(ticker).upper() + ".csv"
+        file_name = "../miniscripts/" + str(ticker).upper() + ".csv"
         for i in frame_s:
-            time_frame = frameselect.frame_select(i)[0]
-            start = frameselect.frame_select(i)[1]
+            time_frame = frame_select(i)[0]
+            start = frame_select(i)[1]
             print(i)
             try:
                 hist_data()
