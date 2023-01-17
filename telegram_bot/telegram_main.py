@@ -14,7 +14,9 @@ os.chdir("../telegram_bot")  # Changing the directory to the `telegram_bot` fold
 
 
 def start_command(update, context):
-    update.message.reply_text("For more info about bot: https://github.com/arabacibahadir/sup-res#readme ")
+    update.message.reply_text(
+        "For more info about bot: https://github.com/arabacibahadir/sup-res#readme "
+    )
 
 
 def help_command(update, context):
@@ -34,21 +36,32 @@ def responses(input_text):
         return "supres 'pair' 'timeframe', pinescript, major coins, fear index, info, news, test"
 
     if user_message == "test":
-        timestamp = client.get_server_time().get('serverTime') / 1000
-        return f"Bot is working.\nAPI System status: {client.get_system_status().get('msg').capitalize()}\n" \
-               f"Server time: " \
-               f"{datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}"
+        timestamp = client.get_server_time().get("serverTime") / 1000
+        return (
+            f"Bot is working.\nAPI System status: {client.get_system_status().get('msg').capitalize()}\n"
+            f"Server time: "
+            f"{datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}"
+        )
 
     if user_message == "major coins":
-        widget_list = ("BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "LUNAUSDT", "AVAXUSDT")
+        widget_list = (
+            "BTCUSDT",
+            "ETHUSDT",
+            "BNBUSDT",
+            "SOLUSDT",
+            "LUNAUSDT",
+            "AVAXUSDT",
+        )
         majors = []
         perf = time.perf_counter()
         for w in widget_list:
             values = list(client.get_symbol_ticker(symbol=w).values())
-            majors.extend([values[0].removesuffix('USDT'), values[1].rstrip('0')])
+            majors.extend([values[0].removesuffix("USDT"), values[1].rstrip("0")])
         print(f"Completed execution in {time.perf_counter() - perf} seconds")
-        return f"{majors[0]}:{majors[1]}, {majors[2]}:{majors[3]}, {majors[4]}:{majors[5]}, " \
-               f"{majors[6]}:{majors[7]}, {majors[8]}:{majors[9]}, {majors[10]}:{majors[11]}"
+        return (
+            f"{majors[0]}:{majors[1]}, {majors[2]}:{majors[3]}, {majors[4]}:{majors[5]}, "
+            f"{majors[6]}:{majors[7]}, {majors[8]}:{majors[9]}, {majors[10]}:{majors[11]}"
+        )
 
     if user_message == "fear index":
         return bot.send_message(chat_id=chat_id, text=cmc.fear())
@@ -60,11 +73,14 @@ def responses(input_text):
         return bot.send_message(chat_id=chat_id, text=cmc.news())
 
     if user_message == "pinescript":
-        textfile = '../telegram_bot/pinescript.txt'
+        textfile = "../telegram_bot/pinescript.txt"
         if os.path.exists(textfile):
-            bot.send_document(chat_id=chat_id, document=open(textfile, 'rb'))
+            bot.send_document(chat_id=chat_id, document=open(textfile, "rb"))
         else:
-            bot.send_message(chat_id=chat_id, text='There is no pinescript.txt file, first run the supres command.')
+            bot.send_message(
+                chat_id=chat_id,
+                text="There is no pinescript.txt file, first run the supres command.",
+            )
 
     msg = user_message.split(" ")
     telegram_user_ticker_input = msg[1]
@@ -80,17 +96,37 @@ def responses(input_text):
                 os.unlink("../telegram_bot/output.txt")
 
     if user_message.startswith("supres"):
-        has_pair = any(telegram_user_ticker_input.upper() == i.get('symbol') for i in client.get_all_tickers())
-        print('Pair found in Binance API.' if has_pair else 'Pair not found in Binance API.')
+        has_pair = any(
+            telegram_user_ticker_input.upper() == i.get("symbol")
+            for i in client.get_all_tickers()
+        )
+        print(
+            "Pair found in Binance API."
+            if has_pair
+            else "Pair not found in Binance API."
+        )
         # Which python path you are using, if it is not working, change "python" command -> "py" or "python3"
-        subprocess.run(f"python ../telegram_bot/telegram_bot.py {telegram_user_ticker_input.upper()} "
-                       f"{telegram_user_timeframe_input.upper()}", cwd="../telegram_bot",
-                       shell=True)
+        subprocess.run(
+            f"python ../telegram_bot/telegram_bot.py {telegram_user_ticker_input.upper()} "
+            f"{telegram_user_timeframe_input.upper()}",
+            cwd="../telegram_bot",
+            shell=True,
+        )
         with open("../telegram_bot/output.txt", "r+") as f:
             content_list = f.readlines()
         content_list = [x.strip() for x in content_list]
-        text = content_list[1] + "\n" + content_list[2] + "\n" + content_list[3] + "\n" + content_list[4]
-        bot.send_document(chat_id=chat_id, document=open(content_list[0], 'rb'), caption=text)
+        text = (
+            content_list[1]
+            + "\n"
+            + content_list[2]
+            + "\n"
+            + content_list[3]
+            + "\n"
+            + content_list[4]
+        )
+        bot.send_document(
+            chat_id=chat_id, document=open(content_list[0], "rb"), caption=text
+        )
         return remove_files()
     return "Error"
 
