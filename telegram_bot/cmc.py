@@ -15,7 +15,7 @@ def market():
     soup = BeautifulSoup(page.content, "html.parser")
     info = soup.find("div", class_="cmc-global-stats__inner-content")
     for i in info:
-        text.append(i.text.replace('\xa0', ' '))
+        text.append(i.text.replace("\xa0", " "))
     return "\n".join(text)
 
 
@@ -30,7 +30,7 @@ def news():
     for a_href in soup.find_all("a", href=True):
         text.append(a_href.text)
     index = text.index("Headlines")
-    for _ in text[index:index + 15:2]:
+    for _ in text[index : index + 15 : 2]:
         news_all.append(_)
     news_list = ["-" + sub for sub in news_all]
     news_list.append(URL)
@@ -48,5 +48,7 @@ def fear():
     info = soup.find_all("div", class_="fng-circle")
     for i in info:
         text.append(i.text)
-    return f"Fear&Greed Index:\nNow: {text[0]}\nYesterday: {text[1]}\n" \
-           f"Last Week: {text[2]}\nLast Month: {text[3]}\n"
+    return (
+        f"Fear&Greed Index:\nNow: {text[0]}\nYesterday: {text[1]}\n"
+        f"Last Week: {text[2]}\nLast Month: {text[3]}\n"
+    )
