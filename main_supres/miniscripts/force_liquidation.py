@@ -29,15 +29,13 @@ if not os.path.exists(filename):
         )
 
 
-async def liqs(uri, filename):
+async def f_liqs(uri, filename):
     async for websocket in connect(uri):
         try:
             while True:
-                now = datetime.now()
                 msg = await websocket.recv()
-                print(msg + "\n" + str(now))
-                msg = json.loads(msg)["o"]
-                msg = [str(x) for x in list(msg.values())]
+                print(msg + "\n" + str(datetime.now()))
+                msg = [str(x) for x in list(json.loads(msg)["o"].values())]
                 with open(filename, "a") as m:
                     m.write(",".join(msg) + "\n")
         except Exception as e:
@@ -45,4 +43,4 @@ async def liqs(uri, filename):
             continue
 
 
-asyncio.run(liqs(websocket_url, filename))
+asyncio.run(f_liqs(websocket_url, filename))
