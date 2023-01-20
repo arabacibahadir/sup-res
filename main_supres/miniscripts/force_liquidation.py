@@ -4,6 +4,29 @@ import os
 from websockets import connect
 from datetime import datetime
 
+"""
+1000ms
+{
+    "e":"forceOrder",                   // Event Type
+    "E":1568014460893,                  // Event Time
+    "o":{
+        "s":"BTCUSDT",                   // Symbol
+        "S":"SELL",                      // Side
+        "o":"LIMIT",                     // Order Type
+        "f":"IOC",                       // Time in Force
+        "q":"0.014",                     // Original Quantity
+        "p":"9910",                      // Price
+        "ap":"9910",                     // Average Price
+        "X":"FILLED",                    // Order Status
+        "l":"0.014",                     // Order Last Filled Quantity
+        "z":"0.014",                     // Order Filled Accumulated Quantity
+        "T":1568014460893,              // Order Trade Time
+
+    }
+
+}
+"""
+
 websocket_url = "wss://fstream.binance.com/ws/!forceOrder@arr"
 filename = "binance_force_orders.csv"
 
