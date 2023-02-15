@@ -67,7 +67,8 @@ class BinanceTicker:
             inplace=True,
             axis=1,
         )
-        df.to_csv(self.file_name, index=False)
+        with open(self.file_name, "w") as f:
+            df.to_csv(f, index=False)
         print("Data writing:", self.file_name)
 
 
