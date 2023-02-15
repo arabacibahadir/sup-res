@@ -28,12 +28,27 @@ pip install -r requirements.txt
 ```
 
 ## Usage :computer:
-
+This tool allows you to generate charts for different cryptocurrencies and time frames using the Binance API.
 When you run the code, main function will ask ticker and time frame and then the local web page will open where you can see the support-resistance levels, RSI, SMA, MACD, Fibonacci and candlestick patterns. 
+
+You can run the script with arguments for the ticker and time frame you want to generate a chart for. To do this, enter the following command:
+````python
+python main.py <ticker> <timeframe>
 ````
-Ticker and Time Frame:
-BTCUSDT 15M
+For example, to generate a chart for the BTCUSDT ticker with a 1-hour time frame, you would enter:
+````python
+python main.py BTCUSDT 1H
 ````
+You can also run the script without any arguments and then enter the ticker and time frame in the command line when prompted. To do this, enter the following command:
+
+````python
+python main.py 
+````
+If you want to generate charts for multiple pairs at once, you can use the multiple_run.py script located in the miniscripts directory. This script will generate charts for all the pairs listed in the `coin_list.csv` file. To run this script, enter the following command:
+````python
+python miniscripts/multiple_run.py
+````
+
 ````
 Supported Tickers: 
 All Binance tickers
