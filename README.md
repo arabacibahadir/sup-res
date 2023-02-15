@@ -44,7 +44,7 @@ You can also run the script without any arguments and then enter the ticker and 
 ````python
 python main.py 
 ````
-If you want to generate charts for multiple pairs at once, you can use the multiple_run.py script located in the miniscripts directory. This script will generate charts for all the pairs listed in the `coin_list.csv` file. To run this script, enter the following command:
+If you want to generate charts for multiple pairs at once, you can use the `multiple_run.py` script located in the miniscripts directory. This script will generate charts for all the pairs listed in the `coin_list.csv` file. To run this script, enter the following command:
 ````python
 python miniscripts/multiple_run.py
 ````
