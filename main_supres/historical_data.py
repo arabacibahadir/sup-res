@@ -1,3 +1,4 @@
+import sys
 import time
 import pandas as pd
 from binance.client import Client
@@ -72,10 +73,23 @@ class BinanceTicker:
         print("Data writing:", self.file_name)
 
 
-# Example input:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
-print("Example input: BTCUSDT 1W, ETHBTC 3D, BNBUSDT 1H, ATOMUSDT 15M")
-print("Ticker and Time Frame: ")
-ticker, frame_s = str(input().upper()).split()
+# If you want to run the script from the command line,
+# there are a couple of ways you can do it.
+# The first way is to use the following command:
+# "python main.py BTCUSDT 1H"
+# The second way to run the script from the command line is
+# without any arguments. To do this, simply enter the following command:
+# "python main.py"
+# and then enter the ticker and time frame in the command line.
+# Also, you can run ../miniscripts/multiple_run.py to run the script for all the
+# given pairs in coin_list.csv
+if len(sys.argv) == 3:
+    ticker, frame_s = sys.argv[1].upper(), sys.argv[2].upper()
+else:
+    # Example input:"BTCUSDT 1H", "ETHBTC 3D", "BNBUSDT 15M"
+    print("Example input: BTCUSDT 1W, ETHBTC 3D, BNBUSDT 1H, ATOMUSDT 15M")
+    print("Ticker and Time Frame: ")
+    ticker, frame_s = str(input().upper()).split()
 binance_api_runtime = time.perf_counter()
 time_frame, start = frameselect.frame_select(frame_s)
 user_ticker = BinanceTicker(ticker, time_frame)
