@@ -20,6 +20,18 @@ frame_select_dict = {
 
 
 def frame_select(kline: str) -> tuple[str | int, str]:
+    """
+    The function takes a string input representing a time frame and returns a tuple containing a string
+    and a formatted date string.
+
+    :param kline: The input parameter `kline` is a string representing a time frame for financial data,
+    such as "1m" for 1 minute, "1h" for 1 hour, "1d" for 1 day, or "1w" for 1 week
+    :type kline: str
+    :return: The function `frame_select` returns a tuple containing a string or integer and a string.
+    The first element of the tuple is the value of the first item in the list associated with the input
+    `kline` in the `frame_select_dict` dictionary. The second element of the tuple is a formatted string
+    representing the date that is `kline_interval` time units after the current date, where the
+    """
     start_date = datetime.now()
     last_letter = frame_select_dict[kline][0][-1].upper()
     kline_interval = frame_select_dict[kline][1]
