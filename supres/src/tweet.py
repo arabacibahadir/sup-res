@@ -10,19 +10,26 @@ authenticator.set_access_token(access_token, access_token_secret)
 api = tweepy.API(authenticator, wait_on_rate_limit=True)
 
 
-def send_tweet(media, tweet):
+def send_tweet(media: str, tweet: str) -> dict:
     """
-    Send a tweet with an image attached
-    :param media: The path to the media file (e.g. image)
-    :param tweet: The text you want to tweet
-    :return: The return value is a tweepy.models.Status object.
+    Uploads an image or video to Twitter and creates a tweet with it.
+
+    Args:
+        media (str): The path to the media file to be uploaded.
+        tweet (str): The text content of the tweet.
+
+    Returns:
+        dict: A dictionary containing information about the created tweet.
     """
     return api.update_with_media(media, tweet)
 
 
 def is_image_tweet():
     """
-    This is getting the latest tweet from the user.
+    Checks if the latest tweet by the specified user contains an image.
+
+    Returns:
+        tweepy.Status: The latest tweet by the user.
     """
     get_last_status = api.user_timeline(
         screen_name=git_twitter_access.user_handle, count=1

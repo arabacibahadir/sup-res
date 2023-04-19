@@ -104,11 +104,21 @@ class Supres(Values):
             high_price, low_price
         ) -> tuple[list[float], list[float]]:
             """
-            Uptrend Fibonacci Retracement Formula =>
-            Fibonacci Price Level = High Price - (High Price - Low Price)*Fibonacci Level
-            :param high_price: High price for the period
-            :param low_price: Low price for the period
+            Calculate Fibonacci retracement levels for given high and low prices.
+
+            Args:
+                high_price (float): The highest price in the range.
+                low_price (float): The lowest price in the range.
+
+            Returns:
+                tuple: A tuple containing two lists of Fibonacci retracement levels for an uptrend and downtrend respectively.
+
+            Notes:
+                The Fibonacci retracement levels are calculated using the following multipliers:
+                [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
+                The `high_price` parameter should be greater than the `low_price` parameter.
             """
+
             for multiplier in fibonacci_multipliers:
                 retracement_levels_uptrend = (
                     low_price + (high_price - low_price) * multiplier
@@ -122,11 +132,18 @@ class Supres(Values):
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
-            Find the support and resistance levels for a given asset.
-            sens:1 is recommended for daily charts or high frequency trade scalping.
-            :param sens: sensitivity parameter default:2, level of
-            detail 1-2-3 can be given to function
+            This function calculates the support and resistance levels of a given financial data set, based on a given
+            sensitivity value.
+
+            Args:
+                sens (int): The sensitivity value to use in calculating the support and resistance levels.
+                Default value is 2.
+
+            Returns:
+                tuple[list, list]: A tuple containing two lists. The first list contains the support levels and the
+                second list contains the resistance levels.
             """
+
             for sens_row in range(3, len(df) - 1):
                 if support_resistance.support(df, sens_row, 3, sens):
                     support_list.append((sens_row, df.low[sens_row]))
@@ -136,7 +153,20 @@ class Supres(Values):
 
         def chart_lines():
             """
-            Check if the support and resistance lines are above or below the latest close price.
+            Calculates the support and resistance levels based on the given support and resistance lists and returns the
+            corresponding Fibonacci price levels.
+
+            Returns:
+                List[float]: A list of Fibonacci price levels.
+
+            Raises:
+                TypeError: If the support_list or resistance_list is not a list.
+                ValueError: If the support_list or resistance_list is empty.
+
+            Note:
+                This function assumes that the `df` DataFrame is defined and contains the 'close', 'low', and
+                'high' columns. The `support_list` and `resistance_list` must contain tuples where the first element
+                is a string representing the level name and the second element is a float representing the price level.
             """
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
@@ -159,8 +189,10 @@ class Supres(Values):
 
         def candlestick_patterns() -> list:
             """
-            Takes in a dataframe and returns a list of candlestick patterns
-            found in the dataframe then returns pattern list.
+            Finds candlestick patterns in the given dataframe.
+
+            Returns:
+                list: A list of tuples containing the name of the pattern and the date it was found.
             """
             from candlestick import candlestick as cd
 
@@ -207,6 +239,9 @@ class Supres(Values):
             return df.iloc[-3:-30:-1].apply(pattern_find_func, axis=1)
 
         def legend_candle_patterns() -> None:
+            """
+            Adds candlestick patterns to a plot as traces with specific names and markers.
+            """
             fig.add_trace(
                 go.Scatter(
                     y=[support_list[0]],
@@ -235,7 +270,8 @@ class Supres(Values):
 
         def create_candlestick_plot() -> None:
             """
-            Creates a candlestick plot using the dataframe df, and adds it to the figure.
+            Creates a candlestick plot using data from a dataframe and adds it to a subplot
+            in a figure.
             """
             fig.add_trace(
                 go.Candlestick(
@@ -253,7 +289,7 @@ class Supres(Values):
 
         def add_volume_subplot() -> None:
             """
-            Adds a volume subplot to the figure.
+            The function adds a bar chart of the USDT volume to a subplot in a given figure.
             """
             fig.add_trace(
                 go.Bar(
@@ -267,6 +303,9 @@ class Supres(Values):
             )
 
         def add_rsi_subplot() -> None:
+            """
+            Adds a subplot of RSI (Relative Strength Index) with upper and lower bands to a given plot.
+            """
             fig.add_trace(
                 go.Scatter(
                     x=df["date"][:-1].dt.strftime(x_date),
@@ -299,7 +338,7 @@ class Supres(Values):
 
         def draw_support() -> None:
             """
-            Draws the support lines and adds annotations to the chart.
+            Draws support lines and annotations on a plot using a list of support points.
             """
             for s in range(len(support_list)):
                 # Support lines
@@ -321,7 +360,7 @@ class Supres(Values):
 
         def draw_resistance() -> None:
             """
-            Draws the resistance lines and adds annotations to the chart.
+            Draws resistance lines and annotations on a plot using a list of resistance values.
             """
             for r in range(len(resistance_list)):
                 # Resistance lines
@@ -342,6 +381,10 @@ class Supres(Values):
                 )
 
         def legend_texts() -> None:
+            """
+            Adds various indicators, support/resistance levels, and Fibonacci multipliers
+            to a Plotly figure and creates a legend for them.
+            """
             fig.add_trace(
                 go.Scatter(
                     y=[support_list[0]],
@@ -355,7 +398,7 @@ class Supres(Values):
 
             def legend_support_resistance_values() -> None:
                 """
-                Takes the support and resistance values and adds them to the legend.
+                Plots support and resistance values on a graph with legend alignment.
                 """
                 temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
@@ -394,6 +437,9 @@ class Supres(Values):
                     pass
 
             def text_and_indicators() -> None:
+                """
+                Adds various indicators and support/resistance levels to a plot using Plotly.
+                """
                 fig.add_trace(
                     go.Scatter(
                         y=[support_list[0]],
@@ -446,7 +492,8 @@ class Supres(Values):
 
             def legend_fibonacci() -> None:
                 """
-                Adds to the legend for each Fibonacci level text.
+                The function adds a trace to a plotly figure for each Fibonacci multiplier in a list,
+                with corresponding uptrend and downtrend values.
                 """
                 mtp = len(fibonacci_multipliers) - 1
                 for _ in fibonacci_uptrend:
@@ -471,7 +518,7 @@ class Supres(Values):
 
         def chart_updates() -> None:
             """
-            Updates the chart's layout, background color, chart color, legend color, and margin.
+            Updates the layout and axes of a chart.
             """
             fig.update_layout(
                 title=str(
@@ -490,7 +537,8 @@ class Supres(Values):
 
         def save():
             """
-            Saves the image and html file of the plotly chart, then it tweets the image and text
+            Saves a plotly figure as an image and html file, generates a text for a tweet,
+            sends the tweet with the image, and updates the tweet with support and resistance levels.
             """
             if not os.path.exists("/images"):
                 os.mkdir("images")
@@ -514,7 +562,8 @@ class Supres(Values):
 
             def send_tweet() -> None:
                 """
-                Takes a screenshot of a chart, then tweets it with a caption.
+                Sends a tweet with support and resistance levels and waits for a response
+                tweet with an image before updating the tweet with the levels.
                 """
                 import tweet
 

@@ -1,6 +1,15 @@
 def pinescript_code(p_ticker, selected_tf, res_above, res_below) -> str:
     """
-    Writes resistance and support lines to a file called pinescript.txt.
+    Creates a Pine Script file for TradingView charts that shows support and resistance levels, as well as 50, 100, and 200 period simple moving averages.
+
+    Args:
+        p_ticker: The ticker symbol for the asset being analyzed.
+        selected_tf: The time frame being analyzed, such as '1D' for daily charts.
+        res_above: A list of resistance levels above the current price, sorted in descending order.
+        res_below: A list of support levels below the current price, sorted in ascending order.
+
+    Returns:
+        str: The Pine Script code as a string.
     """
     pinescript_lines = []
     lines_sma = (

@@ -53,6 +53,14 @@ if not os.path.exists(filename):
 
 
 async def f_liqs(uri, filename):
+    """
+    Asynchronous function that connects to a websocket URI and writes received messages to a specified file.
+    Args:
+        uri (str): The URI of the websocket to connect to.
+        filename (str): The name of the file to write received messages to.
+    Raises:
+        Exception: If there is an issue with the websocket connection or the file writing operation.
+    """
     async for websocket in connect(uri):
         try:
             while True:
