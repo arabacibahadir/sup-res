@@ -5,20 +5,18 @@ def indicators(
     df_sma, ma_length1, ma_length2, ma_length3
 ) -> tuple[tuple, tuple, tuple, tuple]:
     """
-    The function "indicators" calculates and returns four tuples containing simple moving averages and
-    relative strength index values.
+    This function calculates technical indicators for a given pandas DataFrame containing a moving average column.
 
-    :param df_sma: The input dataframe containing the closing prices for a financial asset
-    :param ma_length1: The length of the first Simple Moving Average (SMA) to be calculated
-    :param ma_length2: The length of the second Simple Moving Average (SMA) that will be calculated in
-    the function
-    :param ma_length3: ma_length3 is a parameter that represents the length of the third Simple Moving
-    Average (SMA) that will be calculated in the function. The function takes in a DataFrame of stock
-    data (df_sma) and calculates three SMAs of different lengths (ma_length1, ma_length2, and
-    :return: a tuple of four tuples. The first three tuples contain the simple moving averages (SMAs) of
-    the input dataframe `df_sma` with lengths `ma_length1`, `ma_length2`, and `ma_length3`,
-    respectively. The fourth tuple contains the relative strength index (RSI) values of the `close`
-    column of the input dataframe `df_sma`,
+    Args:
+        df_sma: A DataFrame with a column named "sma".
+        ma_length1: The length of the first simple moving average (SMA).
+        ma_length2: The length of the second simple moving average (SMA).
+        ma_length3: The length of the third simple moving average (SMA).
+
+    Returns:
+        tuple: A tuple of four tuples, where each inner tuple represents the respective calculated indicator:
+            - sma_1, sma_2, sma_3: A tuple of SMA values for the first, second, and third moving averages.
+            - rsi_tuple: A tuple of RSI values calculated using pandas_ta library.
     """
     sma_1 = tuple(df_sma.ta.sma(ma_length1))
     sma_2 = tuple(df_sma.ta.sma(ma_length2))

@@ -10,27 +10,26 @@ authenticator.set_access_token(access_token, access_token_secret)
 api = tweepy.API(authenticator, wait_on_rate_limit=True)
 
 
-def send_tweet(media, tweet):
+def send_tweet(media: str, tweet: str) -> dict:
     """
-    This function sends a tweet with media attached using the Twitter API.
+    Uploads an image or video to Twitter and creates a tweet with it.
 
-    :param media: The media parameter is the file path or URL of the image or video that you want to
-    attach to the tweet. It can be a local file path or a URL to an image or video hosted online
-    :param tweet: The tweet parameter is a string that represents the text content of the tweet that you
-    want to post. It can be up to 280 characters long
-    :return: the result of calling the `update_with_media` method of the `api` object with the `media`
-    and `tweet` arguments. The specific value being returned depends on the implementation of the
-    `update_with_media` method, but it is likely to be a response object or a status code indicating the
-    success or failure of the tweet update.
+    Args:
+        media (str): The path to the media file to be uploaded.
+        tweet (str): The text content of the tweet.
+
+    Returns:
+        dict: A dictionary containing information about the created tweet.
     """
     return api.update_with_media(media, tweet)
 
 
 def is_image_tweet():
     """
-    This function retrieves the last tweet of a specified user and returns it.
-    :return: The function `is_image_tweet()` returns the last status (tweet) of a Twitter user with the
-    specified screen name, which is obtained using the `api.user_timeline()` method.
+    Checks if the latest tweet by the specified user contains an image.
+
+    Returns:
+        tweepy.Status: The latest tweet by the user.
     """
     get_last_status = api.user_timeline(
         screen_name=git_twitter_access.user_handle, count=1

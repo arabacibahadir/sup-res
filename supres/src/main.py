@@ -104,16 +104,21 @@ class Supres(Values):
             high_price, low_price
         ) -> tuple[list[float], list[float]]:
             """
-            The function calculates Fibonacci retracement levels for both uptrend and downtrend based on
-            given high and low prices.
+            Calculate Fibonacci retracement levels for given high and low prices.
 
-            :param high_price: The highest price of a financial asset during a certain period of time,
-            such as a day, week, or month
-            :param low_price: The lowest price of a financial asset during a given period of time
-            :return: a tuple containing two lists of float values - `fibonacci_uptrend` and
-            `fibonacci_downtrend`. These lists contain the retracement levels calculated using Fibonacci
-            multipliers for an input `high_price` and `low_price`.
+            Args:
+                high_price (float): The highest price in the range.
+                low_price (float): The lowest price in the range.
+
+            Returns:
+                tuple: A tuple containing two lists of Fibonacci retracement levels for an uptrend and downtrend respectively.
+
+            Notes:
+                The Fibonacci retracement levels are calculated using the following multipliers:
+                [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
+                The `high_price` parameter should be greater than the `low_price` parameter.
             """
+
             for multiplier in fibonacci_multipliers:
                 retracement_levels_uptrend = (
                     low_price + (high_price - low_price) * multiplier
@@ -127,19 +132,15 @@ class Supres(Values):
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
-            The function calculates support and resistance levels based on a given sensitivity value and
-            returns them as lists of tuples.
+            This function calculates the support and resistance levels of a given financial data set, based on a given sensitivity value.
 
-            :param sens: The sens parameter is an optional input with a default value of 2. It is used
-            in the support_resistance.support() and support_resistance.resistance() functions to
-            determine the sensitivity of the support and resistance levels. A higher value of sens will
-            result in fewer support and resistance levels being identified,, defaults to 2 (optional)
-            :return: The function `sensitivity` is returning a tuple of two lists: `support_list` and
-            `resistance_list`. These lists contain tuples of the form `(row_number, price)` where
-            `row_number` is an integer representing the row number in the DataFrame `df` and `price` is
-            either the low or high price at that row depending on whether it is a support or resistance
-            level.
+            Args:
+                sens (int): The sensitivity value to use in calculating the support and resistance levels. Default value is 2.
+
+            Returns:
+                tuple[list, list]: A tuple containing two lists. The first list contains the support levels and the second list contains the resistance levels.
             """
+
             for sens_row in range(3, len(df) - 1):
                 if support_resistance.support(df, sens_row, 3, sens):
                     support_list.append((sens_row, df.low[sens_row]))
@@ -149,11 +150,20 @@ class Supres(Values):
 
         def chart_lines():
             """
-            The function calculates support and resistance levels and returns Fibonacci price levels
-            based on those levels.
-            :return: The function `chart_lines()` returns the output of the function
-            `fibonacci_pricelevels()` with the arguments `max(resistance_above)` and
-            `min(support_below)`.
+            Calculates the support and resistance levels based on the given support and resistance lists and returns the
+            corresponding Fibonacci price levels.
+
+            Returns:
+                List[float]: A list of Fibonacci price levels.
+
+            Raises:
+                TypeError: If the support_list or resistance_list is not a list.
+                ValueError: If the support_list or resistance_list is empty.
+
+            Note:
+                This function assumes that the `df` DataFrame is defined and contains the 'close', 'low', and 'high' columns.
+                The `support_list` and `resistance_list` must contain tuples where the first element is a string representing
+                the level name and the second element is a float representing the price level.
             """
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))
@@ -176,12 +186,10 @@ class Supres(Values):
 
         def candlestick_patterns() -> list:
             """
-            The function identifies candlestick patterns in a given data frame and returns a list of
-            patterns found in the last 30 rows.
-            :return: The function `candlestick_patterns()` returns a pandas DataFrame with candlestick
-            patterns identified in the stock data, and the dates on which they were identified. The
-            function also applies the `pattern_find_func()` function to the DataFrame to extract the
-            pattern names and dates, and returns the results as a list.
+            Finds candlestick patterns in the given dataframe.
+
+            Returns:
+                list: A list of tuples containing the name of the pattern and the date it was found.
             """
             from candlestick import candlestick as cd
 
@@ -229,7 +237,7 @@ class Supres(Values):
 
         def legend_candle_patterns() -> None:
             """
-            The function adds candlestick patterns to a plot as traces with specific names and markers.
+            Adds candlestick patterns to a plot as traces with specific names and markers.
             """
             fig.add_trace(
                 go.Scatter(
@@ -259,7 +267,7 @@ class Supres(Values):
 
         def create_candlestick_plot() -> None:
             """
-            The function creates a candlestick plot using data from a dataframe and adds it to a subplot
+            Creates a candlestick plot using data from a dataframe and adds it to a subplot
             in a figure.
             """
             fig.add_trace(
@@ -293,8 +301,7 @@ class Supres(Values):
 
         def add_rsi_subplot() -> None:
             """
-            The function adds a subplot of RSI (Relative Strength Index) with upper and lower bands to a
-            given plot.
+            Adds a subplot of RSI (Relative Strength Index) with upper and lower bands to a given plot.
             """
             fig.add_trace(
                 go.Scatter(
@@ -328,7 +335,7 @@ class Supres(Values):
 
         def draw_support() -> None:
             """
-            This function draws support lines and annotations on a plot using a list of support points.
+            Draws support lines and annotations on a plot using a list of support points.
             """
             for s in range(len(support_list)):
                 # Support lines
@@ -350,8 +357,7 @@ class Supres(Values):
 
         def draw_resistance() -> None:
             """
-            This function draws resistance lines and annotations on a plot using a list of resistance
-            values.
+            Draws resistance lines and annotations on a plot using a list of resistance values.
             """
             for r in range(len(resistance_list)):
                 # Resistance lines
@@ -373,7 +379,7 @@ class Supres(Values):
 
         def legend_texts() -> None:
             """
-            The function adds various indicators, support/resistance levels, and Fibonacci multipliers
+            Adds various indicators, support/resistance levels, and Fibonacci multipliers
             to a Plotly figure and creates a legend for them.
             """
             fig.add_trace(
@@ -389,9 +395,8 @@ class Supres(Values):
 
             def legend_support_resistance_values() -> None:
                 """
-                The function plots support and resistance values on a graph with legend alignment.
+                Plots support and resistance values on a graph with legend alignment.
                 """
-
                 temp = 0
                 blank = " " * (len(str(sample_price)) + 1)
                 differ = abs(len(f_res_above) - len(f_sup_below))
@@ -430,8 +435,7 @@ class Supres(Values):
 
             def text_and_indicators() -> None:
                 """
-                The function adds various indicators and support/resistance levels to a plot using
-                Plotly.
+                Adds various indicators and support/resistance levels to a plot using Plotly.
                 """
                 fig.add_trace(
                     go.Scatter(
@@ -488,7 +492,6 @@ class Supres(Values):
                 The function adds a trace to a plotly figure for each Fibonacci multiplier in a list,
                 with corresponding uptrend and downtrend values.
                 """
-
                 mtp = len(fibonacci_multipliers) - 1
                 for _ in fibonacci_uptrend:
                     fig.add_trace(
@@ -512,7 +515,7 @@ class Supres(Values):
 
         def chart_updates() -> None:
             """
-            The function updates the layout and axes of a chart in Python.
+            Updates the layout and axes of a chart.
             """
             fig.update_layout(
                 title=str(
@@ -531,7 +534,7 @@ class Supres(Values):
 
         def save():
             """
-            The function saves a plotly figure as an image and html file, generates a text for a tweet,
+            Saves a plotly figure as an image and html file, generates a text for a tweet,
             sends the tweet with the image, and updates the tweet with support and resistance levels.
             """
             if not os.path.exists("/images"):
@@ -556,7 +559,7 @@ class Supres(Values):
 
             def send_tweet() -> None:
                 """
-                The function sends a tweet with support and resistance levels and waits for a response
+                Sends a tweet with support and resistance levels and waits for a response
                 tweet with an image before updating the tweet with the levels.
                 """
                 import tweet
