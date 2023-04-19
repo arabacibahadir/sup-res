@@ -132,13 +132,16 @@ class Supres(Values):
 
         def sensitivity(sens=2) -> tuple[list, list]:
             """
-            This function calculates the support and resistance levels of a given financial data set, based on a given sensitivity value.
+            This function calculates the support and resistance levels of a given financial data set, based on a given
+            sensitivity value.
 
             Args:
-                sens (int): The sensitivity value to use in calculating the support and resistance levels. Default value is 2.
+                sens (int): The sensitivity value to use in calculating the support and resistance levels.
+                Default value is 2.
 
             Returns:
-                tuple[list, list]: A tuple containing two lists. The first list contains the support levels and the second list contains the resistance levels.
+                tuple[list, list]: A tuple containing two lists. The first list contains the support levels and the
+                second list contains the resistance levels.
             """
 
             for sens_row in range(3, len(df) - 1):
@@ -161,9 +164,9 @@ class Supres(Values):
                 ValueError: If the support_list or resistance_list is empty.
 
             Note:
-                This function assumes that the `df` DataFrame is defined and contains the 'close', 'low', and 'high' columns.
-                The `support_list` and `resistance_list` must contain tuples where the first element is a string representing
-                the level name and the second element is a float representing the price level.
+                This function assumes that the `df` DataFrame is defined and contains the 'close', 'low', and
+                'high' columns. The `support_list` and `resistance_list` must contain tuples where the first element
+                is a string representing the level name and the second element is a float representing the price level.
             """
             all_support_list = tuple(map(lambda sup1: sup1[1], support_list))
             all_resistance_list = tuple(map(lambda res1: res1[1], resistance_list))

@@ -25,10 +25,12 @@ def frame_select(kline: str) -> tuple[str | int, str]:
     kline interval string.
 
     Args:
-        kline (str): A string representing the kline interval for which to retrieve the Binance API kline interval value and start date.
+        kline (str): A string representing the kline interval for which to retrieve the Binance API kline interval value
+         and start date.
 
     Returns:
-        tuple[str | int, str]: A tuple containing the Binance API kline interval value and a string representation of the start date.
+        tuple[str | int, str]: A tuple containing the Binance API kline interval value and a string representation of
+        the start date.
     """
     start_date = datetime.now()
     last_letter = frame_select_dict[kline][0][-1].upper()

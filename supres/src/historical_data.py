@@ -38,7 +38,7 @@ class BinanceTicker:
 
     def historical_data_write(self):
         """
-        This function writes historical data for a given ticker symbol to a CSV file.
+        Writes historical data for a given ticker symbol to a CSV file.
         """
         df = pd.DataFrame(
             reversed(
@@ -69,16 +69,16 @@ class BinanceTicker:
 
 
 """
- If you want to run the script from the command line,
- there are a couple of ways you can do it.
- The first way is to use the following command:
- "python main.py BTCUSDT 1H"
- The second way to run the script from the command line is
- without any arguments. To do this, simply enter the following command:
- "python main.py"
- and then enter the ticker and time frame in the command line.
- Also, you can run ../miniscripts/multiple_run.py to run the script for all the
- given pairs in coin_list.csv
+If you want to run the script from the command line,
+there are a couple of ways you can do it.
+The first way is to use the following command:
+"python main.py BTCUSDT 1H"
+The second way to run the script from the command line is
+without any arguments. To do this, simply enter the following command:
+"python main.py"
+and then enter the ticker and time frame in the command line.
+Also, you can run ../miniscripts/multiple_run.py to run the script for all the
+given pairs in coin_list.csv
 """
 
 if len(sys.argv) == 3:
